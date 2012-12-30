@@ -1,7 +1,7 @@
 name: SwornGuard
-main: com.minesworn.swornguard.SwornGuard
-version: 1.0
-author: [t7seven7t, orange451]
+main: net.t7seven7t.swornguard.SwornGuard
+version: 2.0
+author: t7seven7t
 softdepend: [SwornNations, SwornJail, Factions]
 description: >
              Comprehensive anti cheat plugin based around catching cheaters rather than preventing their actions.
@@ -11,122 +11,181 @@ commands:
         aliases: [p, swornguard]
     patrol:
         description: Teleports the user to the next patrollable player.
-        permission: swornguard.patrol
+        permission: swornguard.cmd.patrol
         usage: |
                /<command>
         aliases: [pat]
     autopatrol:
         description: Automatically teleports the user to the next patrollable player after given duration.
-        permission: swornguard.autopatrol
+        permission: swornguard.cmd.autopatrol
         usage: |
                /<command>
                /<command> <time>
         aliases: [apat]
     vanish:
         description: Vanishes/Unvanishes the user.
-        permission: swornguard.vanish
+        permission: swornguard.cmd.vanish
         usage: /<command>
                /<command> <on/off>
         aliases: [unvanish, hide, unhide]
     vanishlist:
         description: Displays a list of vanished users.
-        permission: swornguard.vanishlist
+        permission: swornguard.cmd.vanishlist
         usage: /<command>
     ctp:
         description: Use to teleport to cheaters.
-        permission: swornguard.ctp
+        permission: swornguard.cmd.cheatteleport
+        usage: /<command>
+    jail:
+        description: Jails a player.
+        permission: swornguard.cmd.jail
+        usage: /<command> <player> <time> <reason>
+    unjail:
+        description: Unjails a player.
+        permission: swornguard.cmd.unjail
+        usage: /<command> <player>
+    jailcheck:
+        description: Checks a player's jail status.
+        permission: swornguard.cmd.jailcheck
+        usage: /<command> <player>
+    jailreason:
+        description: Modifies a player's jail reason.
+        permission: swornguard.cmd.jailreason
+        usage: /<command> <player> <reason>
+    jailset:
+        description: Set the region of the jail.
+        permission: swornguard.cmd.jailset
+        usage: |
+                Usage:
+                /<command>
+                /<command> cancel
+    jailstatus:
+        description: Check your jail status.
+        permission: swornguard.cmd.jailstatus
+        usage: /<command>
+    jailtime:
+        description: Change jail time for a player.
+        permission: swornguard.cmd.jailtime
+        usage: /<command> <player> <time>
+    jailhelp:
+        description: Shows jail help.
+        permission: swornguard.cmd.jailhelp
         usage: /<command>
 permissions:
     swornguard.admin:
         description: Gives access to all SwornGuard features.
         children:
             swornguard.moderator: true
-            swornguard.canban: true
             swornguard.canfly: true
-            swornguard.canspam: true
-            swornguard.canuseblockedcommands: true
-            swornguard.cancheckips: true
-            swornguard.modbot: true
-            swornguard.legit: true
-            swornguard.vanish: true
-            swornguard.vanishlist: true
-            swornguard.patrol: true
+            swornguard.allow.spam: true
+            swornguard.allow.jailbuild: true
+            swornguard.allow.blockedcommands: true
+            swornguard.allow.usecommandsjailed: true
+            swornguard.cmd.legit: true
+            swornguard.cmd.ip: true
+            swornguard.cmd.reload: true
+            swornguard.cmd.jailset: true
+            swornguard.cmd.unban: true
     swornguard.moderator:
         description: Gives access to features intended for moderators.
         children:
+            swornguard.guard: true
+            swornguard.cmd.vanish: true
+            swornguard.cmd.vanishlist: true
+            swornguard.cmd.patrol: true
+            swornguard.cmd.ban: true
+            swornguard.vanishspy: true
+    swornguard.guard:
+        description: Gives access to features intended for guards.
+        children:
             swornguard.default: true
-            swornguard.info.seeothers: true
-            swornguard.cankick: true
-            swornguard.canseecheatreports: true
-            swornguard.baninfo: true
-            swornguard.show: true
-            swornguard.note: true
-            swornguard.ratio: true
-            swornguard.ctp: true
-            swornguard.autopatrol: true
-    swornguard.info:
-        description: Access to the statistics/info command.
-        default: true
-    swornguard.info.seeothers:
-        description: Can view other player's info.
-        default: false
-    swornguard.canban:
-        description: Give this permission if the player can use /ban.
-        default: false
-    swornguard.cankick:
-        description: Give this permission if the player can use /kick.
-        default: false
+            swornguard.cmd.autopatrol: true
+            swornguard.cmd.baninfo: true
+            swornguard.cmd.jail: true
+            swornguard.cmd.jailcheck: true
+            swornguard.cmd.jailreason: true
+            swornguard.cmd.jailtime: true
+            swornguard.cmd.show: true
+            swornguard.cmd.note: true
+            swornguard.cmd.ratio: true
+            swornguard.cmd.autopatrol: true
+            swornguard.cmd.info.others: true
+            swornguard.cmd.kick: true
+            swornguard.cmd.unjail: true
+            swornguard.cmd.cheatteleport: true
+            swornguard.showcheatreports: true
+    swornguard.default:
+        description: Permissions for everyone
+        children:
+            swornguard.cmd.jailstatus: true
+            swornguard.cmd.jailhelp: true
+            swornguard.cmd.serverinfo: true
+            swornguard.cmd.info: true
     swornguard.canfly:
-        description: Give this permission to allow them to fly undetected (Not necessary if the player is in creative mode fly).
         default: false
-    swornguard.canspam:
-        description: Give this permission to allow a player to spam.
+    swornguard.allow.spam:
         default: false
-    swornguard.canuseblockedcommands:
-        description: Give this permission to allow players to use blocked commands.
+    swornguard.allow.jailbuild:
         default: false
-    swornguard.cankick:
-        description: Give this permission if the player can use /kick.
+    swornguard.allow.blockedcommands:
         default: false
-    swornguard.canseecheatreports:
-        description: Give this permission to allow players to see cheat reports.
+    swornguard.allow.usecommandsjailed:
         default: false
-    swornguard.cancheckips:
-        description: Give this permission to allow the player to see ip addresses.
+    swornguard.cmd.legit:
         default: false
-    swornguard.baninfo:
-        description: Access to the baninfo command.
+    swornguard.cmd.ip:
         default: false
-    swornguard.show:
-        description: Access to the profiling command.
+    swornguard.cmd.reload:
         default: false
-    swornguard.note:
-        description: Access to the note command.
+    swornguard.cmd.jailset:
         default: false
-    swornguard.modbot:
-        description: Access to the modbot command to enable/disable the automatic bot.
+    swornguard.cmd.unban:
         default: false
-    swornguard.ratio:
-        description: Access to the ratio command.
+    swornguard.cmd.vanish:
         default: false
-    swornguard.legit:
-        description: Access to the legit command.
+    swornguard.cmd.vanishlist:
         default: false
-    swornguard.reload:
-        description: use for debugging only
+    swornguard.cmd.patrol:
         default: false
-    swornguard.ctp:
-        description: Access to ctp command.
+    swornguard.cmd.ban:
         default: false
-    swornguard.autopatrol:
-        description: Access to autopatrol command.
+    swornguard.cmd.vanishspy:
         default: false
-    swornguard.vanish:
-        description: Access to vanish command.
+    swornguard.cmd.autopatrol:
         default: false
-    swornguard.vanishlist:
-        description: Access to vanishlist command.
+    swornguard.cmd.baninfo:
         default: false
-    swornguard.patrol:
-        description: Access to patrol command.
+    swornguard.cmd.jail:
         default: false
+    swornguard.cmd.jailcheck:
+        default: false
+    swornguard.cmd.jailreason:
+        default: false
+    swornguard.cmd.jailtime:
+        default: false
+    swornguard.cmd.show:
+        default: false
+    swornguard.cmd.note:
+        default: false
+    swornguard.cmd.ratio:
+        default: false
+    swornguard.cmd.autopatrol:
+        default: false
+    swornguard.cmd.info.others:
+        default: false
+    swornguard.cmd.kick:
+        default: false
+    swornguard.cmd.unjail:
+        default: false
+    swornguard.cmd.cheatteleport:
+        default: false
+    swornguard.showcheatreports:
+        default: false
+    swornguard.cmd.jailstatus:
+        default: true
+    swornguard.cmd.jailhelp:
+        default: true
+    swornguard.cmd.serverinfo:
+        default: true
+    swornguard.cmd.info:
+        default: true
