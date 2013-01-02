@@ -38,6 +38,8 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 	protected List<String> optionalArgs;
 	protected List<String> aliases;
 	
+	protected boolean usesPrefix;
+	
 	public SwornGuardCommand(SwornGuard plugin) {
 		this.plugin = plugin;
 		requiredArgs = new ArrayList<String>(2);
@@ -110,7 +112,7 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 		StringBuilder ret = new StringBuilder();
 		ret.append("&b/");
 		
-		if (plugin.getCommandHandler().usesCommandPrefix())
+		if (plugin.getCommandHandler().usesCommandPrefix() && usesPrefix)
 			ret.append(plugin.getCommandHandler().getCommandPrefix() + " ");
 		
 		ret.append(name);

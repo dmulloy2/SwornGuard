@@ -61,7 +61,7 @@ public class CommandHandler implements CommandExecutor {
 	}
 
 	public boolean usesCommandPrefix() {
-		return commandPrefix == null;
+		return commandPrefix != null;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label,

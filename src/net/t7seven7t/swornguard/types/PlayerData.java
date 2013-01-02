@@ -68,6 +68,7 @@ public class PlayerData implements ConfigurationSerializable {
 	private transient boolean cooldownPatrolling;
 	private transient boolean inspecting;
 	private transient boolean vanished;
+	private transient boolean fireworking; // hehe
 	private boolean jailed;
 	private boolean jailMuted;
 	private boolean unjailNextLogin;

@@ -26,7 +26,6 @@ import net.t7seven7t.swornguard.detectors.FlyDetector;
 import net.t7seven7t.swornguard.detectors.SpamDetector;
 import net.t7seven7t.swornguard.detectors.XrayDetector;
 import net.t7seven7t.swornguard.io.PlayerDataCache;
-import net.t7seven7t.swornguard.io.PlayerDataConverter;
 import net.t7seven7t.swornguard.io.ResourceHandler;
 import net.t7seven7t.swornguard.listeners.BlockListener;
 import net.t7seven7t.swornguard.listeners.ChatListener;
@@ -79,11 +78,18 @@ public class SwornGuard extends JavaPlugin {
 		saveDefaultConfig();
 		reloadConfig();
 		
-		if (getConfig().getBoolean("convertOldPlayerData")) {
-			PlayerDataConverter.run(this);
-			getConfig().set("convertOldPlayerData", false);
-			saveConfig();
-		}
+		// Old code used for converting old sworn guard data over
+//		if (getConfig().getBoolean("convertOldPlayerData")) {
+//			PlayerDataConverter.run(this);
+//			getConfig().set("convertOldPlayerData", false);
+//			saveConfig();
+//		}
+		
+//		if (getConfig().getBoolean("fixShit")) {
+//			PlayerDataConverter.fixShit(this);
+//			getConfig().set("fixShit", false);
+//			saveConfig();
+//		}
 		
 		playerDataCache = new PlayerDataCache(this);
 		serverData = new ServerData(this);

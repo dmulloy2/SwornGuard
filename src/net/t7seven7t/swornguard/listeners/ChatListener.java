@@ -10,6 +10,7 @@ import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.detectors.SpamDetector.ChatType;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.tasks.DatableRunnable;
+import net.t7seven7t.swornguard.tasks.FireworkRunnable;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.util.FormatUtil;
 
@@ -118,6 +119,16 @@ public class ChatListener implements Listener {
 				for (int i = 1; i < args.length; i++)
 					Args.add(args[i]);
 				plugin.getCommandDetector().checkCommand(event.getPlayer(), command, Args.toArray(new String[0]));
+			}
+			
+			// Just some fun here on... ignore this :)
+			if (command.equals("firework") && event.getPlayer().hasPermission("firework")) {
+				if (data.isFireworking()) {
+					data.setFireworking(false);
+				} else {
+					data.setFireworking(true);
+					new FireworkRunnable(plugin, event.getPlayer()).runTaskTimer(plugin, 5L, 5L);
+				}
 			}
 		}
 	}

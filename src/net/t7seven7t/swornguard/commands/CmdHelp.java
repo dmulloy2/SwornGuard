@@ -22,6 +22,7 @@ public class CmdHelp extends PaginatedCommand {
 		this.description = "Shows " + plugin.getName() + " help.";
 		this.optionalArgs.add("page");
 		this.linesPerPage = 6;
+		this.usesPrefix = true;
 	}
 
 	@Override

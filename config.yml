@@ -1,4 +1,5 @@
-convertOldPlayerData: true
+#convertOldPlayerData: false
+#fixShit: false
 
 #Auto moderator settings
 autoModEnabled: true
@@ -27,7 +28,17 @@ autoclickerTimeBetweenAttacksInMillis: 500
 combatLogWindowInSeconds: 10
 combatLogFromMobs: false
 combatLogFromPlayers: true
+
+#These values are all for 1/4 second intervals.
+flyDetectorSuspiciousVelocity: -2.0
+flyDetectorSuspiciousDistFromGround: 7
+flyDetectorSuspiciousMoveDist: 5
+
+spamDetectorMessageDecayTime: 2
 spamDetectorThresholdPerSecond: 5
+
+#This number is equivalent to the number of different checks the spam detector will perform to check if a message is spam. Value can be 0-4
+spamDetectorComparisonLevel: 4
 xrayWarnOnDiamondRatio: 10
 xrayWarnOnIronRatio: 0
 

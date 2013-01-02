@@ -23,6 +23,7 @@ public class CmdSInfo extends SwornGuardCommand {
 		this.aliases.add("si");
 		this.description = plugin.getMessage("desc_sinfo");
 		this.permission = PermissionType.CMD_SERVER_INFO.permission;
+		this.usesPrefix = true;
 	}
 	
 	public void perform() {

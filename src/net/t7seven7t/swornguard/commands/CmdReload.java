@@ -16,6 +16,7 @@ public class CmdReload extends SwornGuardCommand {
 		this.name = "reload";
 		this.description = plugin.getMessage("desc_reload");
 		this.permission = PermissionType.CMD_RELOAD.permission;
+		this.usesPrefix = true;
 	}
 	
 	public void perform() {

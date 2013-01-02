@@ -4,10 +4,13 @@
 package net.t7seven7t.swornguard.io;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+
+import com.google.common.io.Files;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -79,6 +82,26 @@ public class PlayerDataConverter {
 		}
 		
 		logger.log("Old player data converted! Took {0}ms", System.currentTimeMillis() - start);
+	}
+	
+	public static void fixShit(SwornGuard plugin) {
+		LogHandler logger = plugin.getLogHandler();
+		logger.log("Fixing shit...");
+		long start = System.currentTimeMillis();
+		
+		File folder = new File(plugin.getDataFolder(), "players");
+		
+		for (File file : folder.listFiles()) {
+			try {
+				Files.copy(file, new File(folder, file.getName() + ".dat"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			file.delete();
+		}
+		
+		logger.log("Shit fixed {0}ms", System.currentTimeMillis() - start);
 	}
 	
 }

@@ -27,6 +27,7 @@ public class CmdBanInfo extends SwornGuardCommand {
 		this.description = plugin.getMessage("desc_baninfo");
 		this.permission = PermissionType.CMD_BAN_INFO.permission;
 		this.optionalArgs.add("player");
+		this.usesPrefix = true;
 	}
 
 	public void perform() {

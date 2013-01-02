@@ -22,14 +22,17 @@ import net.t7seven7t.swornguard.util.FormatUtil;
  * @author t7seven7t
  */
 public class FlyDetector {
-	private static final double SUSPICIOUS_VELOCITY = -2;
-	private static final int SUSPICIOUS_DIST_TO_GROUND = 5;
-	private static final int SUSPICIOUS_FLY_DIST = 5;
 	private static final BlockFace[] directions = new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
 	private final SwornGuard plugin;
+	private final double suspiciousVelocity;
+	private final int suspiciousDistFromGround;
+	private final int suspiciousMoveDist;
 	
 	public FlyDetector(final SwornGuard plugin) {
 		this.plugin = plugin;
+		this.suspiciousVelocity = plugin.getConfig().getDouble("flyDetectorSuspiciousVelocity");
+		this.suspiciousDistFromGround = plugin.getConfig().getInt("flyDetectorSuspiciousDistFromGround");
+		this.suspiciousMoveDist = plugin.getConfig().getInt("flyDetectorSuspiciousMoveDist");
 		
 		plugin.getServer().getScheduler().runTaskTimer(plugin, new BukkitRunnable() {
 			
@@ -41,15 +44,13 @@ public class FlyDetector {
 	}
 	
 	private void step() {
-//		long now = System.currentTimeMillis();
-//		long start = System.nanoTime();
 		for (final Player player : plugin.getServer().getOnlinePlayers()) {
 			if (!plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission) 
-					&& !player.getAllowFlight() && (player.getVelocity().getY() < SUSPICIOUS_VELOCITY ||
-							(!isInWater(player) && getDistanceToGround(player) >= SUSPICIOUS_DIST_TO_GROUND))) {
+					&& !player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity ||
+							(!isInWater(player) && getDistanceToGround(player) >= suspiciousDistFromGround))) {
 				final PlayerData data = plugin.getPlayerDataCache().getData(player);
 				final Vector previousLocation = player.getLocation().toVector();
-				if (System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
+				if (!data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
 					data.setLastFlyWarn(System.currentTimeMillis());
 					plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
 						
@@ -61,26 +62,21 @@ public class FlyDetector {
 				}
 			}
 		}
-//		System.out.println("step: " + (System.currentTimeMillis() - now) + " " + (System.nanoTime() - start));
 	}
 
 	private void checkPlayer(Player player, Vector previousLocation) {
-//		long now = System.currentTimeMillis();
-//		long start = System.nanoTime();
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		
 		if (player.getLocation().getY() - previousLocation.getY() > 3 ||
 				(player.getLocation().getY() >= previousLocation.getY() && 
-					(Math.abs(player.getLocation().getX() - previousLocation.getX()) > SUSPICIOUS_FLY_DIST ||
-					Math.abs(player.getLocation().getZ() - previousLocation.getZ()) > SUSPICIOUS_FLY_DIST))) {
+					(Math.abs(player.getLocation().getX() - previousLocation.getX()) > suspiciousMoveDist ||
+					Math.abs(player.getLocation().getZ() - previousLocation.getZ()) > suspiciousMoveDist))) {
 			CheatEvent event = new CheatEvent(player.getName(), CheatType.FLYING, FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "flying!"));
 			plugin.getCheatHandler().announceCheat(event);
 			data.setLastFlyWarn(System.currentTimeMillis());
 		} else {
 			data.setLastFlyWarn(0);
 		}
-		
-//		System.out.println("checkPlayer: " + (System.currentTimeMillis() - now) + " " + (System.nanoTime() - start));
 	}
 	
 	private boolean isInWater(Player player) {
@@ -104,7 +100,7 @@ public class FlyDetector {
 	private int getDistanceToGround(Player player) {
 		Location loc = player.getLocation();
 		int count = 1;
-		while (loc.subtract(0, 1, 0).getY() > 1 && count < SUSPICIOUS_DIST_TO_GROUND &&
+		while (loc.subtract(0, 1, 0).getY() > 1 && count < suspiciousDistFromGround &&
 				player.getWorld().getBlockAt(loc).getType().equals(Material.AIR) ||
 				player.getWorld().getBlockAt(loc).getType().equals(Material.WATER) ||
 				player.getWorld().getBlockAt(loc).getType().equals(Material.LAVA)) {

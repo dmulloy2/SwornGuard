@@ -24,6 +24,7 @@ public class CmdNote extends SwornGuardCommand {
 		this.permission = PermissionType.CMD_NOTE.permission;
 		this.requiredArgs.add("player");
 		this.requiredArgs.add("note");	
+		this.usesPrefix = true;
 	}
 	
 	public void perform() {

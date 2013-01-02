@@ -24,15 +24,18 @@ import net.t7seven7t.swornguard.util.Util;
  * @author t7seven7t
  */
 public class SpamDetector {
-	private static final int MESSAGE_DECAY_TIME = 2;
 	private final SwornGuard plugin;
 	private final Map<String, Map<String, Long>> recentMessages;
 	private final int spamThreshold;
+	private final int messageDecayTime;
+	private final int comparisonLevel;
 	
 	public SpamDetector(final SwornGuard plugin) {
 		this.plugin = plugin;
 		this.recentMessages = new ConcurrentHashMap<String, Map<String, Long>>(100, 0.75f, 4);
+		this.messageDecayTime = plugin.getConfig().getInt("spamDetectorMessageDecayTime");
 		this.spamThreshold = plugin.getConfig().getInt("spamDetectorThresholdPerSecond");
+		this.comparisonLevel = plugin.getConfig().getInt("spamDetectorComparisonLevel");
 		
 		// Cleanup map every 5 mins
 		new BukkitRunnable() {
@@ -62,11 +65,11 @@ public class SpamDetector {
 			boolean cancelled = false;
 			
 			for (Entry<String, Long> entry : Collections.unmodifiableMap(messages).entrySet()) {
-				if (now - entry.getValue() > MESSAGE_DECAY_TIME * 1000L)
+				if (now - entry.getValue() > messageDecayTime * 1000L)
 					messages.remove(entry.getKey());
 			}
 			
-			if (messages.size() >= spamThreshold * MESSAGE_DECAY_TIME) {
+			if (messages.size() >= spamThreshold * messageDecayTime) {
 				cancelled = true;
 				
 				new DatableRunnable(player) {
@@ -99,16 +102,16 @@ public class SpamDetector {
 		
 		for (String line : messages) {
 			line = line.toLowerCase();
-			if (message.length() <= 2 && line.length() <= 2)
+			if (comparisonLevel > 0 && message.length() <= 2 && line.length() <= 2)
 				return true;
 			
-			if (message.equals(line))
+			if (comparisonLevel > 1 && message.equals(line))
 				return true;
 			
-			if (line.length() >= 2 && message.startsWith(line.substring(0, 2)))
+			if (comparisonLevel > 2 && line.length() >= 2 && message.startsWith(line.substring(0, 2)))
 				return true;
 			
-			if (message.length() >= 3 && line.length() >= 3) {
+			if (comparisonLevel > 3 && message.length() >= 3 && line.length() >= 3) {
 				if (message.length() >= 6 && line.length() >= 6) {
 					for (int i = 0; i < 3; i++) {
 						if (compareStrings(message, line, i))
@@ -125,13 +128,8 @@ public class SpamDetector {
 	}
 	
 	public boolean compareStrings(String a, String b, int offset) {
-		int sublen = (b.length() / 3) * offset;
-		String line = b.substring(sublen, sublen + (b.length() / 3));
-		
-		if (a.matches(".*" + line + ".*"))
-			return true;
-		
-		return false;
+		int sublen = (b.length() / 3) * offset;		
+		return (a.regionMatches(sublen, b, sublen, b.length() / 3));
 	}
 	
 	public enum ChatType {

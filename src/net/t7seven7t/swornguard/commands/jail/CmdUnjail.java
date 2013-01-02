@@ -9,8 +9,6 @@ import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 /**
  * @author t7seven7t
@@ -34,10 +32,6 @@ public class CmdUnjail extends SwornGuardCommand {
 		
 		if (data.isJailed()) {
 			plugin.getJailHandler().unjail(target, sender.getName());
-			data.getProfilerList().add(FormatUtil.format(	plugin.getMessage("profiler_event"), 
-															TimeUtil.getLongDateCurr(), 
-															FormatUtil.format(	plugin.getMessage("profiler_unjail"), 
-																				sender.getName())));
 			plugin.getLogHandler().log(plugin.getMessage("jail_log_unjail"), target.getName(), sender.getName());
 			sendMessage(plugin.getMessage("jail_confirm_unjail"), target.getName());
 		} else {

@@ -29,6 +29,7 @@ public class CmdShow extends PaginatedCommand {
 		this.optionalArgs.add("player");
 		this.optionalArgs.add("page");
 		this.pageArgIndex = 1;
+		this.usesPrefix = true;
 	}
 	
 	@Override
