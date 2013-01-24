@@ -17,7 +17,7 @@ import net.t7seven7t.util.Util;
 /**
  * @author t7seven7t
  */
-public class PlayerDataCache {
+public class PlayerDataCache implements PlayerDataServiceProvider {
 	private final SwornGuard plugin;
 	private final File folder;
 	private final String extension = ".dat";

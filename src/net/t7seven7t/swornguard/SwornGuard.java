@@ -12,6 +12,7 @@ import lombok.Getter;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -26,6 +27,7 @@ import net.t7seven7t.swornguard.detectors.FlyDetector;
 import net.t7seven7t.swornguard.detectors.SpamDetector;
 import net.t7seven7t.swornguard.detectors.XrayDetector;
 import net.t7seven7t.swornguard.io.PlayerDataCache;
+import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
 import net.t7seven7t.swornguard.io.ResourceHandler;
 import net.t7seven7t.swornguard.listeners.BlockListener;
 import net.t7seven7t.swornguard.listeners.ChatListener;
@@ -93,6 +95,7 @@ public class SwornGuard extends JavaPlugin {
 //		}
 		
 		playerDataCache = new PlayerDataCache(this);
+		getServer().getServicesManager().register(PlayerDataServiceProvider.class, playerDataCache, this, ServicePriority.Normal);
 		serverData = new ServerData(this);
 		
 		cheatHandler = new CheatHandler(this);
