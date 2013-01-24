@@ -9,6 +9,8 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.Setter;
 
+import net.t7seven7t.util.SimpleVector;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

@@ -9,8 +9,8 @@ import java.util.List;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.ServerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
+import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.util.TimeUtil;
 
 /**
  * @author t7seven7t

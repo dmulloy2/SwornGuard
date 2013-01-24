@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
-import net.t7seven7t.swornguard.util.Util;
+import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.util.TimeUtil;
+import net.t7seven7t.util.Util;
 
 /**
  * @author t7seven7t

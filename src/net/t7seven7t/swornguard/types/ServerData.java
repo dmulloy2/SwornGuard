@@ -4,7 +4,7 @@
 package net.t7seven7t.swornguard.types;
 
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.util.TimeUtil;
+import net.t7seven7t.util.TimeUtil;
 
 /**
  * @author t7seven7t

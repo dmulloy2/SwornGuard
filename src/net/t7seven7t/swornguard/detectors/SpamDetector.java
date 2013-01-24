@@ -17,8 +17,8 @@ import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.tasks.DatableRunnable;
 import net.t7seven7t.swornguard.types.CheatType;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.Util;
+import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.util.Util;
 
 /**
  * @author t7seven7t

@@ -31,7 +31,7 @@ public class FileSerialization {
 			
 			fc.save(file);
 		} catch (Exception ex) {
-			System.out.println("Exception ocurred while attempting to save file: " + file.getName());
+			System.err.println("Exception ocurred while attempting to save file: " + file.getName());
 			ex.printStackTrace();
 		}
 	}
@@ -69,8 +69,10 @@ public class FileSerialization {
 			
 			return (T) ConfigurationSerialization.deserializeObject(map, clazz);
 		} catch (Exception ex) {
-			System.out.println("Exception ocurred while attempting to load file: " + file.getName());
-			ex.printStackTrace();
+			System.err.println("Exception ocurred while attempting to load file: " + file.getName());
+			if (file.renameTo(new File(file.getParent(), file.getName() + "_bad"))) {
+				System.out.println("Renamed bad file: " + file.getName() + " to: " + file.getName() + "_bad");
+			}
 			return null;
 		}
 	}

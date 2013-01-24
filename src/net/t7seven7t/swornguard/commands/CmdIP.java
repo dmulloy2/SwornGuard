@@ -11,7 +11,7 @@ import org.bukkit.OfflinePlayer;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
+import net.t7seven7t.util.FormatUtil;
 
 /**
  * @author t7seven7t
@@ -41,13 +41,15 @@ public class CmdIP extends PaginatedCommand {
 			return;
 		
 		PlayerData data = plugin.getPlayerDataCache().getData(target);
-		
-		ipList = new ArrayList<String>();
-		for (int x = data.getIpAddressList().size() - 1; x >= 0; x--) {
-			ipList.add(data.getIpAddressList().get(x));
+		if (data.getIpAddressList() != null) {
+			ipList = new ArrayList<String>();
+			for (int x = data.getIpAddressList().size() - 1; x >= 0; x--) {
+				ipList.add(data.getIpAddressList().get(x));
+			}
+			
+			super.perform();
 		}
 		
-		super.perform();
 	}
 
 	@Override

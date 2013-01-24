@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2012 t7seven7t
  */
-package net.t7seven7t.swornguard.util;
+package net.t7seven7t.util;
 
 import java.text.MessageFormat;
 

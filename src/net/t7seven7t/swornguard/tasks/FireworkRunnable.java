@@ -33,7 +33,7 @@ public class FireworkRunnable extends BukkitRunnable {
 	public void run() {
 		if (data.isFireworking() && player.isOnline()) {
 			FireworkEffect.Type type;
-			if (player.getName().contains("creeper")) {
+			if (player.getName().toLowerCase().contains("creeper")) {
 				type = FireworkEffect.Type.CREEPER;
 			} else {
 				type = FireworkEffect.Type.values()[rand.nextInt(FireworkEffect.Type.values().length)];

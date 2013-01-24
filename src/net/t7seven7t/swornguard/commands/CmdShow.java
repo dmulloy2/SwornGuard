@@ -11,7 +11,7 @@ import org.bukkit.OfflinePlayer;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
+import net.t7seven7t.util.FormatUtil;
 
 /**
  * @author t7seven7t
@@ -42,13 +42,16 @@ public class CmdShow extends PaginatedCommand {
 			return;
 		
 		PlayerData data = plugin.getPlayerDataCache().getData(target);
-		
-		profilerList = new ArrayList<String>();
-		for (int x = data.getProfilerList().size() - 1; x >= 0; x--) {
-			profilerList.add(data.getProfilerList().get(x));
+		if (data.getProfilerList() != null) {
+			profilerList = new ArrayList<String>();
+			for (int x = data.getProfilerList().size() - 1; x >= 0; x--) {
+				profilerList.add(data.getProfilerList().get(x));
+			}
+			
+			super.perform();
+		} else {
+			err(plugin.getMessage("error_no_profiler_data"), target.getName());
 		}
-		
-		super.perform();
 	}
 
 	@Override

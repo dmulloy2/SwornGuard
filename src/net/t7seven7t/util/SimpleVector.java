@@ -1,4 +1,7 @@
-package net.t7seven7t.swornguard.types;
+/**
+Copyright (C) 2012 t7seven7t
+**/
+package net.t7seven7t.util;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -7,6 +10,11 @@ import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.Vector;
+
+/**
+ * @author t7seven7t
+ *
+ */
 
 @SerializableAs("SimpleVector")
 public class SimpleVector implements ConfigurationSerializable {
@@ -47,6 +55,22 @@ public class SimpleVector implements ConfigurationSerializable {
 	
 	public Vector toVector() {
 		return new Vector(x, y, z);
+	}
+	
+	public boolean equals(Object o) {
+		if (o == null)
+			return false;
+		if (getClass() != o.getClass())
+			return false;
+		final SimpleVector that = (SimpleVector) o;
+		
+		if (this.x != that.x)
+			return false;
+		if (this.y != that.y)
+			return false;
+		if (this.z != that.z)
+			return false;
+		return true;
 	}
 	
 	@Override

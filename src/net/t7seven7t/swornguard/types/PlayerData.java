@@ -6,6 +6,7 @@ package net.t7seven7t.swornguard.types;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,9 @@ import java.util.Map.Entry;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Setter;
 
 /**
  * @author t7seven7t
@@ -85,6 +88,8 @@ public class PlayerData implements ConfigurationSerializable {
 	private String lastKickReason;
 	private String lastFaction;
 	
+	@Setter(AccessLevel.NONE) private Map<String, Object> data = new HashMap<String, Object>();
+	
 	public void updateSpentTime() {
 		long now = System.currentTimeMillis();
 		onlineTime = onlineTime + (now - ((lastUpdateTimeSpent > lastOnline) ? lastUpdateTimeSpent : lastOnline));
@@ -115,6 +120,16 @@ public class PlayerData implements ConfigurationSerializable {
 		}
 	}
 	
+	/**
+	 * Any data put into this map needs to be inherently serializable, 
+	 * either using ConfigurationSerializable or being a java primitive.
+	 * @param key Key to store the object under
+	 * @param object Object to store.
+	 */
+	public void putData(String key, Object object) {
+		data.put(key, object);
+	}
+	
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Map<String, Object> serialize() {
@@ -141,11 +156,14 @@ public class PlayerData implements ConfigurationSerializable {
 				} else if (field.getType().equals(Boolean.TYPE)) {
 					if (field.getBoolean(this))
 						data.put(field.getName(), field.getBoolean(this));
-				} else if (field.getType().isAssignableFrom(List.class)) {
-					if (!((List) field.get(this)).isEmpty())
+				} else if (field.getType().isAssignableFrom(Collection.class)) {
+					if (!((Collection) field.get(this)).isEmpty())
 						data.put(field.getName(), field.get(this));
 				} else if (field.getType().isAssignableFrom(String.class)) {
 					if (((String) field.get(this)) != null)
+						data.put(field.getName(), field.get(this));
+				} else if (field.getType().isAssignableFrom(Map.class)) {
+					if (!((Map) field.get(this)).isEmpty())
 						data.put(field.getName(), field.get(this));
 				} else {
 					if (field.get(this) != null)

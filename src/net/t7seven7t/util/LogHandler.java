@@ -1,19 +1,20 @@
 /**
  * Copyright (C) 2012 t7seven7t
  */
-package net.t7seven7t.swornguard.util;
+package net.t7seven7t.util;
 
 import java.util.logging.Level;
 
-import net.t7seven7t.swornguard.SwornGuard;
+import org.bukkit.plugin.java.JavaPlugin;
+
 
 /**
  * @author t7seven7t
  */
 public class LogHandler {
-	private final SwornGuard plugin;
+	private final JavaPlugin plugin;
 	
-	public LogHandler(SwornGuard plugin) {
+	public LogHandler(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 

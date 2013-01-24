@@ -14,8 +14,8 @@ import net.t7seven7t.swornguard.io.FileSerialization;
 import net.t7seven7t.swornguard.tasks.InmateTimerTask;
 import net.t7seven7t.swornguard.types.JailData;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
+import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.util.TimeUtil;
 
 /**
  * @author t7seven7t
@@ -65,6 +65,8 @@ public class JailHandler {
 	}
 	
 	public void release(final Player player) {
+		PlayerData data = plugin.getPlayerDataCache().getData(player);
+		data.setUnjailNextLogin(false);
 		player.teleport(jail.getExit());
 		player.sendMessage(FormatUtil.format(plugin.getMessage("jail_unjail")));
 	}

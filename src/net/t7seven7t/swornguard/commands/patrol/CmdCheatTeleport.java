@@ -9,7 +9,7 @@ import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.Util;
+import net.t7seven7t.util.Util;
 
 /**
  * @author t7seven7t

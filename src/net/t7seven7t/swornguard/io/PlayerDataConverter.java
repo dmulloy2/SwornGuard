@@ -15,7 +15,7 @@ import com.google.common.io.Files;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.PlayerInfo;
-import net.t7seven7t.swornguard.util.LogHandler;
+import net.t7seven7t.util.LogHandler;
 
 /**
  * @author t7seven7t
