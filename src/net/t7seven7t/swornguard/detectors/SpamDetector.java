@@ -3,20 +3,19 @@
  */
 package net.t7seven7t.swornguard.detectors;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
-import net.t7seven7t.swornguard.permissions.PermissionType;
-import net.t7seven7t.swornguard.tasks.DatableRunnable;
 import net.t7seven7t.swornguard.types.CheatType;
+import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.Util;
 
@@ -25,76 +24,79 @@ import net.t7seven7t.util.Util;
  */
 public class SpamDetector {
 	private final SwornGuard plugin;
-	private final Map<String, Map<String, Long>> recentMessages;
-	private final int spamThreshold;
-	private final int messageDecayTime;
-	private final int comparisonLevel;
+	private final String player;
 	
-	public SpamDetector(final SwornGuard plugin) {
-		this.plugin = plugin;
-		this.recentMessages = new ConcurrentHashMap<String, Map<String, Long>>(100, 0.75f, 4);
-		this.messageDecayTime = plugin.getConfig().getInt("spamDetectorMessageDecayTime");
-		this.spamThreshold = plugin.getConfig().getInt("spamDetectorThresholdPerSecond");
-		this.comparisonLevel = plugin.getConfig().getInt("spamDetectorComparisonLevel");
+	private final Map<String, Long> messages;
+	private final Map<String, Long> commands;
 		
-		// Cleanup map every 5 mins
-		new BukkitRunnable() {
-			
-			public void run() {
-				for (String playerName : Collections.unmodifiableMap(recentMessages).keySet()) {
-					if (!Util.matchOfflinePlayer(playerName).isOnline())
-						recentMessages.remove(playerName);
-				}
-			}
-			
-		}.runTaskTimer(plugin, 6000L, 6000L);
+	public SpamDetector(final SwornGuard plugin, final Player player) {
+		this.plugin = plugin;
+		this.messages = new HashMap<String, Long>(16, 0.75f);
+		this.commands = new HashMap<String, Long>(16, 0.75f);
+		this.player = player.getName();
+				
+//		// Cleanup map every 5 mins
+//		new BukkitRunnable() {
+//			
+//			public void run() {
+//				for (String playerName : Collections.unmodifiableMap(recentMessages).keySet()) {
+//					if (!Util.matchOfflinePlayer(playerName).isOnline())
+//						recentMessages.remove(playerName);
+//				}
+//			}
+//			
+//		}.runTaskTimer(plugin, 6000L, 6000L);
 	}
 	
-	public boolean checkSpam(final Player player, String message, final ChatType type) {
-		if (!plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_SPAM.permission)) {
-			Map<String, Long> messages = recentMessages.get(player.getName());
-			final long now = System.currentTimeMillis();
+	public Map<String, Long> getMessages(final ChatType type) {
+		if (type == ChatType.COMMAND)
+			return commands;
+		
+		return messages;
+	}
+	
+	public boolean checkSpam(final String message, final ChatType type) {
+		final long now = System.currentTimeMillis();
+		
+		boolean cancelled = false;
+		
+		Map<String, Long> messages = getMessages(type);
+		
+		for (Iterator<Entry<String, Long>> i = messages.entrySet().iterator(); i.hasNext(); ) {
+			Entry<String, Long> entry = i.next();
+			if (now - entry.getValue() > SpamOptions.MESSAGE_DECAY_TIME * 1000L)
+				i.remove();
+		}
+		
+		if (messages.size() >= SpamOptions.SPAM_THRESHOLD * SpamOptions.MESSAGE_DECAY_TIME) {
+			cancelled = true;
 			
-			if (messages == null) {
-				messages = new ConcurrentHashMap<String, Long>(16, 0.75f, 4);
-				messages.put(message, now);
-				recentMessages.put(player.getName(), messages);
-				return false;
-			}
-			
-			boolean cancelled = false;
-			
-			for (Entry<String, Long> entry : Collections.unmodifiableMap(messages).entrySet()) {
-				if (now - entry.getValue() > messageDecayTime * 1000L)
-					messages.remove(entry.getKey());
-			}
-			
-			if (messages.size() >= spamThreshold * messageDecayTime) {
-				cancelled = true;
+			new BukkitRunnable() {
 				
-				new DatableRunnable(player) {
+				public void run() {
+					OfflinePlayer p = Util.matchOfflinePlayer(player);
+					PlayerData data = plugin.getPlayerDataCache().getData(p);
 					
-					public void run() {
-						if (System.currentTimeMillis() - plugin.getPlayerDataCache().getData(player.getName()).getLastSpamWarn() > 2000L) {
-							plugin.getPlayerDataCache().getData(player).setLastSpamWarn(System.currentTimeMillis());
-							CheatEvent event = new CheatEvent(player.getName(), CheatType.SPAM, FormatUtil.format("[SPAMMER] {0} is trying to spam {1}!", player.getName(), type.toString()));
-							plugin.getCheatHandler().announceCheat(event);
-						}
+					if (data == null)
+						return;
+					
+					if (System.currentTimeMillis() - data.getLastSpamWarn() > 2000L) {
+						data.setLastSpamWarn(System.currentTimeMillis());
+						CheatEvent event = new CheatEvent(p.getName(), CheatType.SPAM, FormatUtil.format("[SPAMMER] {0} is trying to spam {1}!", p.getName(), type.toString()));
+						plugin.getCheatHandler().announceCheat(event);
 					}
 					
-				}.runTask(plugin);
-				messages.clear();
-			}
-			
-			if (!cancelled && compareMessages(message, messages.keySet())) {
-				cancelled = true;
-			}
-			
-			messages.put(message, now);
-			return cancelled;
+				}
+				
+			}.runTask(plugin);
+			messages.clear();
 		}
-			
-		return false;
+		
+		if (!cancelled && compareMessages(message, messages.keySet()))
+			cancelled = true;
+		
+		messages.put(message, now);
+		return cancelled;
 	}
 	
 	public boolean compareMessages(String message, Set<String> messages) {
@@ -102,16 +104,16 @@ public class SpamDetector {
 		
 		for (String line : messages) {
 			line = line.toLowerCase();
-			if (comparisonLevel > 0 && message.length() <= 2 && line.length() <= 2)
+			if (SpamOptions.COMPARISON_LEVEL > 0 && message.length() <= 2 && line.length() <= 2)
 				return true;
 			
-			if (comparisonLevel > 1 && message.equals(line))
+			if (SpamOptions.COMPARISON_LEVEL > 1 && message.equals(line))
 				return true;
 			
-			if (comparisonLevel > 2 && line.length() >= 2 && message.startsWith(line.substring(0, 2)))
+			if (SpamOptions.COMPARISON_LEVEL > 2 && line.length() >= 2 && message.startsWith(line.substring(0, 2)))
 				return true;
 			
-			if (comparisonLevel > 3 && message.length() >= 3 && line.length() >= 3) {
+			if (SpamOptions.COMPARISON_LEVEL > 3 && message.length() >= 3 && line.length() >= 3) {
 				if (message.length() >= 6 && line.length() >= 6) {
 					for (int i = 0; i < 3; i++) {
 						if (compareStrings(message, line, i))
@@ -135,6 +137,18 @@ public class SpamDetector {
 	public enum ChatType {
 		CHAT,
 		COMMAND;
+	}
+	
+	public static class SpamOptions {
+		public static int SPAM_THRESHOLD;
+		public static int MESSAGE_DECAY_TIME;
+		public static int COMPARISON_LEVEL;
+		
+		public SpamOptions(final SwornGuard plugin) {
+			MESSAGE_DECAY_TIME = plugin.getConfig().getInt("spamDetectorMessageDecayTime");
+			SPAM_THRESHOLD = plugin.getConfig().getInt("spamDetectorThresholdPerSecond");
+			COMPARISON_LEVEL = plugin.getConfig().getInt("spamDetectorComparisonLevel");
+		}
 	}
 	
 }

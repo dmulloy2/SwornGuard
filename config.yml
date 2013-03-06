@@ -1,6 +1,8 @@
 #convertOldPlayerData: false
 #fixShit: false
 
+debug: false
+
 #Auto moderator settings
 autoModEnabled: true
 autoModAlwaysEnabled: false
@@ -62,3 +64,10 @@ allowedCommandsInJail:
 - "whisper"
 - "r"
 - "reply"
+
+#Troll hell settings
+allowedCommandsInHell:
+- "rules"
+- "help"
+
+chanceTrollSeesChat: 30

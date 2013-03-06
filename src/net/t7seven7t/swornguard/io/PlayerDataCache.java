@@ -8,7 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import org.bukkit.OfflinePlayer;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -22,10 +23,8 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 	private final File folder;
 	private final String extension = ".dat";
 	private final String folderName = "players";
-	private final Object readWriteLock = new Object();
-	private final Object mapLock = new Object();
 	
-	private Map<String, PlayerData> data;
+	private ConcurrentMap<String, PlayerData> data;
 	
 	public PlayerDataCache(SwornGuard plugin) {
 		this.plugin = plugin;
@@ -34,7 +33,7 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		if (!folder.exists())
 			folder.mkdir();
 		
-		this.data = new HashMap<String, PlayerData>();
+		this.data = new ConcurrentHashMap<String, PlayerData>(64, 0.75f, 64);
 	}
 
 	public PlayerData getData(final String key) {
@@ -71,21 +70,11 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 	}
 	
 	private void removeData(final String key) {
-		synchronized(mapLock) {
-			Map<String, PlayerData> copy = new HashMap<String, PlayerData>();
-			copy.putAll(data);
-			copy.remove(key);
-			data = Collections.unmodifiableMap(copy);
-		}
+		data.remove(key);
 	}
 	
-	private void addData(final String key, final PlayerData value) {		
-		synchronized(mapLock) {
-			Map<String, PlayerData> copy = new HashMap<String, PlayerData>();
-			copy.putAll(data);
-			copy.put(key, value);
-			data = Collections.unmodifiableMap(copy);
-		}
+	private void addData(final String key, final PlayerData value) {
+		data.put(key, value);
 	}
 	
 	public PlayerData newData(final String key) {
@@ -105,22 +94,25 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 	}
 	
 	private PlayerData loadData(final String key) {
-		synchronized(readWriteLock) {
+		File file = new File(folder, getFileName(key));
+		
+		synchronized(file) {
 			return FileSerialization.load(new File(folder, getFileName(key)), PlayerData.class);
 		}
 	}
 	
 	public void save() {
-		synchronized(readWriteLock) {
-			plugin.getLogHandler().log("Saving {0} to disk...", folderName);
-			long start = System.currentTimeMillis();
-			for (Entry<String, PlayerData> entry : getAllLoadedPlayerData().entrySet())
-				synchronized(entry.getValue()) {
-					FileSerialization.save(entry.getValue(), new File(folder, getFileName(entry.getKey())));
-				}
-			cleanupData();
-			plugin.getLogHandler().log("{0} saved! [{1}ms]", folderName, System.currentTimeMillis() - start);
+		plugin.getLogHandler().log("Saving {0} to disk...", folderName);
+		long start = System.currentTimeMillis();
+		for (Entry<String, PlayerData> entry : getAllLoadedPlayerData().entrySet()) {
+			File file = new File(folder, getFileName(entry.getKey()));
+			
+			synchronized(file) {
+				FileSerialization.save(entry.getValue(), new File(folder, getFileName(entry.getKey())));
+			}
 		}
+		cleanupData();
+		plugin.getLogHandler().log("{0} saved! [{1}ms]", folderName, System.currentTimeMillis() - start);
 	}
 	
 	private boolean isFileAlreadyLoaded(final String fileName, final Map<String, PlayerData> map) {

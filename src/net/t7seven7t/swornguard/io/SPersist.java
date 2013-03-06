@@ -21,7 +21,7 @@ public class SPersist {
 					f.setAccessible(true);
 					try {
 						f.set(instance, fc.get(f.getName()));
-					} catch (IllegalArgumentException | IllegalAccessException e) {
+					} catch (Throwable e) {
 					}
 				}
 			}

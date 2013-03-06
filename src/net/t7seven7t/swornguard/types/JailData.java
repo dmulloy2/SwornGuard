@@ -104,6 +104,7 @@ public class JailData implements ConfigurationSerializable {
 		return !(min.x > v.x || min.y > v.y || min.z > v.z || max.x < v.x || max.y < v.y || max.z < v.z);
 	}
 	
+	@Override
 	public Map<String, Object> serialize() {
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("max", max);

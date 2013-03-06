@@ -28,19 +28,18 @@ public class AutoClickerDetector {
 	
 	public boolean isClickingTooFast(final Player player) {
 		final long now = System.currentTimeMillis();
-		boolean tooFast = false;
 		
 		if (player.getItemInHand() == null 
-				|| autoclickerAllowedWeapons.contains(player.getItemInHand().getTypeId())) {
+				|| !autoclickerAllowedWeapons.contains(player.getItemInHand().getTypeId())) {
 			if (recentClicks.containsKey(player.getName()) 
 					&& (now - recentClicks.get(player.getName()) < autoclickerTimeBetweenAttacks)) {
-				tooFast = true;
+				return true;
 			}
 		}
 		
 		recentClicks.remove(player.getName());
 		recentClicks.put(player.getName(), Long.valueOf(now));
 		
-		return tooFast;
+		return false;
 	}
 }

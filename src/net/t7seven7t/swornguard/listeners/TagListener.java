@@ -12,7 +12,7 @@ import org.kitteh.tag.PlayerReceiveNameTagEvent;
  * @author t7seven7t
  */
 public class TagListener implements Listener {
-
+	
 	@EventHandler
 	public void onNameTag(PlayerReceiveNameTagEvent event) {
 		if (event.getNamedPlayer().getName().equals("t7seven7t")) {

@@ -76,6 +76,16 @@ public class PlayerListener implements Listener {
 		else if (data.isJailed()) 
 			new InmateTimerTask(plugin, event.getPlayer(), data).runTaskTimer(plugin, 20L, 20L);
 		
+		if (data.isTrollHell()) {
+			for (Player p : plugin.getServer().getOnlinePlayers()) {
+				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
+					p.sendMessage(ChatColor.YELLOW + event.getPlayer().getName() + " has just logged on in troll hell");
+				} else {
+					p.hidePlayer(event.getPlayer());
+					event.getPlayer().hidePlayer(p);
+				}
+			}
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -115,6 +125,15 @@ public class PlayerListener implements Listener {
 		
 		if (data.isVanished()) {
 			plugin.getPatrolHandler().vanish(player, false);
+		}
+		
+		if (data.isTrollHell()) {
+			for (Player p : plugin.getServer().getOnlinePlayers()) {
+				if (!plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
+					p.showPlayer(player);
+					player.showPlayer(p);
+				}
+			}
 		}
 	}
 	

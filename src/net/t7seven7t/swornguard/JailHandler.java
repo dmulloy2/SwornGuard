@@ -115,6 +115,11 @@ public class JailHandler {
 	
 	public void checkPlayerInJail(final Player player) {
 		if (!jail.isInside(player.getLocation())) {
+			
+			// Check if player is riding other entities
+			if (player.isInsideVehicle())
+				player.getVehicle().eject();
+			
 			player.teleport(jail.getSpawn());
 			player.sendMessage(FormatUtil.format(plugin.getMessage("jail_escape")));
 		}

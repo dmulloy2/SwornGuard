@@ -19,7 +19,7 @@ public class CmdJailHelp extends SwornGuardCommand {
 	public CmdJailHelp(SwornGuard plugin) {
 		super(plugin);
 		this.name = "jailhelp";
-		this.description = plugin.getMessage("jailhelp");
+		this.description = plugin.getMessage("desc_jailhelp");
 	}
 
 	@Override
@@ -30,8 +30,8 @@ public class CmdJailHelp extends SwornGuardCommand {
 			lines.add(new CmdCheck(plugin).getUsageTemplate(true));
 		if (plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_JAIL.permission))
 			lines.add(new CmdJail(plugin).getUsageTemplate(true));
-//		if (plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_JAIL_MUTE.permission))
-//			lines.add(new CmdMute(plugin).getUsageTemplate(true));
+		if (plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_JAIL_MUTE.permission))
+			lines.add(new CmdMute(plugin).getUsageTemplate(true));
 		if (plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_JAIL_REASON.permission))
 			lines.add(new CmdReason(plugin).getUsageTemplate(true));
 		if (plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_JAIL_SET.permission))

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.t7seven7t.swornguard.detectors.SpamDetector;
+
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -75,8 +77,11 @@ public class PlayerData implements ConfigurationSerializable {
 	private boolean jailed;
 	private boolean jailMuted;
 	private boolean unjailNextLogin;
+	private boolean trollHell;
 	
 	private transient Location previousLocation;
+	
+	private transient SpamDetector spamManager;
 	
 	private String lastJailer;
 	private String lastJailReason;
@@ -115,7 +120,7 @@ public class PlayerData implements ConfigurationSerializable {
 							field.setAccessible(false);
 					}
 				}
-			} catch (IllegalArgumentException | IllegalAccessException ex) {
+			} catch (Throwable ex) {
 			}
 		}
 	}
@@ -173,7 +178,7 @@ public class PlayerData implements ConfigurationSerializable {
 				if (!accessible)
 					field.setAccessible(false);
 				
-			} catch (IllegalArgumentException | IllegalAccessException ex) {
+			} catch (Throwable ex) {
 			}
 		}
 		

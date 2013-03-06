@@ -9,6 +9,7 @@ package net.t7seven7t.swornguard.permissions;
 public enum PermissionType {
 	ALLOW_BLOCKED_COMMANDS("allow.blockedcommands"),
 	ALLOW_USE_COMMANDS_JAILED("allow.usecommandsjailed"),
+	ALLOW_USE_COMMANDS_HELL("allow.usecommandshell"),
 	ALLOW_FLY("canfly"),
 	ALLOW_SPAM("allow.spam"),
 	ALLOW_JAIL_BUILD("allow.jailbuild"),
@@ -35,11 +36,13 @@ public enum PermissionType {
 	CMD_RELOAD("cmd.reload"),
 	CMD_SHOW("cmd.show"),
 	CMD_SERVER_INFO("cmd.serverinfo"),
+	CMD_TROLL("cmd.troll"),
 	CMD_UNJAIL("cmd.unjail"),
 	CMD_UNBAN("cmd.unban"),
 	CMD_VANISH("cmd.vanish"),
 	CMD_VANISH_LIST("cmd.vanishlist"),
 	SHOW_CHEAT_REPORTS("showcheatreports"),
+	TROLL_SPY("trollspy"),
 	VANISH_SPY("vanishspy");
 	
 	public final Permission permission;

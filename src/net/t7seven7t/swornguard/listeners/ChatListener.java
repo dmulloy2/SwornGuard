@@ -5,19 +5,20 @@ package net.t7seven7t.swornguard.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-
 import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.swornguard.detectors.SpamDetector;
 import net.t7seven7t.swornguard.detectors.SpamDetector.ChatType;
 import net.t7seven7t.swornguard.permissions.PermissionType;
-import net.t7seven7t.swornguard.tasks.DatableRunnable;
 import net.t7seven7t.swornguard.tasks.FireworkRunnable;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.util.FormatUtil;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -26,6 +27,7 @@ import org.bukkit.entity.Bat;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -42,56 +44,105 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ChatListener implements Listener {
 	private final SwornGuard plugin;
 	private final List<String> allowedCommandsInJail;
+	private final List<String> allowedCommandsInHell;
 	private final boolean spamDetectorEnabled;
 	private final List<String> blockedCommands;
+	private final int hellSeeChatChance;
 	
 	public ChatListener(final SwornGuard plugin) {
 		this.plugin = plugin;
 		this.allowedCommandsInJail = plugin.getConfig().getStringList("allowedCommandsInJail");
+		this.allowedCommandsInHell = plugin.getConfig().getStringList("allowedCommandsInHell");
 		this.spamDetectorEnabled = plugin.getConfig().getBoolean("spamDetectorEnabled");
 		this.blockedCommands = plugin.getConfig().getStringList("blockedCommands");
+		this.hellSeeChatChance = plugin.getConfig().getInt("chanceTrollSeesChat");
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {
+	public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {		
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+		
+		if (data == null)
+			return;
+		
 		if (spamDetectorEnabled) {
-			if (plugin.getSpamDetector().checkSpam(event.getPlayer(), event.getMessage(), ChatType.CHAT)) {
-				event.setCancelled(true);
-				return;
+			if (!plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_SPAM.permission)) {
+				if (data.getSpamManager() == null)
+					data.setSpamManager(new SpamDetector(plugin, event.getPlayer()));
+				
+				if (data.getSpamManager().checkSpam(event.getMessage(), ChatType.CHAT)) {
+					event.setCancelled(true);
+					return;
+				}
 			}
 		}
 		
-		// TODO: mute? maybe not - seems difficult to implement without a new list
+		if (data.isJailMuted()) {
+			event.setCancelled(true);
+			event.getPlayer().sendMessage(ChatColor.RED + "You have been muted.");
+			return;
+		}
+		
+		if (data.isTrollHell()) {
+			event.getRecipients().clear();
+			event.getRecipients().add(event.getPlayer());
+			
+			String admMsg = FormatUtil.format("&7[&4TROLL&7]&c {0} &4: &f{1}", event.getPlayer().getName(), event.getMessage());
+			
+			for (Player p : plugin.getServer().getOnlinePlayers()) {
+				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission))
+					p.sendMessage(admMsg);
+			}
+		}
+		
+		Random r = new Random();
+		int chance = r.nextInt(100);
+				
+		for (Iterator<Player> i = event.getRecipients().iterator(); i.hasNext(); ) {
+			Player p = i.next();
+			PlayerData d = plugin.getPlayerDataCache().getData(p);
+			
+			if (d == null)
+				continue;
+			
+			if (d.isTrollHell()) {
+				if (chance >= hellSeeChatChance) {
+					i.remove();
+				}
+			}
+		}
+		
 	}
 	
 	// Needs to be at high because factions cancels event for its colour tags :(
 	@EventHandler(priority = EventPriority.HIGH)
 	public void onAsyncPlayerChatMonitor(final AsyncPlayerChatEvent event) {
 		if (!event.isCancelled()) {
-			new DatableRunnable(event.getPlayer()) {
-				
-				public void run() {
-					final PlayerData data = plugin.getPlayerDataCache().getData(player);
-					if (data.getMessages() == 0)
-						data.setMessages(1);
-					else
-						data.setMessages(data.getMessages() + 1);
-					
-					if (data.isJailed())
-						data.setLastActivity(System.currentTimeMillis());
-				}
-				
-			}.runTask(plugin);
+			final PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+			if (data.getMessages() == 0)
+				data.setMessages(1);
+			else
+				data.setMessages(data.getMessages() + 1);
+			
+			if (data.isJailed())
+				data.setLastActivity(System.currentTimeMillis());
 		}
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST) 
 	public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) {
 		if (!event.isCancelled()) {
+			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+			
 			if (spamDetectorEnabled) {
-				if (plugin.getSpamDetector().checkSpam(event.getPlayer(), event.getMessage(), ChatType.CHAT)) {
-					event.setCancelled(true);
-					return;
+				if (!plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_SPAM.permission)) {
+					if (data.getSpamManager() == null)
+						data.setSpamManager(new SpamDetector(plugin, event.getPlayer()));
+					
+					if (data.getSpamManager().checkSpam(event.getMessage(), ChatType.COMMAND)) {
+						event.setCancelled(true);
+						return;
+					}
 				}
 			}
 			
@@ -104,7 +155,15 @@ public class ChatListener implements Listener {
 				}
 			}
 			
-			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+			if (data.isTrollHell() && !plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
+				for (String command : allowedCommandsInHell) {
+					if (event.getMessage().matches("/" + command.toLowerCase() + ".*"))
+						return;
+				}
+				
+				event.setCancelled(true);
+			}
+			
 			if (data.isJailed() && 
 				!plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_JAILED.permission) && 
 				!event.getMessage().equalsIgnoreCase("/jailstatus")) {
@@ -116,6 +175,8 @@ public class ChatListener implements Listener {
 					event.setCancelled(true);
 					event.getPlayer().sendMessage(FormatUtil.format(plugin.getMessage("jail_cannot_use_command")));
 			}
+			
+
 		}
 	}
 	

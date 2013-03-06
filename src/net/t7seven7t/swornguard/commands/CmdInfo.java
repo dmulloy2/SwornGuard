@@ -149,7 +149,5 @@ public class CmdInfo extends SwornGuardCommand {
 		for (String string : lines)
 			sendMessage(string);
 	}
-
-	
 	
 }

@@ -16,7 +16,7 @@ import org.bukkit.util.Vector;
  *
  */
 
-@SerializableAs("SimpleVector")
+@SerializableAs("net.t7seven7t.SimpleVector")
 public class SimpleVector implements ConfigurationSerializable {
 
 	public int x, y, z;

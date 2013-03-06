@@ -61,8 +61,9 @@ public class SwornGuard extends JavaPlugin {
 	private @Getter CommandDetector commandDetector;
 	private @Getter FactionBetrayalDetector factionBetrayaldetector;
 	private @Getter FlyDetector flyDetector;
-	private @Getter SpamDetector spamDetector;
 	private @Getter XrayDetector xrayDetector;
+	
+	private @Getter boolean debug;
 	
 	private List<Listener> listeners;
 
@@ -95,7 +96,7 @@ public class SwornGuard extends JavaPlugin {
 //		}
 		
 		playerDataCache = new PlayerDataCache(this);
-		getServer().getServicesManager().register(PlayerDataServiceProvider.class, playerDataCache, this, ServicePriority.Normal);
+		getServer().getServicesManager().register(PlayerDataServiceProvider.class, playerDataCache, this, ServicePriority.Normal);		
 		serverData = new ServerData(this);
 		
 		cheatHandler = new CheatHandler(this);
@@ -114,7 +115,7 @@ public class SwornGuard extends JavaPlugin {
 		if (getConfig().getBoolean("flyDetectorEnabled"))
 			flyDetector = new FlyDetector(this);
 		if (getConfig().getBoolean("spamDetectorEnabled"))
-			spamDetector = new SpamDetector(this);
+			new SpamDetector.SpamOptions(this);
 		if (getConfig().getBoolean("xrayDetectorEnabled"))
 			xrayDetector = new XrayDetector(this);
 		
@@ -134,6 +135,8 @@ public class SwornGuard extends JavaPlugin {
 			}
 			
 		}, 12000L, 12000L);
+		
+		debug = getConfig().getBoolean("debug");
 		
 		commandHandler.setCommandPrefix("sg");
 		commandHandler.registerPrefixedCommand(new CmdBanInfo(this));
@@ -156,12 +159,14 @@ public class SwornGuard extends JavaPlugin {
 		commandHandler.registerCommand(new CmdCheck(this));
 		commandHandler.registerCommand(new CmdJail(this));
 		commandHandler.registerCommand(new CmdJailHelp(this));
-//		commandHandler.registerCommand(new CmdMute(this));
+		commandHandler.registerCommand(new CmdMute(this));
 		commandHandler.registerCommand(new CmdReason(this));
 		commandHandler.registerCommand(new CmdSet(this));
 		commandHandler.registerCommand(new CmdStatus(this));
 		commandHandler.registerCommand(new CmdTime(this));
 		commandHandler.registerCommand(new CmdUnjail(this));
+		
+		commandHandler.registerCommand(new CmdTrollHell(this));
 		
 		logHandler.log("Enabled Version {1}", getDescription().getName(), getDescription().getVersion());
 	}

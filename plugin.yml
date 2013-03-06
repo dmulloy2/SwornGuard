@@ -71,6 +71,9 @@ commands:
         description: Shows jail help.
         permission: swornguard.cmd.jailhelp
         usage: /<command>
+    troll:
+        usage: /<command> <player>
+        aliases: [hell, trollhell]
 permissions:
     swornguard.admin:
         description: Gives access to all SwornGuard features.
@@ -86,6 +89,8 @@ permissions:
             swornguard.cmd.reload: true
             swornguard.cmd.jailset: true
             swornguard.cmd.unban: true
+            swornguard.cmd.troll: true
+            swornguard.allow.usecommandshell: true
     swornguard.moderator:
         description: Gives access to features intended for moderators.
         children:
@@ -114,6 +119,7 @@ permissions:
             swornguard.cmd.unjail: true
             swornguard.cmd.cheatteleport: true
             swornguard.showcheatreports: true
+            swornguard.trollspy: true
     swornguard.default:
         description: Permissions for everyone
         children:
@@ -189,3 +195,9 @@ permissions:
         default: true
     swornguard.cmd.info:
         default: true
+    swornguard.cmd.troll:
+        default: false
+    swornguard.allow.usecommandshell:
+        default: false
+    swornguard.trollspy:
+        default: false
