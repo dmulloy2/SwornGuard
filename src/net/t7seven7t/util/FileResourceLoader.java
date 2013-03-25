@@ -1,7 +1,7 @@
 /**
  * Copyright (C) 2012 t7seven7t
  */
-package net.t7seven7t.swornguard.io;
+package net.t7seven7t.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import net.t7seven7t.swornguard.SwornGuard;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * @author t7seven7t
@@ -19,7 +19,7 @@ public class FileResourceLoader extends ClassLoader {
 
 	private final transient File dataFolder;
 	
-	public FileResourceLoader(final ClassLoader classLoader, final SwornGuard plugin) {
+	public FileResourceLoader(final ClassLoader classLoader, final JavaPlugin plugin) {
 		super(classLoader);
 		this.dataFolder = plugin.getDataFolder();
 	}

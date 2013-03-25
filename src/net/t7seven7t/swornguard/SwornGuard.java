@@ -28,7 +28,7 @@ import net.t7seven7t.swornguard.detectors.SpamDetector;
 import net.t7seven7t.swornguard.detectors.XrayDetector;
 import net.t7seven7t.swornguard.io.PlayerDataCache;
 import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
-import net.t7seven7t.swornguard.io.ResourceHandler;
+import net.t7seven7t.util.ResourceHandler;
 import net.t7seven7t.swornguard.listeners.BlockListener;
 import net.t7seven7t.swornguard.listeners.ChatListener;
 import net.t7seven7t.swornguard.listeners.EntityListener;

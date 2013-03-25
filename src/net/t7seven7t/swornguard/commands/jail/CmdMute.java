@@ -33,10 +33,10 @@ public class CmdMute extends SwornGuardCommand {
 		if (data.isJailed()) {
 			if (data.isJailMuted()) {
 				data.setJailMuted(false);
-				sendMessage(plugin.getMessage("jail_muted"), target.getName(), "now");
+				sendMessage(plugin.getMessage("jail_muted"), target.getName(), "no longer");
 			} else {
 				data.setJailMuted(true);
-				sendMessage(plugin.getMessage("jail_muted"), target.getName(), "no longer");
+				sendMessage(plugin.getMessage("jail_muted"), target.getName(), "now");
 			}
 		} else {
 			sendMessage(plugin.getMessage("jail_not_jailed"),
