@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -157,7 +158,7 @@ public class PatrolHandler {
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				if (!plugin.getPermissionHandler().hasPermission(p, PermissionType.VANISH_SPY.permission)) {
 					p.hidePlayer(player);
-					p.sendMessage(ChatColor.YELLOW + player.getName() + " left the game.");
+					p.sendMessage(FormatUtil.format("&b[&8Quit&b] {0} has left the game!", player.getName()));
 				} else {
 					p.sendMessage(ChatColor.DARK_GRAY + player.getName() + " is now vanished. Shhh...");
 				}
@@ -172,7 +173,7 @@ public class PatrolHandler {
 				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.VANISH_SPY.permission))
 					p.sendMessage(ChatColor.DARK_GRAY + player.getName() + " is no longer vanished.");
 				else
-					p.sendMessage(ChatColor.YELLOW + player.getName() + " joined the game.");
+					p.sendMessage(FormatUtil.format("&b[&8Join&b] {0} has joined the game!", player.getName()));
 			}
 			
 			plugin.getLogHandler().log(player.getName() + " is no longer vanished.");

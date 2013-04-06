@@ -1,10 +1,9 @@
 name: SwornGuard
 main: net.t7seven7t.swornguard.SwornGuard
-version: 2.0.1
-author: t7seven7t
-softdepend: [SwornNations, SwornJail, Factions, TagAPI]
-description: >
-             Comprehensive anti cheat plugin based around catching cheaters rather than preventing their actions.
+version: 2.1
+authors: [t7seven7t, dmulloy2]
+softdepend: [SwornNations, SwornJail, Factions]
+description: Comprehensive anti cheat plugin based around catching cheaters rather than preventing their actions.
 commands:
     sg:
         description: Root command.
@@ -59,10 +58,6 @@ commands:
                 Usage:
                 /<command>
                 /<command> cancel
-    jailmute:
-        description: Mute inmates.
-        permission: swornguard.cmd.jailmute
-        usage: /<command> <player>
     jailstatus:
         description: Check your jail status.
         permission: swornguard.cmd.jailstatus
@@ -75,6 +70,9 @@ commands:
         description: Shows jail help.
         permission: swornguard.cmd.jailhelp
         usage: /<command>
+    jailmute:
+        description: Mute a jailed player.
+        permission: swornguard.cmd.jailmute
     troll:
         usage: /<command> <player>
         aliases: [hell, trollhell]
@@ -114,7 +112,6 @@ permissions:
             swornguard.cmd.jailcheck: true
             swornguard.cmd.jailreason: true
             swornguard.cmd.jailtime: true
-            swornguard.cmd.jailmute: true
             swornguard.cmd.show: true
             swornguard.cmd.note: true
             swornguard.cmd.ratio: true
@@ -125,6 +122,7 @@ permissions:
             swornguard.cmd.cheatteleport: true
             swornguard.showcheatreports: true
             swornguard.trollspy: true
+            swornguard.cmd.jailmute: true
     swornguard.default:
         description: Permissions for everyone
         children:
@@ -174,8 +172,6 @@ permissions:
         default: false
     swornguard.cmd.jailtime:
         default: false
-    swornguard.cmd.jailmute:
-        default: false
     swornguard.cmd.show:
         default: false
     swornguard.cmd.note:
@@ -202,6 +198,8 @@ permissions:
         default: true
     swornguard.cmd.info:
         default: true
+    swornguard.cmd.jailmute:
+        default: false
     swornguard.cmd.troll:
         default: false
     swornguard.allow.usecommandshell:

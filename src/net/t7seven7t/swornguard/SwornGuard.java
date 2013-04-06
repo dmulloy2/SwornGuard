@@ -34,7 +34,6 @@ import net.t7seven7t.swornguard.listeners.ChatListener;
 import net.t7seven7t.swornguard.listeners.EntityListener;
 import net.t7seven7t.swornguard.listeners.PlayerListener;
 import net.t7seven7t.swornguard.listeners.ServerListener;
-import net.t7seven7t.swornguard.listeners.TagListener;
 import net.t7seven7t.swornguard.permissions.PermissionHandler;
 import net.t7seven7t.swornguard.types.ServerData;
 import net.t7seven7t.util.LogHandler;
@@ -78,6 +77,8 @@ public class SwornGuard extends JavaPlugin {
 		
 		if (!getDataFolder().exists())
 			getDataFolder().mkdir();
+		
+		saveResource("messages.properties", true);
 		
 		saveDefaultConfig();
 		reloadConfig();
@@ -124,9 +125,6 @@ public class SwornGuard extends JavaPlugin {
 		registerListener(new EntityListener(this));
 		registerListener(new PlayerListener(this));
 		registerListener(new ServerListener(this));
-		
-		if (getServer().getPluginManager().isPluginEnabled("TagAPI"))
-			registerListener(new TagListener());
 		
 		getServer().getScheduler().runTaskTimerAsynchronously(this, new BukkitRunnable() {
 			

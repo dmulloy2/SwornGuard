@@ -62,6 +62,9 @@ public class JailHandler {
 		} else {
 			data.setUnjailNextLogin(true);
 		}
+		
+		if (data.isJailMuted())
+			data.setJailMuted(false);
 	}
 	
 	public void release(final Player player) {
@@ -69,6 +72,8 @@ public class JailHandler {
 		data.setUnjailNextLogin(false);
 		player.teleport(jail.getExit());
 		player.sendMessage(FormatUtil.format(plugin.getMessage("jail_unjail")));
+		if (data.isJailMuted())
+			data.setJailMuted(false);
 	}
 	
 	public void jail(final OfflinePlayer offlinePlayer, final long time, final String reason, final String jailer) {
@@ -127,6 +132,5 @@ public class JailHandler {
 	
 	public JailData getJail() {
 		return jail;
-	}
-	
+	}	
 }
