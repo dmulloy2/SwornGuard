@@ -158,7 +158,7 @@ public class PatrolHandler {
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				if (!plugin.getPermissionHandler().hasPermission(p, PermissionType.VANISH_SPY.permission)) {
 					p.hidePlayer(player);
-					p.sendMessage(FormatUtil.format("&b[&8Quit&b] {0} has left the game!", player.getName()));
+					p.sendMessage(FormatUtil.format("&e{0} has left the game.", player.getName()));
 				} else {
 					p.sendMessage(ChatColor.DARK_GRAY + player.getName() + " is now vanished. Shhh...");
 				}
@@ -173,7 +173,7 @@ public class PatrolHandler {
 				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.VANISH_SPY.permission))
 					p.sendMessage(ChatColor.DARK_GRAY + player.getName() + " is no longer vanished.");
 				else
-					p.sendMessage(FormatUtil.format("&b[&8Join&b] {0} has joined the game!", player.getName()));
+					p.sendMessage(FormatUtil.format("&e{0} has joined the game.", player.getName()));
 			}
 			
 			plugin.getLogHandler().log(player.getName() + " is no longer vanished.");

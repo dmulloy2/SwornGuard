@@ -89,7 +89,8 @@ public class ChatListener implements Listener {
 			
 			String admMsg = FormatUtil.format("&7[&4TROLL&7]&c {0} &4: &f{1}", event.getPlayer().getName(), event.getMessage());
 			
-			event.getPlayer().getServer().broadcast(admMsg, "swornguard.trollspy");
+			String node = plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission);
+			plugin.getServer().broadcast(admMsg, node);
 		}
 		
 		Random r = new Random();

@@ -71,3 +71,9 @@ allowedCommandsInHell:
 - "help"
 
 chanceTrollSeesChat: 30
+
+# AutoSave Task
+autosave:
+  enabled: true
+  interval: 15
+  # Delay in minutes between saves

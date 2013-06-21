@@ -31,7 +31,7 @@ public class PermissionHandler {
 		return true;
 	}
 	
-	private String getPermissionString(Permission permission) {
+	public String getPermissionString(Permission permission) {
 		return plugin.getName().toLowerCase() + "." + permission.getNode().toLowerCase();
 	}
 

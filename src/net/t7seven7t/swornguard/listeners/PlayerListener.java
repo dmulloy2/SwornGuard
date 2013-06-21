@@ -4,9 +4,9 @@
 package net.t7seven7t.swornguard.listeners;
 
 import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.swornguard.events.JailEvent;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.tasks.InmateTimerTask;
-import net.t7seven7t.swornguard.types.FactionKick;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 import org.bukkit.ChatColor;
@@ -23,21 +23,17 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.massivecraft.factions.event.FPlayerJoinEvent;
-import com.massivecraft.factions.event.FPlayerLeaveEvent;
-
 /**
  * @author t7seven7t
  */
 public class PlayerListener implements Listener {
 	private final SwornGuard plugin;
-	private final boolean factionBetrayalDetectorEnabled;
+	
 	private final boolean combatLogDetectorEnabled;
 	
 	public PlayerListener(final SwornGuard plugin) {
 		this.plugin = plugin;
 		this.combatLogDetectorEnabled = plugin.getConfig().getBoolean("combatLogDetectorEnabled");
-		this.factionBetrayalDetectorEnabled = plugin.getConfig().getBoolean("factionBetrayalDetectorEnabled");
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -181,30 +177,26 @@ public class PlayerListener implements Listener {
 			event.getPlayer().setFlying(true);
 		}
 	}
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerJoinFaction(FPlayerJoinEvent event) {
-		if (!event.isCancelled() && factionBetrayalDetectorEnabled) {
-			PlayerData data = plugin.getPlayerDataCache().getData(event.getFPlayer().getPlayer());
-			data.setFactions(data.getFactions() + 1);
-			data.setLastFaction(event.getFaction().getTag());
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerLeaveFaction(FPlayerLeaveEvent event) {
-		if (!event.isCancelled() && factionBetrayalDetectorEnabled) {
-			if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED) {
-				plugin.getFactionBetrayaldetector().addPossibleBetrayedPlayer(event.getFPlayer().getName(), 
-						new FactionKick(event.getFaction().getTag(), System.currentTimeMillis()));
-			}
-		}
-	}
-	
+		
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerMove(PlayerMoveEvent event) {
 		if (plugin.getPlayerDataCache().getData(event.getPlayer()).isJailed())
 			plugin.getPlayerDataCache().getData(event.getPlayer()).setLastActivity(System.currentTimeMillis());
 	}
 	
+	//dmulloy2 new method
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerJail(JailEvent event) {
+		if (event.getPlayer().isOnline()) {
+			Player p = (Player)event.getPlayer();
+
+			//Check to see if they are in a vehicle
+			if (p.getVehicle() != null)
+				p.leaveVehicle();
+
+			//Check to see if anyone is riding them
+			if (p.getPassenger() != null)
+				p.eject();
+		}
+	}
 }

@@ -126,6 +126,22 @@ public class CmdInfo extends SwornGuardCommand {
 			lines.add(line.toString());
 		}
 		
+		if (data.getBans() != 0) {
+			line = new StringBuilder();
+			line.append("  " + FormatUtil.format(plugin.getMessage("info_bans"), 
+						data.getBans(), 
+						TimeUtil.formatTimeDifference(data.getLastBan(), System.currentTimeMillis()), 
+						data.getLastBanner()));
+			lines.add(line.toString());
+			
+			line = new StringBuilder();
+			String banreason = data.getLastBanReason();
+			if (banreason == null)
+				banreason = "The Banhammer has spoken!";
+			line.append("  " + FormatUtil.format(plugin.getMessage("info_ban_reason"), banreason));
+			lines.add(line.toString());
+		}
+		
 		if (data.getJails() != 0) {
 			line = new StringBuilder();
 			line.append("  " + FormatUtil.format(plugin.getMessage("info_jails"), 

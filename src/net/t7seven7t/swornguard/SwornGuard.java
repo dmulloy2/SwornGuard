@@ -42,7 +42,8 @@ import net.t7seven7t.util.SimpleVector;
 /**
  * @author t7seven7t
  */
-public class SwornGuard extends JavaPlugin {
+public class SwornGuard extends JavaPlugin
+{
 	private @Getter LogHandler logHandler;
 	private @Getter CommandHandler commandHandler;
 	private @Getter PermissionHandler permissionHandler;
@@ -67,7 +68,10 @@ public class SwornGuard extends JavaPlugin {
 	private List<Listener> listeners;
 
 	@Override
-	public void onEnable() {
+	public void onEnable()
+	{
+		long start = System.currentTimeMillis();
+		
 		ConfigurationSerialization.registerClass(SimpleVector.class);
 		logHandler = new LogHandler(this);
 		commandHandler = new CommandHandler(this);
@@ -82,19 +86,6 @@ public class SwornGuard extends JavaPlugin {
 		
 		saveDefaultConfig();
 		reloadConfig();
-		
-		// Old code used for converting old sworn guard data over
-//		if (getConfig().getBoolean("convertOldPlayerData")) {
-//			PlayerDataConverter.run(this);
-//			getConfig().set("convertOldPlayerData", false);
-//			saveConfig();
-//		}
-		
-//		if (getConfig().getBoolean("fixShit")) {
-//			PlayerDataConverter.fixShit(this);
-//			getConfig().set("fixShit", false);
-//			saveConfig();
-//		}
 		
 		playerDataCache = new PlayerDataCache(this);
 		getServer().getServicesManager().register(PlayerDataServiceProvider.class, playerDataCache, this, ServicePriority.Normal);		
@@ -126,13 +117,20 @@ public class SwornGuard extends JavaPlugin {
 		registerListener(new PlayerListener(this));
 		registerListener(new ServerListener(this));
 		
-		getServer().getScheduler().runTaskTimerAsynchronously(this, new BukkitRunnable() {
-			
-			public void run() {
+		// dmulloy2 new method(s)
+		class AutoSaveThread extends BukkitRunnable
+		{
+			public void run()
+			{
 				playerDataCache.save();
 			}
-			
-		}, 12000L, 12000L);
+		}
+		
+		if (getConfig().getBoolean("autosave.enabled"))
+		{
+			int interval = 20 * 60 * getConfig().getInt("autosave.interval");
+			new AutoSaveThread().runTaskTimer(this, interval, interval);
+		}
 		
 		debug = getConfig().getBoolean("debug");
 		
@@ -146,6 +144,7 @@ public class SwornGuard extends JavaPlugin {
 		commandHandler.registerPrefixedCommand(new CmdRatio(this));
 		commandHandler.registerPrefixedCommand(new CmdReload(this));
 		commandHandler.registerPrefixedCommand(new CmdShow(this));
+		commandHandler.registerPrefixedCommand(new CmdFHistory(this));
 		commandHandler.registerPrefixedCommand(new CmdSInfo(this));
 		
 		commandHandler.registerCommand(new CmdAutoPatrol(this));
@@ -166,31 +165,42 @@ public class SwornGuard extends JavaPlugin {
 		
 		commandHandler.registerCommand(new CmdTrollHell(this));
 		
-		logHandler.log("Enabled Version {1}", getDescription().getName(), getDescription().getVersion());
+		long finish = System.currentTimeMillis();
+		
+		logHandler.log("{0} has been enabled ({1}ms)", getDescription().getFullName(), finish-start);
 	}
 
 	@Override
-	public void onDisable() {		
+	public void onDisable()
+	{		
+		long start = System.currentTimeMillis();
+		
 		playerDataCache.save();
 		jailHandler.saveJail();
 		
 		getServer().getScheduler().cancelTasks(this);
 		
-		logHandler.log("Disabled Version {1}", getDescription().getName(), getDescription().getVersion());
+		long finish = System.currentTimeMillis();
+		
+		logHandler.log("{0} has been disabled ({1}ms)", getDescription().getFullName(), finish-start);
 	}
 	
-	public void registerListener(Listener listener) {
+	public void registerListener(Listener listener) 
+	{
 		listeners.add(listener);
 		getServer().getPluginManager().registerEvents(listener, this);
 	}
 	
-	public String getMessage(String string) {
-		try {
+	public String getMessage(String string)
+	{
+		try 
+		{
 			return resourceHandler.getMessages().getString(string);
-		} catch (MissingResourceException ex) {
+		}
+		catch (MissingResourceException ex)
+		{
 			logHandler.log(Level.WARNING, "Messages locale is missing key for: {0}", string);
 			return null;
 		}
 	}
-
 }

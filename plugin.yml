@@ -74,6 +74,7 @@ commands:
         description: Mute a jailed player.
         permission: swornguard.cmd.jailmute
     troll:
+        description: Trololololololol
         usage: /<command> <player>
         aliases: [hell, trollhell]
 permissions:
