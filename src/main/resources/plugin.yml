@@ -1,8 +1,8 @@
 name: SwornGuard
 main: net.t7seven7t.swornguard.SwornGuard
-version: 2.1
+version: "${project.version}"
 authors: [t7seven7t, dmulloy2]
-softdepend: [SwornNations, SwornJail, Factions]
+softdepend: [SwornNations, Factions]
 description: Comprehensive anti cheat plugin based around catching cheaters rather than preventing their actions.
 commands:
     sg:

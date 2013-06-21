@@ -5,6 +5,13 @@
   <version>2.1</version>
   <name>SwornGuard</name>
   
+  <repositories>
+    <repository>
+      <id>bukkit-repo</id>
+      <url>http://repo.bukkit.org/content/groups/public</url>
+    </repository>
+  </repositories>
+  
   <build>
     <plugins> 
       <plugin>
@@ -48,4 +55,26 @@
       </resource>
     </resources>
   </build>
+  
+  
+  <dependencies>
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>bukkit</artifactId>
+      <version>1.5.2-R0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+ 	  <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>0.11.6</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.massivecraft</groupId>
+      <artifactId>factions</artifactId>
+      <version>1.6.9.5</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/Factions.jar</systemPath>
+    </dependency>
+  </dependencies>
 </project>
