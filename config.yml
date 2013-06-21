@@ -77,3 +77,7 @@ autosave:
   enabled: true
   interval: 15
   # Delay in minutes between saves
+  
+joinMessage: "&e{0} has joined the game."
+
+quitMessage: "&e{0} has left the game."
