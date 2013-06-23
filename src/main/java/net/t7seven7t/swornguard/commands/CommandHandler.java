@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.util.FormatUtil;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -74,14 +76,17 @@ public class CommandHandler implements CommandExecutor {
 				argsList.add(args[i]);
 			
 			for (SwornGuardCommand command : registeredPrefixedCommands) {
-				if (commandName.equalsIgnoreCase(command.getName()) || command.getAliases().contains(commandName.toLowerCase()))
+				if (commandName.equalsIgnoreCase(command.getName()) || command.getAliases().contains(commandName.toLowerCase())) {
 					command.execute(sender, argsList.toArray(new String[0]));
+					return true;
+				}
 			}
+			
+			sender.sendMessage(FormatUtil.format(plugin.getMessage("unknown_command"), args[0]));
 		} else {
 			new CmdHelp(plugin).execute(sender, args);
 		}
 		
 		return true;
 	}
-	
 }

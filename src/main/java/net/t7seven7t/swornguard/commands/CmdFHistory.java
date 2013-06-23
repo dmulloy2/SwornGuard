@@ -46,9 +46,9 @@ public class CmdFHistory extends PaginatedCommand
 		if (data.getFactionLog() != null)
 		{
 			factionHistory = new ArrayList<String>();
-			for (int x = data.getProfilerList().size() - 1; x >= 0; x--)
+			for (int x = data.getFactionLog().size() - 1; x >= 0; x--)
 			{
-				factionHistory.add(data.getProfilerList().get(x));
+				factionHistory.add(data.getFactionLog().get(x));
 			}
 			
 			super.perform();
