@@ -19,21 +19,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 import net.t7seven7t.swornguard.commands.*;
 import net.t7seven7t.swornguard.commands.jail.*;
 import net.t7seven7t.swornguard.commands.patrol.*;
-import net.t7seven7t.swornguard.detectors.AutoClickerDetector;
-import net.t7seven7t.swornguard.detectors.CombatLogDetector;
-import net.t7seven7t.swornguard.detectors.CommandDetector;
-import net.t7seven7t.swornguard.detectors.FactionBetrayalDetector;
-import net.t7seven7t.swornguard.detectors.FlyDetector;
-import net.t7seven7t.swornguard.detectors.SpamDetector;
-import net.t7seven7t.swornguard.detectors.XrayDetector;
+import net.t7seven7t.swornguard.detectors.*;
 import net.t7seven7t.swornguard.io.PlayerDataCache;
 import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
 import net.t7seven7t.util.ResourceHandler;
-import net.t7seven7t.swornguard.listeners.BlockListener;
-import net.t7seven7t.swornguard.listeners.ChatListener;
-import net.t7seven7t.swornguard.listeners.EntityListener;
-import net.t7seven7t.swornguard.listeners.PlayerListener;
-import net.t7seven7t.swornguard.listeners.ServerListener;
+import net.t7seven7t.swornguard.listeners.*;
 import net.t7seven7t.swornguard.permissions.PermissionHandler;
 import net.t7seven7t.swornguard.types.ServerData;
 import net.t7seven7t.util.LogHandler;
@@ -116,6 +106,7 @@ public class SwornGuard extends JavaPlugin
 		registerListener(new EntityListener(this));
 		registerListener(new PlayerListener(this));
 		registerListener(new ServerListener(this));
+		registerListener(new FactionsListener(this));
 		
 		// dmulloy2 new method(s)
 		class AutoSaveThread extends BukkitRunnable
