@@ -3,7 +3,12 @@ package net.t7seven7t.swornguard.listeners;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.OfflinePlayer;
+import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.swornguard.types.FactionKick;
+import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.util.TimeUtil;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,12 +16,6 @@ import org.bukkit.event.Listener;
 
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.event.FPlayerLeaveEvent;
-
-import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.types.FactionKick;
-import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.util.FormatUtil;
-import net.t7seven7t.util.TimeUtil;
 
 /**
  * @author dmulloy2
@@ -53,7 +52,7 @@ public class FactionsListener implements Listener
 		}
 		
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format("&e[{0}] &3{1} {2} &3{3}",
+		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}",
 				TimeUtil.getLongDateCurr(), 
 				player.getName(), 
 				action,
@@ -95,15 +94,14 @@ public class FactionsListener implements Listener
 			action += " (inactivity)";
 		}
 		
-		OfflinePlayer player = event.getFPlayer().getPlayer();
-		PlayerData data = plugin.getPlayerDataCache().getData(player);
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getFPlayer().getName());
 		
 		List<String> lines = new ArrayList<String>();
 		
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format("&e[{0}] &3{1} {2} &e{3}",
+		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}",
 				TimeUtil.getLongDateCurr(),
-				player.getName(),
+				event.getFPlayer().getName(),
 				action,
 				event.getFaction().getTag()));
 		lines.add(line.toString());
