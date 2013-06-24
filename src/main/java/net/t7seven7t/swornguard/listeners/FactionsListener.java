@@ -3,6 +3,7 @@ package net.t7seven7t.swornguard.listeners;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -94,7 +95,7 @@ public class FactionsListener implements Listener
 			action += " (inactivity)";
 		}
 		
-		Player player = event.getFPlayer().getPlayer();
+		OfflinePlayer player = event.getFPlayer().getPlayer();
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		
 		List<String> lines = new ArrayList<String>();
