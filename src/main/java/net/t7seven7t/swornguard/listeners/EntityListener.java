@@ -53,7 +53,7 @@ public class EntityListener implements Listener {
 				
 				if (event.getEntity() instanceof Player) {					
 					if (factionBetrayalDetectorEnabled) {
-						plugin.getFactionBetrayaldetector().check((Player) event.getEntity(), event.getDamage(), (Player) event.getDamager());
+						plugin.getFactionBetrayaldetector().check((Player) event.getEntity(), (int) event.getDamage(), (Player) event.getDamager());
 					}
 				}
 			}
