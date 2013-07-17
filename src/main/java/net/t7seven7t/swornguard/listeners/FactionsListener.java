@@ -1,8 +1,5 @@
 package net.t7seven7t.swornguard.listeners;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.FactionKick;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -42,9 +39,7 @@ public class FactionsListener implements Listener
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		data.setFactions(data.getFactions() + 1);
 		data.setLastFaction(event.getFaction().getTag());
-		
-		List<String> lines = new ArrayList<String>();
-		
+
 		String action = "joined";
 		if (event.getReason() == FPlayerJoinEvent.PlayerJoinReason.CREATE)
 		{
@@ -57,10 +52,8 @@ public class FactionsListener implements Listener
 				player.getName(), 
 				action,
 				event.getFaction().getTag()));
-		lines.add(line.toString());
 		
-		lines.addAll(data.getFactionLog());
-		data.setFactionLog(lines);
+		data.getFactionLog().add(line.toString());
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -94,19 +87,18 @@ public class FactionsListener implements Listener
 			action += " (inactivity)";
 		}
 		
-		PlayerData data = plugin.getPlayerDataCache().getData(event.getFPlayer().getName());
-		
-		List<String> lines = new ArrayList<String>();
-		
+
 		StringBuilder line = new StringBuilder();
 		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}",
 				TimeUtil.getLongDateCurr(),
 				event.getFPlayer().getName(),
 				action,
 				event.getFaction().getTag()));
-		lines.add(line.toString());
 		
-		lines.addAll(data.getFactionLog());
-		data.setFactionLog(lines);
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getFPlayer().getName());
+		if (data == null)
+			return;
+
+		data.getFactionLog().add(line.toString());
 	}
 }
