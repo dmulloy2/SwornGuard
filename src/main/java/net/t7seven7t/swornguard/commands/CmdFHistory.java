@@ -14,13 +14,11 @@ import org.bukkit.OfflinePlayer;
  * @author dmulloy2
  */
 
-public class CmdFHistory extends PaginatedCommand 
-{
+public class CmdFHistory extends PaginatedCommand {
 	private OfflinePlayer target = null;
 	private List<String> factionHistory = null;
 	
-	public CmdFHistory(SwornGuard plugin) 
-	{
+	public CmdFHistory(SwornGuard plugin) {
 		super(plugin);
 		this.name = "fhistory";
 		this.aliases.add("fh");
@@ -33,8 +31,7 @@ public class CmdFHistory extends PaginatedCommand
 	}
 	
 	@Override
-	public void perform()
-	{
+	public void perform() {
 		if (args.length == 0 && isPlayer())
 			target = player;
 		else if (args.length > 0)
@@ -43,37 +40,31 @@ public class CmdFHistory extends PaginatedCommand
 			return;
 		
 		PlayerData data = plugin.getPlayerDataCache().getData(target);
-		if (data.getFactionLog() != null)
-		{
+		if (data.getFactionLog() != null) {
 			factionHistory = new ArrayList<String>();
-			for (int x = data.getFactionLog().size() - 1; x >= 0; x--)
-			{
+			for (int x = data.getFactionLog().size() - 1; x >= 0; x--) {
 				factionHistory.add(data.getFactionLog().get(x));
 			}
 			
 			super.perform();
-		}
-		else 
-		{
+		} else {
 			err("{0} does not have any faction data!", target.getName());
 		}
 	}
 
 	@Override
-	public int getListSize()
-	{
+	public int getListSize() {
 		return factionHistory.size();
 	}
 
 	@Override
-	public String getHeader(int index) 
-	{
+	public String getHeader(int index) {
 		return FormatUtil.format("Faction History for &a{0} &e(Page {1}/{2}):", target.getName(), index, getPageCount());
 	}
 
 	@Override
-	public String getLine(int index)
-	{
+	public String getLine(int index) {
 		return FormatUtil.format(factionHistory.get(index));
-	}	
+	}
+	
 }

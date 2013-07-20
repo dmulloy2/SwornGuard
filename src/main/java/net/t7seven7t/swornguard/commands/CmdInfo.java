@@ -19,7 +19,6 @@ import net.t7seven7t.util.TimeUtil;
  */
 public class CmdInfo extends SwornGuardCommand {
 
-
 	public CmdInfo(SwornGuard plugin) {
 		super(plugin);
 		this.name = "info";

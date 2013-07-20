@@ -32,8 +32,7 @@ import net.t7seven7t.util.SimpleVector;
 /**
  * @author t7seven7t
  */
-public class SwornGuard extends JavaPlugin
-{
+public class SwornGuard extends JavaPlugin {
 	private @Getter LogHandler logHandler;
 	private @Getter CommandHandler commandHandler;
 	private @Getter PermissionHandler permissionHandler;
@@ -58,8 +57,7 @@ public class SwornGuard extends JavaPlugin
 	private List<Listener> listeners;
 
 	@Override
-	public void onEnable()
-	{
+	public void onEnable() {
 		long start = System.currentTimeMillis();
 		
 		ConfigurationSerialization.registerClass(SimpleVector.class);
@@ -109,17 +107,15 @@ public class SwornGuard extends JavaPlugin
 		registerListener(new FactionsListener(this));
 		
 		// dmulloy2 new method(s)
-		class AutoSaveThread extends BukkitRunnable
-		{
-			public void run()
-			{
+		class AutoSaveThread extends BukkitRunnable {
+			@Override
+			public void run() {
 				playerDataCache.save();
 			}
 		}
 		
-		if (getConfig().getBoolean("autosave.enabled"))
-		{
-			int interval = 20 * 60 * getConfig().getInt("autosave.interval");
+		if (getConfig().getBoolean("autosave.enabled", true)) {
+			int interval = 20 * 60 * getConfig().getInt("autosave.interval", 15);
 			new AutoSaveThread().runTaskTimer(this, interval, interval);
 		}
 		
@@ -162,8 +158,7 @@ public class SwornGuard extends JavaPlugin
 	}
 
 	@Override
-	public void onDisable()
-	{		
+	public void onDisable() {		
 		long start = System.currentTimeMillis();
 		
 		playerDataCache.save();
@@ -176,20 +171,15 @@ public class SwornGuard extends JavaPlugin
 		logHandler.log("{0} has been disabled ({1}ms)", getDescription().getFullName(), finish-start);
 	}
 	
-	public void registerListener(Listener listener) 
-	{
+	public void registerListener(Listener listener) {
 		listeners.add(listener);
 		getServer().getPluginManager().registerEvents(listener, this);
 	}
 	
-	public String getMessage(String string)
-	{
-		try 
-		{
+	public String getMessage(String string) {
+		try {
 			return resourceHandler.getMessages().getString(string);
-		}
-		catch (MissingResourceException ex)
-		{
+		} catch (MissingResourceException ex) {
 			logHandler.log(Level.WARNING, "Messages locale is missing key for: {0}", string);
 			return null;
 		}

@@ -54,6 +54,5 @@ public class CmdHelp extends PaginatedCommand {
 		// Unnecessary since we override getLines();
 		return null;
 	}
-
-
+	
 }
