@@ -48,7 +48,7 @@ public class CmdFHistory extends PaginatedCommand {
 			
 			super.perform();
 		} else {
-			err("{0} does not have any faction data!", target.getName());
+			err(plugin.getMessage("fhistory_no_data"), target.getName());
 		}
 	}
 
@@ -59,7 +59,7 @@ public class CmdFHistory extends PaginatedCommand {
 
 	@Override
 	public String getHeader(int index) {
-		return FormatUtil.format("Faction History for &a{0} &e(Page {1}/{2}):", target.getName(), index, getPageCount());
+		return FormatUtil.format(plugin.getMessage("fhistory_header"), target.getName(), index, getPageCount());
 	}
 
 	@Override

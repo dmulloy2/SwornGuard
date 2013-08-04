@@ -17,21 +17,17 @@ import com.massivecraft.factions.event.FPlayerLeaveEvent;
 /**
  * @author dmulloy2
  */
-
-public class FactionsListener implements Listener
-{
+public class FactionsListener implements Listener {
 	public SwornGuard plugin;
 	private final boolean factionBetrayalDetectorEnabled;
 	
-	public FactionsListener(SwornGuard plugin)
-	{
+	public FactionsListener(SwornGuard plugin) {
 		this.plugin = plugin;
 		this.factionBetrayalDetectorEnabled = plugin.getConfig().getBoolean("factionBetrayalDetectorEnabled");
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerJoinFaction(FPlayerJoinEvent event)
-	{
+	public void onPlayerJoinFaction(FPlayerJoinEvent event) {
 		if (event.isCancelled())
 			return;
 		
@@ -41,8 +37,7 @@ public class FactionsListener implements Listener
 		data.setLastFaction(event.getFaction().getTag());
 
 		String action = "joined";
-		if (event.getReason() == FPlayerJoinEvent.PlayerJoinReason.CREATE)
-		{
+		if (event.getReason() == FPlayerJoinEvent.PlayerJoinReason.CREATE) {
 			action = "created";
 		}
 		
@@ -57,33 +52,27 @@ public class FactionsListener implements Listener
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerLeaveFaction(FPlayerLeaveEvent event) 
-	{
+	public void onPlayerLeaveFaction(FPlayerLeaveEvent event) {
 		if (event.isCancelled())
 			return;
 		
-		if (factionBetrayalDetectorEnabled)
-		{
-			if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED) 
-			{
+		if (factionBetrayalDetectorEnabled) {
+			if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED) {
 				plugin.getFactionBetrayaldetector().addPossibleBetrayedPlayer(event.getFPlayer().getName(), 
 						new FactionKick(event.getFaction().getTag(), System.currentTimeMillis()));
 			}
 		}
 		
 		String action = "left";
-		if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED)
-		{
+		if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED) {
 			action = "was kicked from";
 		}
 		
-		if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.DISBAND)
-		{
+		if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.DISBAND) {
 			action += " (disbanded)";
 		}
 		
-		if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.RESET)
-		{
+		if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.RESET) {
 			action += " (inactivity)";
 		}
 		

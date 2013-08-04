@@ -16,24 +16,18 @@ import net.t7seven7t.util.Util;
 
 /**
  * @author t7seven7t
- * @editor dmulloy2
  */
-
-public class CommandDetector
-{
+public class CommandDetector {
 	private final SwornGuard plugin;
 	
-	public CommandDetector(final SwornGuard plugin) 
-	{
+	public CommandDetector(final SwornGuard plugin) {
 		this.plugin = plugin;
 	}
 	
-	public void checkCommand(CommandSender sender, String command, String[] args)
-	{
+	public void checkCommand(CommandSender sender, String command, String[] args) {
 		command = command.toLowerCase();
 		if (args.length > 0 && (command.equals("ban") || command.equals("eban") || command.equals("tempban") || command.equals("unban") ||
-				command.equals("unban") || command.equals("kick") || command.equals("ekick") || command.equals("pardon") || command.equals("epardon")))
-		{
+				command.equals("unban") || command.equals("kick") || command.equals("ekick") || command.equals("pardon") || command.equals("epardon"))) {
 			OfflinePlayer target = Util.matchOfflinePlayer(args[0]);
 			if (target == null)
 				return;
@@ -49,8 +43,7 @@ public class CommandDetector
 			String action;
 
 			StringBuilder reason = null;
-			if (args.length > 1)
-			{
+			if (args.length > 1) {
 				reason = new StringBuilder();
 				for (int i = 1; i < args.length; i++)
 					reason.append(args[i] + " ");
@@ -58,8 +51,7 @@ public class CommandDetector
 			}
 			
 			if ((command.equals("ban") || command.equals("eban") || command.equals("tempban") || command.equals("etempban")) 
-					&& plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_BAN.permission)) 
-			{
+					&& plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_BAN.permission)) {
 				action = plugin.getMessage("profiler_ban");
 				data.setBans(data.getBans() + 1);
 				data.setLastBan(System.currentTimeMillis());
@@ -67,18 +59,14 @@ public class CommandDetector
 				data.setLastBanReason(reason == null ? "" : reason.toString());
 				if (senderData != null)
 					senderData.setPlayersBanned(senderData.getPlayersBanned() + 1);
-			} 
-			else if ((command.equals("unban") || command.equals("eunban") || command.equals("pardon") || command.equals("epardon"))
-					&& plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_UNBAN.permission)) 
-			{
+			} else if ((command.equals("unban") || command.equals("eunban") || command.equals("pardon") || command.equals("epardon"))
+					&& plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_UNBAN.permission)) {
 				action = plugin.getMessage("profiler_unban");
 				data.setLastUnban(System.currentTimeMillis());
 				data.setLastUnbanner(sender.getName());
 				data.setLastUnbanReason(reason == null ? "" : reason.toString());
-			}
-			else if ((command.equals("kick") || command.equals("ekick"))
-					&& plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_KICK.permission))
-			{
+			} else if ((command.equals("kick") || command.equals("ekick"))
+					&& plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_KICK.permission)) {
 				action = plugin.getMessage("profiler_kick");
 				data.setKicks(data.getKicks() + 1);
 				data.setLastKick(System.currentTimeMillis());
@@ -86,9 +74,7 @@ public class CommandDetector
 				data.setLastKickReason(reason == null ? "" : reason.toString());
 				if (senderData != null)
 					senderData.setPlayersKicked(senderData.getPlayersKicked() + 1);
-			}
-			else 
-			{
+			} else  {
 				return;
 			}
 			
@@ -97,4 +83,5 @@ public class CommandDetector
 							sender.getName(), reason == null ? "" : " for " + reason.toString())));
 		}
 	}
+	
 }

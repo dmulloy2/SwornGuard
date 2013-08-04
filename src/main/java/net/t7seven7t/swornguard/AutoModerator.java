@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.util.TimeUtil;
 
 /**
  * @author t7seven7t
@@ -27,9 +29,6 @@ public class AutoModerator {
 		switch (event.getCheat()) {
 		case FLYING:
 			reason = plugin.getConfig().getString("autoModKickReasonFly");
-			break;
-		case KICK_AND_KILL:
-			// TODO: Jail sum ppls
 			break;
 		case SPAM:
 			reason = plugin.getConfig().getString("autoModKickReasonSpam");
@@ -53,6 +52,9 @@ public class AutoModerator {
 				if (plugin.getPermissionHandler().hasPermission(player1, PermissionType.SHOW_CHEAT_REPORTS.permission))
 					player1.sendMessage(ChatColor.YELLOW + "AutoModBot kicked " + event.getPlayerName() + " for " + reason);
 			}
+			
+			data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(),
+					FormatUtil.format(plugin.getMessage("profiler_automodbot"), player.getName(), reason)));
 		}
 	}
 	

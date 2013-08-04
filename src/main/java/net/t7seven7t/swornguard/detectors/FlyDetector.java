@@ -48,17 +48,19 @@ public class FlyDetector {
 			if (!plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission) 
 					&& !player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity ||
 							(!isInWater(player) && getDistanceToGround(player) >= suspiciousDistFromGround))) {
-				final PlayerData data = plugin.getPlayerDataCache().getData(player);
-				final Vector previousLocation = player.getLocation().toVector();
-				if (!data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
-					data.setLastFlyWarn(System.currentTimeMillis());
-					plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
+				if (! isPlayerFallingIntoVoid(player) && ! player.isInsideVehicle()) {
+					final PlayerData data = plugin.getPlayerDataCache().getData(player);
+					final Vector previousLocation = player.getLocation().toVector();
+					if (!data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
+						data.setLastFlyWarn(System.currentTimeMillis());
+						plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
 						
-						public void run() {
-							checkPlayer(player, previousLocation);
-						}
+							public void run() {
+								checkPlayer(player, previousLocation);
+							}
 						
-					}, 5L);
+						}, 5L);
+					}
 				}
 			}
 		}
@@ -109,5 +111,23 @@ public class FlyDetector {
 		
 		return count;
 	}
-	
+
+	public boolean isPlayerFallingIntoVoid(Player player) {
+		Location loc = player.getLocation();
+		if (loc.getBlockY() < 0) {
+			return true;
+		}
+		
+		for (int y = 0; y < loc.getBlockY(); y++) {
+			Location locTest = loc.clone();
+			locTest.setY(y);
+			
+			if (locTest.getBlock().getType() != Material.AIR) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
 }
