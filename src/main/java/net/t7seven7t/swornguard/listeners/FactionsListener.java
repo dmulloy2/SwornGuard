@@ -33,6 +33,9 @@ public class FactionsListener implements Listener {
 		
 		Player player = event.getFPlayer().getPlayer();
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
+		if (data == null)
+			return;
+		
 		data.setFactions(data.getFactions() + 1);
 		data.setLastFaction(event.getFaction().getTag());
 
