@@ -7,7 +7,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -22,7 +25,7 @@ import net.t7seven7t.util.FormatUtil;
  * @author t7seven7t
  */
 public class FlyDetector {
-	private static final BlockFace[] directions = new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
+	private static final BlockFace[] directions = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
 	private final SwornGuard plugin;
 	private final double suspiciousVelocity;
 	private final int suspiciousDistFromGround;
@@ -34,32 +37,35 @@ public class FlyDetector {
 		this.suspiciousDistFromGround = plugin.getConfig().getInt("flyDetectorSuspiciousDistFromGround");
 		this.suspiciousMoveDist = plugin.getConfig().getInt("flyDetectorSuspiciousMoveDist");
 		
-		plugin.getServer().getScheduler().runTaskTimer(plugin, new BukkitRunnable() {
-			
+		new BukkitRunnable() {
+
+			@Override
 			public void run() {
 				step();
 			}
 			
-		}, 20L, 5L);
+		}.runTaskTimer(plugin, 20L, 5L);
 	}
 	
 	private void step() {
 		for (final Player player : plugin.getServer().getOnlinePlayers()) {
-			if (!plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission) 
-					&& !player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity ||
-							(!isInWater(player) && getDistanceToGround(player) >= suspiciousDistFromGround))) {
-				if (! isPlayerFallingIntoVoid(player) && ! player.isInsideVehicle()) {
+			if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission) 
+					&& ! player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity ||
+							(! isInWater(player) && getDistanceToGround(player) >= suspiciousDistFromGround))) {
+				if (! isPlayerFallingIntoVoid(player) && ! isPlayerInsideCar(player) && ! player.isInsideVehicle()) {
 					final PlayerData data = plugin.getPlayerDataCache().getData(player);
 					final Vector previousLocation = player.getLocation().toVector();
-					if (!data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
+					if (! data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
 						data.setLastFlyWarn(System.currentTimeMillis());
-						plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
 						
+						new BukkitRunnable() {
+
+							@Override
 							public void run() {
 								checkPlayer(player, previousLocation);
 							}
 						
-						}, 5L);
+						}.runTaskLater(plugin, 5L);
 					}
 				}
 			}
@@ -73,7 +79,8 @@ public class FlyDetector {
 				(player.getLocation().getY() >= previousLocation.getY() && 
 					(Math.abs(player.getLocation().getX() - previousLocation.getX()) > suspiciousMoveDist ||
 					Math.abs(player.getLocation().getZ() - previousLocation.getZ()) > suspiciousMoveDist))) {
-			CheatEvent event = new CheatEvent(player.getName(), CheatType.FLYING, FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "flying!"));
+			CheatEvent event = new CheatEvent(player.getName(), CheatType.FLYING, 
+					FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "flying!"));
 			plugin.getCheatHandler().announceCheat(event);
 			data.setLastFlyWarn(System.currentTimeMillis());
 		} else {
@@ -118,16 +125,31 @@ public class FlyDetector {
 			return true;
 		}
 		
-		for (int y = 0; y < loc.getBlockY(); y++) {
-			Location locTest = loc.clone();
-			locTest.setY(y);
-			
-			if (locTest.getBlock().getType() != Material.AIR) {
+		for (int y = loc.getBlockY(); y >= 0; y--) {
+			if (loc.getWorld().getBlockAt(loc.getBlockX(), y, loc.getBlockZ()).getType() != Material.AIR) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
+	public boolean isPlayerInsideCar(Player player) {
+		if (player.isInsideVehicle()) {
+			Entity ent = player.getVehicle();
+			if (ent instanceof Vehicle) {
+				Vehicle veh = (Vehicle)ent;
+				if (veh instanceof Minecart) {
+					Minecart cart = (Minecart)veh;
+					Location loc = cart.getLocation();
+					
+					int id = loc.getBlock().getTypeId();
+					return (id != 27 && id != 66 && id != 28 && id != 157);
+				}
+			}
+		}
+		
+		return false;
+	}
+	
 }

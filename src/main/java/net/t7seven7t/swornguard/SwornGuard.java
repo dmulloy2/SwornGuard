@@ -107,16 +107,18 @@ public class SwornGuard extends JavaPlugin {
 		registerListener(new FactionsListener(this));
 		
 		// dmulloy2 new method(s)
-		class AutoSaveThread extends BukkitRunnable {
+		class AutoSaveTask extends BukkitRunnable {
+			
 			@Override
 			public void run() {
 				playerDataCache.save();
 			}
+			
 		}
 		
 		if (getConfig().getBoolean("autosave.enabled", true)) {
 			int interval = 20 * 60 * getConfig().getInt("autosave.interval", 15);
-			new AutoSaveThread().runTaskTimer(this, interval, interval);
+			new AutoSaveTask().runTaskTimer(this, interval, interval);
 		}
 		
 		debug = getConfig().getBoolean("debug");
