@@ -49,6 +49,7 @@ public class SimpleVector implements ConfigurationSerializable {
 		this(l.toVector());
 	}
 	
+	@Override
 	public String toString() {
 		return (x + "," + y + "," + z);
 	}
@@ -57,6 +58,7 @@ public class SimpleVector implements ConfigurationSerializable {
 		return new Vector(x, y, z);
 	}
 	
+	@Override
 	public boolean equals(Object o) {
 		if (o == null)
 			return false;

@@ -3,6 +3,13 @@
  */
 package net.t7seven7t.swornguard.detectors;
 
+import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.swornguard.events.CheatEvent;
+import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.CheatType;
+import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.util.FormatUtil;
+
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,13 +20,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
-
-import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.events.CheatEvent;
-import net.t7seven7t.swornguard.permissions.PermissionType;
-import net.t7seven7t.swornguard.types.CheatType;
-import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.util.FormatUtil;
 
 /**
  * @author t7seven7t

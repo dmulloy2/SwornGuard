@@ -5,9 +5,9 @@ package net.t7seven7t.swornguard.io;
 
 import java.util.Map;
 
-import org.bukkit.OfflinePlayer;
-
 import net.t7seven7t.swornguard.types.PlayerData;
+
+import org.bukkit.OfflinePlayer;
 
 /**
  * @author t7seven7t

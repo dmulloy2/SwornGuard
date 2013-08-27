@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
-
 import net.t7seven7t.swornguard.SwornGuard;
+
+import org.bukkit.entity.Player;
 
 /**
  * @author t7seven7t

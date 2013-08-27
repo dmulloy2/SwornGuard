@@ -3,13 +3,13 @@
  */
 package net.t7seven7t.swornguard.commands;
 
-import org.bukkit.OfflinePlayer;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.TimeUtil;
+
+import org.bukkit.OfflinePlayer;
 
 /**
  * @author t7seven7t
@@ -27,6 +27,7 @@ public class CmdNote extends SwornGuardCommand {
 		this.usesPrefix = true;
 	}
 	
+	@Override
 	public void perform() {
 		OfflinePlayer target = getTarget(args[0]);
 		if (target == null)
@@ -42,6 +43,7 @@ public class CmdNote extends SwornGuardCommand {
 			line.append(args[x] + " ");
 		
 		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+			@Override
 			public void run() {
 				synchronized(data) {
 					data.getProfilerList().add(line.toString());

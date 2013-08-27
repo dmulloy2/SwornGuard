@@ -3,12 +3,12 @@
  */
 package net.t7seven7t.swornguard.commands.patrol;
 
-import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.swornguard.permissions.PermissionType;
+
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 /**
  * @author t7seven7t
@@ -22,6 +22,7 @@ public class CmdVanishList extends SwornGuardCommand {
 		this.permission = PermissionType.CMD_VANISH_LIST.permission;
 	}
 	
+	@Override
 	public void perform() {
 		StringBuilder ret = new StringBuilder();
 		ret.append(ChatColor.AQUA + "Vanish list: " + ChatColor.YELLOW);

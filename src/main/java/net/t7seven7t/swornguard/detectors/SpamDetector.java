@@ -8,9 +8,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
@@ -18,6 +15,10 @@ import net.t7seven7t.swornguard.types.CheatType;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.Util;
+
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author t7seven7t
@@ -73,6 +74,7 @@ public class SpamDetector {
 			
 			new BukkitRunnable() {
 				
+				@Override
 				public void run() {
 					OfflinePlayer p = Util.matchOfflinePlayer(player);
 					PlayerData data = plugin.getPlayerDataCache().getData(p);
@@ -89,6 +91,7 @@ public class SpamDetector {
 				}
 				
 			}.runTask(plugin);
+			
 			messages.clear();
 		}
 		

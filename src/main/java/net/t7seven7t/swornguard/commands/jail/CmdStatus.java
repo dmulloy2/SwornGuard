@@ -22,6 +22,7 @@ public class CmdStatus extends SwornGuardCommand {
 		this.permission = PermissionType.CMD_JAIL_STATUS.permission;
 	}
 	
+	@Override
 	public void perform() {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		

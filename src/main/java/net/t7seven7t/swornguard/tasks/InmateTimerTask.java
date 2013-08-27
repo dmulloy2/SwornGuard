@@ -24,6 +24,7 @@ public class InmateTimerTask extends BukkitRunnable {
 		this.data = data;
 	}
 	
+	@Override
 	public void run() {
 		if (data.isJailed() && player.isOnline()) {
 			long now = System.currentTimeMillis();

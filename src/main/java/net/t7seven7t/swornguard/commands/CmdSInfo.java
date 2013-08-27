@@ -26,6 +26,7 @@ public class CmdSInfo extends SwornGuardCommand {
 		this.usesPrefix = true;
 	}
 	
+	@Override
 	public void perform() {
 		ServerData data = plugin.getServerData();
 		List<String> lines = new ArrayList<String>();

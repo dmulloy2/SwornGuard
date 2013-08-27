@@ -22,6 +22,7 @@ public abstract class PaginatedCommand extends SwornGuardCommand {
 	
 	int pageArgIndex = 0;
 	
+	@Override
 	public void perform() {
 		int index = 1;
 		if (this.args.length > pageArgIndex) {

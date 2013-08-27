@@ -35,6 +35,7 @@ public class CheatEvent extends Event {
 		return cheat;
 	}
 	
+	@Override
 	public HandlerList getHandlers() {
 		return handlers;
 	}

@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-
-import com.google.common.io.Files;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.PlayerInfo;
 import net.t7seven7t.util.LogHandler;
+
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+
+import com.google.common.io.Files;
 
 /**
  * @author t7seven7t

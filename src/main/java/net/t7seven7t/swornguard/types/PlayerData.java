@@ -12,14 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.Setter;
 import net.t7seven7t.swornguard.detectors.SpamDetector;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.Setter;
 
 /**
  * @author t7seven7t

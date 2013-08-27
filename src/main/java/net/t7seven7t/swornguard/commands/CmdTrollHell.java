@@ -3,13 +3,13 @@
  */
 package net.t7seven7t.swornguard.commands;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.util.FormatUtil;
+
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 /**
  * @author t7seven7t

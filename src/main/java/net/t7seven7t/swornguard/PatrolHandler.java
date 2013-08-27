@@ -88,6 +88,7 @@ public class PatrolHandler {
 		
 		int id = plugin.getServer().getScheduler().runTaskTimer(plugin, new BukkitRunnable() {
 			
+			@Override
 			public void run() {
 				if (data.isPatrolling())
 					patrol(player);
@@ -108,6 +109,7 @@ public class PatrolHandler {
 		player.sendMessage(ChatColor.YELLOW + "Patrol mode will wear off in 30 seconds.");
 		int id = plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
 			
+			@Override
 			public void run() {
 				if (data.isCooldownPatrolling()) {
 					player.teleport(data.getPreviousLocation());
@@ -203,6 +205,7 @@ public class PatrolHandler {
 		
 		int id = plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
 			
+			@Override
 			public void run() {
 				if (data.isInspecting())
 					returnFromInspecting(player);
@@ -224,6 +227,7 @@ public class PatrolHandler {
 		
 		int id = plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
 			
+			@Override
 			public void run() {
 				data.setInspecting(false);
 			}
@@ -245,6 +249,7 @@ public class PatrolHandler {
 		recentCheaters.add(player);
 		plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
 			
+			@Override
 			public void run() {
 				recentCheaters.remove(player);
 			}

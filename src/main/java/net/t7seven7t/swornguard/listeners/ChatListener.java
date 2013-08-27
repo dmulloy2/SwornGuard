@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.detectors.SpamDetector;
 import net.t7seven7t.swornguard.detectors.SpamDetector.ChatType;
@@ -238,6 +239,7 @@ public class ChatListener implements Listener {
 						private final Color[] colors = new Color[] {Color.RED, Color.YELLOW, Color.ORANGE, Color.BLUE, Color.NAVY, Color.PURPLE};
 						private int color = 0;
 						
+						@Override
 						public void run() {
 							if (bat.isValid() && creepFunMap.containsKey(event.getPlayer().getName())) {
 								FireworkEffect.Type type = FireworkEffect.Type.values()[random.nextInt(FireworkEffect.Type.values().length)];
@@ -272,6 +274,7 @@ public class ChatListener implements Listener {
 				
 				new BukkitRunnable() {
 					
+					@Override
 					public void run() {
 						for (UUID uuid : creepFunMap.get(event.getPlayer().getName())) {
 							for (Entity e : event.getPlayer().getWorld().getEntities()) {

@@ -21,6 +21,7 @@ public class CmdPatrol extends SwornGuardCommand {
 		this.permission = PermissionType.CMD_PATROL.permission;
 	}
 	
+	@Override
 	public void perform() {
 		plugin.getPatrolHandler().patrol(player);
 	}

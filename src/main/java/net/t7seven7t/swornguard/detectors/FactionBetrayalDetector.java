@@ -6,14 +6,14 @@ package net.t7seven7t.swornguard.detectors;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.entity.Player;
-
-import com.massivecraft.factions.FPlayers;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.types.CheatType;
 import net.t7seven7t.swornguard.types.FactionKick;
+
+import org.bukkit.entity.Player;
+
+import com.massivecraft.factions.FPlayers;
 
 /**
  * @author t7seven7t

@@ -3,31 +3,63 @@
  */
 package net.t7seven7t.swornguard;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
 
 import lombok.Getter;
+import net.t7seven7t.swornguard.commands.CmdBanInfo;
+import net.t7seven7t.swornguard.commands.CmdFHistory;
+import net.t7seven7t.swornguard.commands.CmdHelp;
+import net.t7seven7t.swornguard.commands.CmdIP;
+import net.t7seven7t.swornguard.commands.CmdInfo;
+import net.t7seven7t.swornguard.commands.CmdLegit;
+import net.t7seven7t.swornguard.commands.CmdNote;
+import net.t7seven7t.swornguard.commands.CmdRatio;
+import net.t7seven7t.swornguard.commands.CmdReload;
+import net.t7seven7t.swornguard.commands.CmdSInfo;
+import net.t7seven7t.swornguard.commands.CmdShow;
+import net.t7seven7t.swornguard.commands.CmdTrollHell;
+import net.t7seven7t.swornguard.commands.CommandHandler;
+import net.t7seven7t.swornguard.commands.jail.CmdCheck;
+import net.t7seven7t.swornguard.commands.jail.CmdJail;
+import net.t7seven7t.swornguard.commands.jail.CmdJailHelp;
+import net.t7seven7t.swornguard.commands.jail.CmdMute;
+import net.t7seven7t.swornguard.commands.jail.CmdReason;
+import net.t7seven7t.swornguard.commands.jail.CmdSet;
+import net.t7seven7t.swornguard.commands.jail.CmdStatus;
+import net.t7seven7t.swornguard.commands.jail.CmdTime;
+import net.t7seven7t.swornguard.commands.jail.CmdUnjail;
+import net.t7seven7t.swornguard.commands.patrol.CmdAutoPatrol;
+import net.t7seven7t.swornguard.commands.patrol.CmdCheatTeleport;
+import net.t7seven7t.swornguard.commands.patrol.CmdPatrol;
+import net.t7seven7t.swornguard.commands.patrol.CmdVanish;
+import net.t7seven7t.swornguard.commands.patrol.CmdVanishList;
+import net.t7seven7t.swornguard.detectors.AutoClickerDetector;
+import net.t7seven7t.swornguard.detectors.CombatLogDetector;
+import net.t7seven7t.swornguard.detectors.CommandDetector;
+import net.t7seven7t.swornguard.detectors.FactionBetrayalDetector;
+import net.t7seven7t.swornguard.detectors.FlyDetector;
+import net.t7seven7t.swornguard.detectors.SpamDetector;
+import net.t7seven7t.swornguard.detectors.XrayDetector;
+import net.t7seven7t.swornguard.io.PlayerDataCache;
+import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
+import net.t7seven7t.swornguard.listeners.BlockListener;
+import net.t7seven7t.swornguard.listeners.ChatListener;
+import net.t7seven7t.swornguard.listeners.EntityListener;
+import net.t7seven7t.swornguard.listeners.FactionsListener;
+import net.t7seven7t.swornguard.listeners.PlayerListener;
+import net.t7seven7t.swornguard.listeners.ServerListener;
+import net.t7seven7t.swornguard.permissions.PermissionHandler;
+import net.t7seven7t.swornguard.types.ServerData;
+import net.t7seven7t.util.LogHandler;
+import net.t7seven7t.util.ResourceHandler;
+import net.t7seven7t.util.SimpleVector;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import net.t7seven7t.swornguard.commands.*;
-import net.t7seven7t.swornguard.commands.jail.*;
-import net.t7seven7t.swornguard.commands.patrol.*;
-import net.t7seven7t.swornguard.detectors.*;
-import net.t7seven7t.swornguard.io.PlayerDataCache;
-import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
-import net.t7seven7t.util.ResourceHandler;
-import net.t7seven7t.swornguard.listeners.*;
-import net.t7seven7t.swornguard.permissions.PermissionHandler;
-import net.t7seven7t.swornguard.types.ServerData;
-import net.t7seven7t.util.LogHandler;
-import net.t7seven7t.util.SimpleVector;
 
 /**
  * @author t7seven7t
@@ -53,8 +85,6 @@ public class SwornGuard extends JavaPlugin {
 	private @Getter XrayDetector xrayDetector;
 	
 	private @Getter boolean debug;
-	
-	private List<Listener> listeners;
 
 	@Override
 	public void onEnable() {
@@ -65,9 +95,8 @@ public class SwornGuard extends JavaPlugin {
 		commandHandler = new CommandHandler(this);
 		permissionHandler = new PermissionHandler(this);
 		resourceHandler = new ResourceHandler(this, this.getClassLoader());
-		listeners = new ArrayList<Listener>();
 		
-		if (!getDataFolder().exists())
+		if (! getDataFolder().exists())
 			getDataFolder().mkdir();
 		
 		saveResource("messages.properties", true);
@@ -106,21 +135,19 @@ public class SwornGuard extends JavaPlugin {
 		registerListener(new ServerListener(this));
 		registerListener(new FactionsListener(this));
 		
-		// dmulloy2 new method(s)
-		class AutoSaveTask extends BukkitRunnable {
-			
-			@Override
-			public void run() {
-				playerDataCache.save();
-			}
-			
-		}
-		
 		if (getConfig().getBoolean("autosave.enabled", true)) {
 			int interval = 20 * 60 * getConfig().getInt("autosave.interval", 15);
-			new AutoSaveTask().runTaskTimer(this, interval, interval);
+			
+			new BukkitRunnable() {
+				
+				@Override
+				public void run() {
+					playerDataCache.save();
+				}
+				
+			}.runTaskTimerAsynchronously(this, interval, interval);
 		}
-		
+
 		debug = getConfig().getBoolean("debug");
 		
 		commandHandler.setCommandPrefix("sg");
@@ -174,7 +201,6 @@ public class SwornGuard extends JavaPlugin {
 	}
 	
 	public void registerListener(Listener listener) {
-		listeners.add(listener);
 		getServer().getPluginManager().registerEvents(listener, this);
 	}
 	

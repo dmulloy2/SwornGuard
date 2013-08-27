@@ -5,9 +5,6 @@ package net.t7seven7t.swornguard;
 
 import java.io.File;
 
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
-
 import net.t7seven7t.swornguard.events.JailEvent;
 import net.t7seven7t.swornguard.events.UnjailEvent;
 import net.t7seven7t.swornguard.io.FileSerialization;
@@ -16,6 +13,9 @@ import net.t7seven7t.swornguard.types.JailData;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.TimeUtil;
+
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 /**
  * @author t7seven7t

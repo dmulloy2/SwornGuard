@@ -25,6 +25,7 @@ public class UnjailEvent extends Event implements Cancellable {
 		return player;
 	}
 
+	@Override
 	public HandlerList getHandlers() {
 		return handlers;
 	}
@@ -33,10 +34,12 @@ public class UnjailEvent extends Event implements Cancellable {
 		return handlers;
 	}
 
+	@Override
 	public boolean isCancelled() {
 		return cancel;
 	}
 
+	@Override
 	public void setCancelled(boolean cancel) {
 		this.cancel = cancel;
 	}

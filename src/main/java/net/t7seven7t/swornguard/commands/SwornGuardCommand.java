@@ -6,18 +6,18 @@ package net.t7seven7t.swornguard.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.swornguard.permissions.Permission;
+import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.util.Util;
+
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.Permission;
-import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.util.FormatUtil;
-import net.t7seven7t.util.Util;
 
 /**
  * @author t7seven7t
@@ -49,6 +49,7 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 	
 	public abstract void perform();
 	
+	@Override
 	public final boolean onCommand(CommandSender sender, Command command, String label,
 			String[] args) {
 		execute(sender, args);

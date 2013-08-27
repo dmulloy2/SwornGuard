@@ -3,12 +3,12 @@
  */
 package net.t7seven7t.swornguard.commands.jail;
 
-import org.bukkit.OfflinePlayer;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
+
+import org.bukkit.OfflinePlayer;
 
 /**
  * @author t7seven7t
@@ -23,6 +23,7 @@ public class CmdUnjail extends SwornGuardCommand {
 		this.requiredArgs.add("player");
 	}
 	
+	@Override
 	public void perform() {
 		OfflinePlayer target = getTarget(args[0]);
 		if (target == null)

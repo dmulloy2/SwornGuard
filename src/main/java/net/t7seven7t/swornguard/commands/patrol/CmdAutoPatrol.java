@@ -23,6 +23,7 @@ public class CmdAutoPatrol extends SwornGuardCommand {
 		this.permission = PermissionType.CMD_AUTO_PATROL.permission;
 	}
 
+	@Override
 	public void perform() {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		

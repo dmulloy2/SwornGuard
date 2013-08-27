@@ -25,6 +25,7 @@ public class CmdVanish extends SwornGuardCommand {
 		this.permission = PermissionType.CMD_VANISH.permission;
 	}
 
+	@Override
 	public void perform() {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		

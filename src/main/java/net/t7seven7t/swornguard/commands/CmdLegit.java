@@ -3,9 +3,10 @@
  */
 package net.t7seven7t.swornguard.commands;
 
-import org.bukkit.OfflinePlayer;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
+
+import org.bukkit.OfflinePlayer;
 
 /**
  * @author t7seven7t
@@ -21,6 +22,7 @@ public class CmdLegit extends SwornGuardCommand {
 		this.usesPrefix = true;
 	}
 	
+	@Override
 	public void perform() {
 		OfflinePlayer target = null;
 		if (args.length == 0 && isPlayer())

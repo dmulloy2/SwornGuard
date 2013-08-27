@@ -20,6 +20,7 @@ public class CmdSet extends SwornGuardCommand {
 		this.optionalArgs.add("cancel");
 	}
 
+	@Override
 	public void perform() {
 		if (args.length == 1) {
 			plugin.getJailHandler().getJail().resetJailStage();

@@ -3,13 +3,13 @@
  */
 package net.t7seven7t.swornguard.commands.patrol;
 
-import org.bukkit.entity.Player;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.util.Util;
+
+import org.bukkit.entity.Player;
 
 /**
  * @author t7seven7t
@@ -25,6 +25,7 @@ public class CmdCheatTeleport extends SwornGuardCommand {
 		this.permission = PermissionType.CMD_CHEAT_TELEPORT.permission;
 	}
 
+	@Override
 	public void perform() {
 		if (args.length > 0) {
 			final Player target = Util.matchPlayer(args[0]);

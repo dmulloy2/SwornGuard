@@ -30,6 +30,7 @@ public class FireworkRunnable extends BukkitRunnable {
 		this.data = plugin.getPlayerDataCache().getData(player);
 	}
 	
+	@Override
 	public void run() {
 		if (data.isFireworking() && player.isOnline()) {
 			FireworkEffect.Type type;

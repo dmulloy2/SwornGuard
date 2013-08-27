@@ -19,6 +19,7 @@ public class CmdReload extends SwornGuardCommand {
 		this.usesPrefix = true;
 	}
 	
+	@Override
 	public void perform() {
 		plugin.onDisable();
 		plugin.onEnable();
