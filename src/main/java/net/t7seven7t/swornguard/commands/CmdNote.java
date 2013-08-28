@@ -10,6 +10,7 @@ import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.TimeUtil;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author t7seven7t
@@ -42,15 +43,17 @@ public class CmdNote extends SwornGuardCommand {
 		for (int x = 1; x < args.length; x++)
 			line.append(args[x] + " ");
 		
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, new Runnable() {
+		new BukkitRunnable() {
+			
 			@Override
 			public void run() {
 				synchronized(data) {
 					data.getProfilerList().add(line.toString());
 				}
 			}
-		});
-		
+			
+		}.runTaskAsynchronously(plugin);
+
 		sendMessage(plugin.getMessage("note_confirm"));
 	}
 	
