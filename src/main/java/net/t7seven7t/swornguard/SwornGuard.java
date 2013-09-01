@@ -40,6 +40,7 @@ import net.t7seven7t.swornguard.detectors.CommandDetector;
 import net.t7seven7t.swornguard.detectors.FactionBetrayalDetector;
 import net.t7seven7t.swornguard.detectors.FlyDetector;
 import net.t7seven7t.swornguard.detectors.SpamDetector;
+import net.t7seven7t.swornguard.detectors.WrongMovementDetector;
 import net.t7seven7t.swornguard.detectors.XrayDetector;
 import net.t7seven7t.swornguard.io.PlayerDataCache;
 import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
@@ -83,6 +84,7 @@ public class SwornGuard extends JavaPlugin {
 	private @Getter FactionBetrayalDetector factionBetrayaldetector;
 	private @Getter FlyDetector flyDetector;
 	private @Getter XrayDetector xrayDetector;
+	private @Getter WrongMovementDetector wrongMovementDetector;
 	
 	private @Getter boolean debug;
 
@@ -127,6 +129,12 @@ public class SwornGuard extends JavaPlugin {
 			new SpamDetector.SpamOptions(this);
 		if (getConfig().getBoolean("xrayDetectorEnabled"))
 			xrayDetector = new XrayDetector(this);
+		
+		if (getConfig().getBoolean("wrongMovementDetectorEnabled", true)) {
+			wrongMovementDetector = new WrongMovementDetector(this);
+			
+			getServer().getLogger().setFilter(wrongMovementDetector);
+		}
 		
 		registerListener(new BlockListener(this));
 		registerListener(new ChatListener(this));

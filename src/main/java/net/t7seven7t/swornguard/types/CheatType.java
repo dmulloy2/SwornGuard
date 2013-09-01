@@ -12,6 +12,8 @@ public enum CheatType {
 	KICK_AND_KILL,
 	COMBAT_LOG,
 	SPAM,
-	XRAY;
-
+	XRAY,
+	
+	MOVED_WRONGLY;
+	
 }

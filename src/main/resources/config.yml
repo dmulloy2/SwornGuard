@@ -17,6 +17,7 @@ factionBetrayalDetectorEnabled: true
 flyDetectorEnabled: true
 spamDetectorEnabled: true
 xrayDetectorEnabled: true
+wrongMovementDetectorEnabled: true
 
 #The following are items that won't be detected - needed for most guns to actually work
 autoclickerAllowedWeapons:
