@@ -96,12 +96,12 @@ public class SwornGuard extends JavaPlugin {
 		logHandler = new LogHandler(this);
 		commandHandler = new CommandHandler(this);
 		permissionHandler = new PermissionHandler(this);
-		resourceHandler = new ResourceHandler(this, this.getClassLoader());
 		
 		if (! getDataFolder().exists())
 			getDataFolder().mkdir();
 		
 		saveResource("messages.properties", true);
+		resourceHandler = new ResourceHandler(this, this.getClassLoader());
 		
 		saveDefaultConfig();
 		reloadConfig();

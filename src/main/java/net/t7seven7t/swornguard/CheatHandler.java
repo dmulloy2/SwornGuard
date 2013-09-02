@@ -45,7 +45,7 @@ public class CheatHandler {
 					TimeUtil.getLongDateCurr(), WordUtils.capitalize(event.getCheat().toString().replaceAll("_", " "))));
 		}
 		
-		if (event.getCheat() == CheatType.FLYING || event.getCheat() == CheatType.XRAY) {
+		if (event.getCheat() == CheatType.FLYING || event.getCheat() == CheatType.XRAY || event.getCheat() == CheatType.MOVED_WRONGLY) {
 			// Add cheater to patrol list
 			plugin.getPatrolHandler().addCheater(event.getPlayerName());
 			
