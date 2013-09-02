@@ -8,6 +8,7 @@ import java.util.logging.LogRecord;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
+import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.CheatType;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.Util;
@@ -32,9 +33,12 @@ public class WrongMovementDetector implements Filter {
 			
 			Player player = Util.matchPlayer(playerName);
 			if (player != null) {
-				CheatEvent event = new CheatEvent(player.getName(), CheatType.MOVED_WRONGLY, 
-						FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving wrongly!"));
-				plugin.getCheatHandler().announceCheat(event);
+/*				if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission)) {
+					CheatEvent event = new CheatEvent(player.getName(), CheatType.MOVED_WRONGLY, 
+							FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving wrongly!"));
+					plugin.getCheatHandler().announceCheat(event);
+				}
+*/				
 				return false;
 			}
 		} else if (message.contains("moved too quickly!")) {
@@ -42,9 +46,12 @@ public class WrongMovementDetector implements Filter {
 			
 			Player player = Util.matchPlayer(playerName);
 			if (player != null) {
-				CheatEvent event = new CheatEvent(player.getName(), CheatType.MOVED_WRONGLY, 
-						FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving too quickly!"));
-				plugin.getCheatHandler().announceCheat(event);
+				if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission)) {
+					CheatEvent event = new CheatEvent(player.getName(), CheatType.MOVED_WRONGLY, 
+							FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving too quickly!"));
+					plugin.getCheatHandler().announceCheat(event);
+				}
+				
 				return false;
 			}
 		}
