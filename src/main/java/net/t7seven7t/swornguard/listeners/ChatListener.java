@@ -5,7 +5,6 @@ package net.t7seven7t.swornguard.listeners;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -28,7 +27,6 @@ import org.bukkit.entity.Bat;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -45,27 +43,22 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class ChatListener implements Listener {
 	private final SwornGuard plugin;
 	private final List<String> allowedCommandsInJail;
-	private final List<String> allowedCommandsInHell;
 	private final boolean spamDetectorEnabled;
 	private final List<String> blockedCommands;
-	private final int hellSeeChatChance;
-	
+	private final List<String> blockedCommandsInHell;
+
 	public ChatListener(final SwornGuard plugin) {
 		this.plugin = plugin;
 		this.allowedCommandsInJail = plugin.getConfig().getStringList("allowedCommandsInJail");
-		this.allowedCommandsInHell = plugin.getConfig().getStringList("allowedCommandsInHell");
 		this.spamDetectorEnabled = plugin.getConfig().getBoolean("spamDetectorEnabled");
 		this.blockedCommands = plugin.getConfig().getStringList("blockedCommands");
-		this.hellSeeChatChance = plugin.getConfig().getInt("chanceTrollSeesChat");
+		this.blockedCommandsInHell = plugin.getConfig().getStringList("blockedCommandsInHell");
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {		
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-		
-		if (data == null)
-			return;
-		
+
 		if (spamDetectorEnabled) {
 			if (!plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_SPAM.permission)) {
 				if (data.getSpamManager() == null)
@@ -94,7 +87,7 @@ public class ChatListener implements Listener {
 			plugin.getServer().broadcast(admMsg, node);
 		}
 		
-		Random r = new Random();
+/*		Random r = new Random();
 		int chance = r.nextInt(100);
 				
 		for (Iterator<Player> i = event.getRecipients().iterator(); i.hasNext(); ) {
@@ -110,7 +103,7 @@ public class ChatListener implements Listener {
 				}
 			}
 		}
-		
+*/		
 	}
 	
 	// Needs to be at high because factions cancels event for its colour tags :(
@@ -154,13 +147,14 @@ public class ChatListener implements Listener {
 				}
 			}
 			
+			// TODO: Remove this maybe?
 			if (data.isTrollHell() && !plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
-				for (String command : allowedCommandsInHell) {
-					if (event.getMessage().matches("/" + command.toLowerCase() + ".*"))
+				for (String command : blockedCommandsInHell) {
+					if (event.getMessage().matches("/" + command.toLowerCase() + ".*")) {
+						event.setCancelled(true);
 						return;
+					}
 				}
-				
-				event.setCancelled(true);
 			}
 			
 			if (data.isJailed() && 
@@ -198,96 +192,109 @@ public class ChatListener implements Listener {
 			}
 			
 			// Just some fun here on... ignore this :)
-			if (command.equals("firework") && event.getPlayer().hasPermission("firework")) {
-				if (data.isFireworking()) {
-					data.setFireworking(false);
+			if (command.equals("firework")) {
+				if (plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.FIREWORK.permission)) {
+					if (data.isFireworking()) {
+						data.setFireworking(false);
+					} else {
+						data.setFireworking(true);
+						new FireworkRunnable(plugin, event.getPlayer()).runTaskTimer(plugin, 5L, 5L);
+					}
 				} else {
-					data.setFireworking(true);
-					new FireworkRunnable(plugin, event.getPlayer()).runTaskTimer(plugin, 5L, 5L);
+					event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to do this!");
 				}
+
 				event.setCancelled(true);
-			} else if (command.equals("creepfun") && event.getPlayer().hasPermission("creepfun") && !creepFunMap.containsKey(event.getPlayer().getName())) {
-				final Random random = new Random();
-				List<UUID> entityIds = new ArrayList<UUID>(25);
-				for (int i = 0; i < 5; i++) {
-					final int xOffset = random.nextInt(10 * 2) - 10;
-					final int zOffset = random.nextInt(10 * 2) - 10;
-					final Location spawnLocation = event.getPlayer().getLocation().add(xOffset, 0, zOffset);
+			} else if (command.equals("creepfun")) {
+				if (plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.CREEPFUN.permission)) {
+					if (! creepFunMap.containsKey(event.getPlayer().getName())) {
+						final Random random = new Random();
+						List<UUID> entityIds = new ArrayList<UUID>(25);
+						for (int i = 0; i < 5; i++) {
+							final int xOffset = random.nextInt(10 * 2) - 10;
+							final int zOffset = random.nextInt(10 * 2) - 10;
+							final Location spawnLocation = event.getPlayer().getLocation().add(xOffset, 0, zOffset);
 					
-					// Make sure entity doesn't spawn inside of blocks or floating in the air
-					while (	spawnLocation.add(0, 1, 0).getBlockY() < 250 
-							&& spawnLocation.getWorld().getBlockAt(spawnLocation).getType().isSolid() 
-							&& spawnLocation.getWorld().getBlockAt(spawnLocation.clone().add(0, 1, 0)).getType().isSolid());
-					while ( spawnLocation.subtract(0, 1, 0).getBlockY() > 2
-							&& spawnLocation.getWorld().getBlockAt(spawnLocation).getType() == Material.AIR);
+							// Make sure entity doesn't spawn inside of blocks or floating in the air
+							while (	spawnLocation.add(0, 1, 0).getBlockY() < 250 
+									&& spawnLocation.getWorld().getBlockAt(spawnLocation).getType().isSolid() 
+									&& spawnLocation.getWorld().getBlockAt(spawnLocation.clone().add(0, 1, 0)).getType().isSolid());
+							while ( spawnLocation.subtract(0, 1, 0).getBlockY() > 2
+									&& spawnLocation.getWorld().getBlockAt(spawnLocation).getType() == Material.AIR);
+							
+							final Bat bat = spawnLocation.getWorld().spawn(spawnLocation, Bat.class);
+							entityIds.add(bat.getUniqueId());
+							Creeper prevCreeper = null;
+							for (int j = 0; j < 4; j++) {
+								Creeper creeper = spawnLocation.getWorld().spawn(spawnLocation, Creeper.class);
+								if (j == 0)
+									bat.setPassenger(creeper);
+								else
+									prevCreeper.setPassenger(creeper);
+								creeper.setPowered(true);
+								prevCreeper = creeper;
+								entityIds.add(creeper.getUniqueId());
+							}
 					
-					final Bat bat = spawnLocation.getWorld().spawn(spawnLocation, Bat.class);
-					entityIds.add(bat.getUniqueId());
-					Creeper prevCreeper = null;
-					for (int j = 0; j < 4; j++) {
-						Creeper creeper = spawnLocation.getWorld().spawn(spawnLocation, Creeper.class);
-						if (j == 0)
-							bat.setPassenger(creeper);
-						else
-							prevCreeper.setPassenger(creeper);
-						creeper.setPowered(true);
-						prevCreeper = creeper;
-						entityIds.add(creeper.getUniqueId());
-					}
-					
-					new BukkitRunnable() {
-						private final Color[] colors = new Color[] {Color.RED, Color.YELLOW, Color.ORANGE, Color.BLUE, Color.NAVY, Color.PURPLE};
-						private int color = 0;
-						
-						@Override
-						public void run() {
-							if (bat.isValid() && creepFunMap.containsKey(event.getPlayer().getName())) {
-								FireworkEffect.Type type = FireworkEffect.Type.values()[random.nextInt(FireworkEffect.Type.values().length)];
+							new BukkitRunnable() {
+								private final Color[] colors = new Color[] {Color.RED, Color.YELLOW, Color.ORANGE, Color.BLUE, Color.NAVY, Color.PURPLE};
+								private int color = 0;
+
+								@Override
+								public void run() {
+									if (bat.isValid() && creepFunMap.containsKey(event.getPlayer().getName())) {
+										FireworkEffect.Type type = FireworkEffect.Type.values()[random.nextInt(FireworkEffect.Type.values().length)];
 								
-								FireworkEffect effect = FireworkEffect.builder()
-										.with(type)
-										.withColor(colors[color])
-										.withFade(colors[(color + 1 >= colors.length) ? 0 : color + 1])
-										.flicker(random.nextBoolean())
-										.trail(random.nextBoolean())
-										.build();
+										FireworkEffect effect = FireworkEffect.builder()
+												.with(type)
+												.withColor(colors[color])
+												.withFade(colors[(color + 1 >= colors.length) ? 0 : color + 1])
+												.flicker(random.nextBoolean())
+												.trail(random.nextBoolean())
+												.build();
 			
-								Firework firework = bat.getWorld().spawn(bat.getLocation(), Firework.class);
+										Firework firework = bat.getWorld().spawn(bat.getLocation(), Firework.class);
 								
-								FireworkMeta meta = firework.getFireworkMeta();
-								meta.addEffect(effect);
-								meta.setPower(2);
+										FireworkMeta meta = firework.getFireworkMeta();
+										meta.addEffect(effect);
+										meta.setPower(2);
 								
-								firework.setFireworkMeta(meta);
+										firework.setFireworkMeta(meta);
 								
-								color++;
-								if (color >= colors.length)
-									color = 0;
-							} else {
-								this.cancel();
-							}
-						}
-						
-					}.runTaskTimer(plugin, 5L, 5L);
-				}
-				creepFunMap.put(event.getPlayer().getName(), entityIds);
-				
-				new BukkitRunnable() {
-					
-					@Override
-					public void run() {
-						for (UUID uuid : creepFunMap.get(event.getPlayer().getName())) {
-							for (Entity e : event.getPlayer().getWorld().getEntities()) {
-								if (e.getUniqueId().equals(uuid)) {
-									e.remove();
+										color++;
+										if (color >= colors.length)
+											color = 0;
+									} else {
+										this.cancel();
+									}
 								}
-							}
-						}
 						
-						creepFunMap.remove(event.getPlayer().getName());
-					}
+							}.runTaskTimer(plugin, 5L, 5L);
+						}
+						creepFunMap.put(event.getPlayer().getName(), entityIds);
+				
+						new BukkitRunnable() {
 					
-				}.runTaskLater(plugin, 600L);
+							@Override
+							public void run() {
+								for (UUID uuid : creepFunMap.get(event.getPlayer().getName())) {
+									for (Entity e : event.getPlayer().getWorld().getEntities()) {
+										if (e.getUniqueId().equals(uuid)) {
+											e.remove();
+										}
+									}
+								}
+						
+								creepFunMap.remove(event.getPlayer().getName());
+							}
+					
+						}.runTaskLater(plugin, 600L);
+					}
+				} else {
+					event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to do this!");
+				}
+				
+				event.setCancelled(true);
 			}
 		}
 	}

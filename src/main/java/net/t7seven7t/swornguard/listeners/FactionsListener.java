@@ -18,10 +18,10 @@ import com.massivecraft.factions.event.FPlayerLeaveEvent;
  * @author dmulloy2
  */
 public class FactionsListener implements Listener {
-	public SwornGuard plugin;
+	private final SwornGuard plugin;
 	private final boolean factionBetrayalDetectorEnabled;
 	
-	public FactionsListener(SwornGuard plugin) {
+	public FactionsListener(final SwornGuard plugin) {
 		this.plugin = plugin;
 		this.factionBetrayalDetectorEnabled = plugin.getConfig().getBoolean("factionBetrayalDetectorEnabled");
 	}

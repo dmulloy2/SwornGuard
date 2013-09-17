@@ -8,19 +8,19 @@ import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author t7seven7t
  */
-public class InmateTimerTask extends BukkitRunnable {
-	final Player player;
-	final PlayerData data;
-	final SwornGuard plugin;
-	long lastMessage;
+public class InmateTimerTask extends DatableRunnable {
+	private final PlayerData data;
+	private final SwornGuard plugin;
+	private long lastMessage;
+	
 	public InmateTimerTask(final SwornGuard plugin, final Player player, final PlayerData data) {
+		super(player);
+		
 		this.plugin = plugin;
-		this.player = player;
 		this.data = data;
 	}
 	

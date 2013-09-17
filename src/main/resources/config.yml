@@ -1,16 +1,16 @@
-#convertOldPlayerData: false
-#fixShit: false
+# SwornGuard Configuration
 
+# Extra output to console
 debug: false
 
-#Auto moderator settings
+# Auto moderator settings
 autoModEnabled: true
 autoModAlwaysEnabled: false
 autoModKickReasonFly: "Remove your fly hack."
 autoModKickReasonSpam: "Do not spam."
 autoModKickReasonXray: "Remove your xray hack/texture pack."
 
-#Detector settings
+# Detector settings
 autoclickerDetectorEnabled: true
 combatLogDetectorEnabled: true
 factionBetrayalDetectorEnabled: true
@@ -19,7 +19,8 @@ spamDetectorEnabled: true
 xrayDetectorEnabled: true
 wrongMovementDetectorEnabled: true
 
-#The following are items that won't be detected - needed for most guns to actually work
+# AutoClicker settings
+# The following are items that won't be detected - needed for most guns to actually work
 autoclickerAllowedWeapons:
 - 290
 - 291
@@ -27,33 +28,40 @@ autoclickerAllowedWeapons:
 - 293
 - 294
 - 340
+
 autoclickerTimeBetweenAttacksInMillis: 500
+
+# Combat Logging
 combatLogWindowInSeconds: 10
 combatLogFromMobs: false
 combatLogFromPlayers: true
 
-#These values are all for 1/4 second intervals.
+# Fly Detector Settings
+# These values are all for 1/4 second intervals.
 flyDetectorSuspiciousVelocity: -2.0
 flyDetectorSuspiciousDistFromGround: 7
 flyDetectorSuspiciousMoveDist: 5
 
+# Spam Detector Settings
 spamDetectorMessageDecayTime: 2
 spamDetectorThresholdPerSecond: 5
 
-#This number is equivalent to the number of different checks the spam detector will perform to check if a message is spam. Value can be 0-4
+# Equivalent to the number of different checks the spam detector will perform to check if a message is spam. Value can be 0-4
 spamDetectorComparisonLevel: 4
+
+# Xray Detector Settings
 xrayWarnOnDiamondRatio: 10
 xrayWarnOnIronRatio: 0
 
-#Cheat notification settings
+# Cheat notification settings
 jailAmountNoticeEnabled: true
 jailsBeforeNotice: 2
 
-#Blocked commands
+# Blocked commands
 blockedCommands:
 - "op"
 
-#Jail settings
+# Allowed Commands in jail
 allowedCommandsInJail:
 - "jailstatus"
 - "jailhelp"
@@ -66,19 +74,17 @@ allowedCommandsInJail:
 - "r"
 - "reply"
 
-#Troll hell settings
-allowedCommandsInHell:
-- "rules"
-- "help"
-
-chanceTrollSeesChat: 30
+# Blocked Commands in hell
+blockedCommandsInHell:
+- "someCommand"
 
 # AutoSave Task
 autosave:
   enabled: true
   interval: 15
   # Delay in minutes between saves
-  
-joinMessage: "&e{0} has joined the game."
 
-quitMessage: "&e{0} has left the game."
+# Join and Quit messages for patroling
+joinMessage: "&e{0} joined the game."
+
+quitMessage: "&e{0} left the game."

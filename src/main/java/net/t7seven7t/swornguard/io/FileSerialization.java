@@ -35,29 +35,7 @@ public class FileSerialization {
 			ex.printStackTrace();
 		}
 	}
-	
-//	@SuppressWarnings("rawtypes")
-//	private static boolean isObjectEmpty(Object object) {
-//		if (object.getClass().isAssignableFrom(Integer.TYPE)) {
-//			if ((int) object != 0)
-//				return false;
-//		} else if (object.getClass().isAssignableFrom(Long.TYPE)) {
-//			if ((long) object != 0)
-//				return false;
-//		} else if (object.getClass().isAssignableFrom(Boolean.TYPE)) {
-//			if ((boolean) object)
-//				return false;
-//		} else if (object.getClass().isAssignableFrom(List.class)) {
-//			if (!((List) object).isEmpty())
-//				return false;
-//		} else {
-//			if (object != null)
-//				return false;
-//		}
-//		
-//		return true;
-//	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static <T extends ConfigurationSerializable> T load(File file, Class<T> clazz) {
 		try {

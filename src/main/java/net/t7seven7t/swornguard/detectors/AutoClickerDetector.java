@@ -26,6 +26,7 @@ public class AutoClickerDetector {
 		this.autoclickerTimeBetweenAttacks = plugin.getConfig().getLong("autoclickerTimeBetweenAttacksInMillis");
 	}
 	
+	@SuppressWarnings("deprecation")
 	public boolean isClickingTooFast(final Player player) {
 		final long now = System.currentTimeMillis();
 		

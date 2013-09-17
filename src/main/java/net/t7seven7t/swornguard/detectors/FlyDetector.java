@@ -143,7 +143,9 @@ public class FlyDetector {
 					Minecart cart = (Minecart)veh;
 					Location loc = cart.getLocation();
 					
+					@SuppressWarnings("deprecation")
 					int id = loc.getBlock().getTypeId();
+					
 					return (id != 27 && id != 66 && id != 28 && id != 157);
 				}
 			}

@@ -77,6 +77,12 @@ commands:
         description: Trololololololol
         usage: /<command> <player>
         aliases: [hell, trollhell]
+    firework:
+        description: Fireworks!
+        usage: /<command>
+    creepfun:
+        description: Creepers riding bats with fireworks
+        usage: /<command>
 permissions:
     swornguard.admin:
         description: Gives access to all SwornGuard features.
@@ -94,6 +100,8 @@ permissions:
             swornguard.cmd.unban: true
             swornguard.cmd.troll: true
             swornguard.allow.usecommandshell: true
+            swornguard.firework: true
+            swornguard.creepfun: true
     swornguard.moderator:
         description: Gives access to features intended for moderators.
         children:
@@ -206,4 +214,8 @@ permissions:
     swornguard.allow.usecommandshell:
         default: false
     swornguard.trollspy:
+        default: false
+    swornguard.firework:
+        default: true
+    swornguard.creepfun:
         default: false

@@ -13,20 +13,19 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author t7seven7t
  */
-public class FireworkRunnable extends BukkitRunnable {
+public class FireworkRunnable extends DatableRunnable {
 	private static final Color[] colors = new Color[] {Color.RED, Color.YELLOW, Color.ORANGE, Color.BLUE, Color.NAVY, Color.PURPLE};
-	private final Player player;
 	private final PlayerData data;
 	private final Random rand = new Random();
 	private int color;
 	
 	public FireworkRunnable(SwornGuard plugin, Player player) {
-		this.player = player;
+		super(player);
+
 		this.data = plugin.getPlayerDataCache().getData(player);
 	}
 	

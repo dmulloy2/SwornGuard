@@ -43,7 +43,9 @@ public enum PermissionType {
 	CMD_VANISH_LIST("cmd.vanishlist"),
 	SHOW_CHEAT_REPORTS("showcheatreports"),
 	TROLL_SPY("trollspy"),
-	VANISH_SPY("vanishspy");
+	VANISH_SPY("vanishspy"),
+	FIREWORK("firework"),
+	CREEPFUN("creepfun");
 	
 	public final Permission permission;
 	PermissionType(final String node) {
