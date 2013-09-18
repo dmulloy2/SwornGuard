@@ -49,23 +49,26 @@ public class FlyDetector {
 	
 	private void step() {
 		for (final Player player : plugin.getServer().getOnlinePlayers()) {
-			if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission) 
-					&& ! player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity ||
+			if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission) ) {
+				if (! player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity ||
 							(! isInWater(player) && getDistanceToGround(player) >= suspiciousDistFromGround))) {
-				if (! isPlayerFallingIntoVoid(player) && ! isPlayerInsideCar(player) && ! player.isInsideVehicle()) {
-					final PlayerData data = plugin.getPlayerDataCache().getData(player);
-					final Vector previousLocation = player.getLocation().toVector();
-					if (! data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
-						data.setLastFlyWarn(System.currentTimeMillis());
+					if (! isPlayerFallingIntoVoid(player) && ! isPlayerInsideCar(player) && ! player.isInsideVehicle()) {
+						if (! isNewPlayerJoin(player)) {
+							final PlayerData data = plugin.getPlayerDataCache().getData(player);
+							final Vector previousLocation = player.getLocation().toVector();
+							if (! data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
+								data.setLastFlyWarn(System.currentTimeMillis());
 						
-						new BukkitRunnable() {
-
-							@Override
-							public void run() {
-								checkPlayer(player, previousLocation);
+								new BukkitRunnable() {
+							
+									@Override
+									public void run() {
+										checkPlayer(player, previousLocation);
+									}
+									
+								}.runTaskLater(plugin, 5L);
 							}
-						
-						}.runTaskLater(plugin, 5L);
+						}
 					}
 				}
 			}
@@ -149,6 +152,19 @@ public class FlyDetector {
 					return (id != 27 && id != 66 && id != 28 && id != 157);
 				}
 			}
+		}
+		
+		return false;
+	}
+	
+	public boolean isNewPlayerJoin(Player player) {
+		if (! player.hasPlayedBefore()) {
+			PlayerData data = plugin.getPlayerDataCache().getData(player);
+			if (data != null) {
+				return data.getOnlineTime() < 200L;
+			}
+			
+			return true;
 		}
 		
 		return false;
