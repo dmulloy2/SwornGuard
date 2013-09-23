@@ -3,12 +3,15 @@
  */
 package net.t7seven7t.swornguard.detectors;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.util.MaterialUtil;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -16,22 +19,27 @@ import org.bukkit.entity.Player;
  */
 public class AutoClickerDetector {
 	private final Map<String, Long> recentClicks;
-	private final List<Integer> autoclickerAllowedWeapons;
+	private final List<Material> autoclickerAllowedWeapons;
 	private final long autoclickerTimeBetweenAttacks;
 	
 	public AutoClickerDetector(final SwornGuard plugin) {
 		this.recentClicks = new HashMap<String, Long>();
-		
-		this.autoclickerAllowedWeapons = plugin.getConfig().getIntegerList("autoclickerAllowedWeapons");
+
 		this.autoclickerTimeBetweenAttacks = plugin.getConfig().getLong("autoclickerTimeBetweenAttacksInMillis");
+		
+		this.autoclickerAllowedWeapons = new ArrayList<Material>();
+		
+		for (String s : plugin.getConfig().getStringList("autoclickerAllowedWeapons"))
+		{
+			autoclickerAllowedWeapons.add(MaterialUtil.getMaterial(s));
+		}
 	}
-	
-	@SuppressWarnings("deprecation")
+
 	public boolean isClickingTooFast(final Player player) {
 		final long now = System.currentTimeMillis();
 		
 		if (player.getItemInHand() == null 
-				|| !autoclickerAllowedWeapons.contains(player.getItemInHand().getTypeId())) {
+				|| !autoclickerAllowedWeapons.contains(player.getItemInHand().getType())) {
 			if (recentClicks.containsKey(player.getName()) 
 					&& (now - recentClicks.get(player.getName()) < autoclickerTimeBetweenAttacks)) {
 				return true;
