@@ -99,7 +99,7 @@ public class EntityListener implements Listener {
 					att = (Player) shooter;
 				}
 			}
-			
+
 			if (att != null) {
 
 				// Check if target is living entity and thus actually has health
@@ -107,7 +107,7 @@ public class EntityListener implements Listener {
 					
 					// Check that target's health will drop below zero with this event succeeding
 					if (((LivingEntity) event.getEntity()).getHealth() - event.getDamage() < 0) {
-						PlayerData data = plugin.getPlayerDataCache().getData((Player) event.getDamager()); 
+						PlayerData data = plugin.getPlayerDataCache().getData(att); 
 						
 						// If target is player...
 						if (event.getEntity() instanceof Player && System.currentTimeMillis() - data.getLastPlayerKill() > 300L) {
@@ -129,9 +129,7 @@ public class EntityListener implements Listener {
 					}
 				}
 			}
-			
 
-			
 			// Monitor recent damage sources
 			if (event.getEntity() instanceof Player) {
 				if (combatLogDetectorEnabled) {
