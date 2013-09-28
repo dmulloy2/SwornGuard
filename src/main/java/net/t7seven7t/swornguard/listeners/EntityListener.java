@@ -7,9 +7,12 @@ import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -77,9 +80,28 @@ public class EntityListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDamageByEntityMonitor(final EntityDamageByEntityEvent event) {
-		if (!event.isCancelled()) {
-			if (event.getDamager() instanceof Player) {
-				
+		if (! event.isCancelled()) {
+			Entity attacker = event.getDamager();
+			
+			Player att = null;
+			
+			// Figure out the attacker
+			if (attacker instanceof Player) {
+				att = (Player) attacker;
+			} else if (attacker instanceof Arrow) {
+				Entity shooter = ((Arrow) attacker).getShooter();
+				if (shooter instanceof Player) {
+					att = (Player) shooter;
+				}
+			} else if (attacker instanceof Snowball) {
+				Entity shooter = ((Snowball) attacker).getShooter();
+				if (shooter instanceof Player) {
+					att = (Player) shooter;
+				}
+			}
+			
+			if (att != null) {
+
 				// Check if target is living entity and thus actually has health
 				if (event.getEntity() instanceof LivingEntity) {
 					
@@ -92,7 +114,7 @@ public class EntityListener implements Listener {
 							data.setLastPlayerKill(System.currentTimeMillis());
 							data.setPlayerKills(data.getPlayerKills() + 1);
 						}
-						
+					
 						// If target is monster...
 						if (event.getEntity() instanceof Monster && System.currentTimeMillis() - data.getLastMonsterKill() > 300L) {
 							data.setLastMonsterKill(System.currentTimeMillis());
@@ -108,17 +130,21 @@ public class EntityListener implements Listener {
 				}
 			}
 			
+
+			
 			// Monitor recent damage sources
 			if (event.getEntity() instanceof Player) {
 				if (combatLogDetectorEnabled) {
 					PlayerData data = plugin.getPlayerDataCache().getData(((Player) event.getEntity()).getName());
 					
-					if (event.getDamager() instanceof Monster && plugin.getConfig().getBoolean("combatLogFromMobs"))
+					if (event.getDamager() instanceof Monster && plugin.getConfig().getBoolean("combatLogFromMobs")) {
 						data.setLastAttacked(System.currentTimeMillis());
-					else if (event.getDamager() instanceof Player && plugin.getConfig().getBoolean("combatLogFromPlayers"))
+					} else if (event.getDamager() instanceof Player && plugin.getConfig().getBoolean("combatLogFromPlayers")) {
 						data.setLastAttacked(System.currentTimeMillis());
+					}
 				}
 			}
 		}
 	}
+
 }

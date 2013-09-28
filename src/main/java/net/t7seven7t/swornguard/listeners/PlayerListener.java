@@ -4,7 +4,6 @@
 package net.t7seven7t.swornguard.listeners;
 
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.events.JailEvent;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.tasks.InmateTimerTask;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -183,20 +182,5 @@ public class PlayerListener implements Listener {
 		if (plugin.getPlayerDataCache().getData(event.getPlayer()).isJailed())
 			plugin.getPlayerDataCache().getData(event.getPlayer()).setLastActivity(System.currentTimeMillis());
 	}
-	
-	//dmulloy2 new method
-	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerJail(JailEvent event) {
-		if (event.getPlayer().isOnline()) {
-			Player p = (Player)event.getPlayer();
 
-			//Check to see if they are in a vehicle
-			if (p.getVehicle() != null)
-				p.leaveVehicle();
-
-			//Check to see if anyone is riding them
-			if (p.getPassenger() != null)
-				p.eject();
-		}
-	}
 }

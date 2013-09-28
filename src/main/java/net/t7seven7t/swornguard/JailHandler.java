@@ -89,6 +89,12 @@ public class JailHandler {
 		if (event.isCancelled())
 			return;
 		
+		// Leave vehicle / eject
+		if (offlinePlayer.isOnline()) {
+			((Player)offlinePlayer).leaveVehicle();
+			((Player)offlinePlayer).eject();
+		}
+		
 		data.setJailed(true);
 		data.setLastJail(System.currentTimeMillis());
 		data.setLastJailer(jailer);
@@ -132,5 +138,6 @@ public class JailHandler {
 	
 	public JailData getJail() {
 		return jail;
-	}	
+	}
+
 }
