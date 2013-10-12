@@ -146,8 +146,7 @@ public class ChatListener implements Listener {
 					}
 				}
 			}
-			
-			// TODO: Remove this maybe?
+
 			if (data.isTrollHell() && !plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
 				for (String command : blockedCommandsInHell) {
 					if (event.getMessage().matches("/" + command.toLowerCase() + ".*")) {
