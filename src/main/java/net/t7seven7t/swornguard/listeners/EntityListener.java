@@ -7,12 +7,11 @@ import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Snowball;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -88,13 +87,8 @@ public class EntityListener implements Listener {
 			// Figure out the attacker
 			if (attacker instanceof Player) {
 				att = (Player) attacker;
-			} else if (attacker instanceof Arrow) {
-				Entity shooter = ((Arrow) attacker).getShooter();
-				if (shooter instanceof Player) {
-					att = (Player) shooter;
-				}
-			} else if (attacker instanceof Snowball) {
-				Entity shooter = ((Snowball) attacker).getShooter();
+			} else if (attacker instanceof Projectile) {
+				Entity shooter = ((Projectile) attacker).getShooter();
 				if (shooter instanceof Player) {
 					att = (Player) shooter;
 				}
