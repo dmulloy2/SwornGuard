@@ -120,6 +120,10 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 	}
 	
 	public void save() {
+		save(true);
+	}
+
+	public void save(boolean cleanup) {
 		plugin.getLogHandler().log("Saving {0} to disk...", folderName);
 		long start = System.currentTimeMillis();
 		for (Entry<String, PlayerData> entry : getAllLoadedPlayerData().entrySet()) {
@@ -129,7 +133,7 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 				FileSerialization.save(entry.getValue(), new File(folder, getFileName(entry.getKey())));
 			}
 		}
-		cleanupData();
+		if (cleanup) cleanupData();
 		plugin.getLogHandler().log("{0} saved! [{1}ms]", folderName, System.currentTimeMillis() - start);
 	}
 	
