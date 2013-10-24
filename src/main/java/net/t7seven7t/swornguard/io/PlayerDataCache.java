@@ -4,8 +4,10 @@
 package net.t7seven7t.swornguard.io;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,9 +15,9 @@ import java.util.concurrent.ConcurrentMap;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.util.Util;
 
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 /**
  * @author t7seven7t
@@ -93,10 +95,20 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		return newData(player.getName());
 	}
 	
-	private void cleanupData() {
+	public void cleanupData() {
+		// Get all online players into an array list
+		List<String> online = new ArrayList<String>();
+		for (Player player : plugin.getServer().getOnlinePlayers())
+			online.add(player.getName());
+
+		// Actually cleanup the data
 		for (String key : getAllLoadedPlayerData().keySet())
-			if (!Util.matchOfflinePlayer(key).isOnline())
+			if (! online.contains(key))
 				removeData(key);
+
+		// Clear references
+		online.clear();
+		online = null;
 	}
 	
 	private PlayerData loadData(final String key) {
