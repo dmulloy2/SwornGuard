@@ -1,9 +1,11 @@
 /**
  * Copyright (C) 2012 t7seven7t
  */
-package net.t7seven7t.util;
+package net.t7seven7t.swornguard.handlers;
 
 import java.util.logging.Level;
+
+import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

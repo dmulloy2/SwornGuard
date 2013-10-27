@@ -88,3 +88,7 @@ autosave:
 joinMessage: "&e{0} joined the game."
 
 quitMessage: "&e{0} left the game."
+
+# Log Filtering
+filterMessagesFromLog:
+- "moved wrongly!"

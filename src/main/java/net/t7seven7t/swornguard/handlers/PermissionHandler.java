@@ -1,9 +1,10 @@
 /**
  * Copyright (C) 2012 t7seven7t
  */
-package net.t7seven7t.swornguard.permissions;
+package net.t7seven7t.swornguard.handlers;
 
 import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.swornguard.permissions.Permission;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

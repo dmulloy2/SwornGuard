@@ -1,10 +1,11 @@
 /**
  * Copyright (C) 2012 t7seven7t
  */
-package net.t7seven7t.swornguard;
+package net.t7seven7t.swornguard.handlers;
 
 import java.io.File;
 
+import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.JailEvent;
 import net.t7seven7t.swornguard.events.UnjailEvent;
 import net.t7seven7t.swornguard.io.FileSerialization;

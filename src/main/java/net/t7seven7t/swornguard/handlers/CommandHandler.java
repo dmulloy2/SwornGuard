@@ -1,12 +1,14 @@
 /**
  * Copyright (C) 2012 t7seven7t
  */
-package net.t7seven7t.swornguard.commands;
+package net.t7seven7t.swornguard.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.swornguard.commands.CmdHelp;
+import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.command.Command;

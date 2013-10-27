@@ -19,7 +19,6 @@ import net.t7seven7t.swornguard.commands.CmdReload;
 import net.t7seven7t.swornguard.commands.CmdSInfo;
 import net.t7seven7t.swornguard.commands.CmdShow;
 import net.t7seven7t.swornguard.commands.CmdTrollHell;
-import net.t7seven7t.swornguard.commands.CommandHandler;
 import net.t7seven7t.swornguard.commands.jail.CmdCheck;
 import net.t7seven7t.swornguard.commands.jail.CmdJail;
 import net.t7seven7t.swornguard.commands.jail.CmdJailHelp;
@@ -40,8 +39,16 @@ import net.t7seven7t.swornguard.detectors.CommandDetector;
 import net.t7seven7t.swornguard.detectors.FactionBetrayalDetector;
 import net.t7seven7t.swornguard.detectors.FlyDetector;
 import net.t7seven7t.swornguard.detectors.SpamDetector;
-import net.t7seven7t.swornguard.detectors.WrongMovementDetector;
 import net.t7seven7t.swornguard.detectors.XrayDetector;
+import net.t7seven7t.swornguard.handlers.AutoModerator;
+import net.t7seven7t.swornguard.handlers.CheatHandler;
+import net.t7seven7t.swornguard.handlers.CommandHandler;
+import net.t7seven7t.swornguard.handlers.JailHandler;
+import net.t7seven7t.swornguard.handlers.LogFilterHandler;
+import net.t7seven7t.swornguard.handlers.LogHandler;
+import net.t7seven7t.swornguard.handlers.PatrolHandler;
+import net.t7seven7t.swornguard.handlers.PermissionHandler;
+import net.t7seven7t.swornguard.handlers.ResourceHandler;
 import net.t7seven7t.swornguard.io.PlayerDataCache;
 import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
 import net.t7seven7t.swornguard.listeners.BlockListener;
@@ -50,10 +57,7 @@ import net.t7seven7t.swornguard.listeners.EntityListener;
 import net.t7seven7t.swornguard.listeners.FactionsListener;
 import net.t7seven7t.swornguard.listeners.PlayerListener;
 import net.t7seven7t.swornguard.listeners.ServerListener;
-import net.t7seven7t.swornguard.permissions.PermissionHandler;
 import net.t7seven7t.swornguard.types.ServerData;
-import net.t7seven7t.util.LogHandler;
-import net.t7seven7t.util.ResourceHandler;
 import net.t7seven7t.util.SimpleVector;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -77,6 +81,7 @@ public class SwornGuard extends JavaPlugin {
 	private @Getter AutoModerator autoModerator;
 	private @Getter PatrolHandler patrolHandler;
 	private @Getter JailHandler jailHandler;
+	private @Getter LogFilterHandler logFilterHandler;
 	
 	private @Getter AutoClickerDetector autoClickerDetector;
 	private @Getter CombatLogDetector combatLogDetector;
@@ -84,7 +89,6 @@ public class SwornGuard extends JavaPlugin {
 	private @Getter FactionBetrayalDetector factionBetrayaldetector;
 	private @Getter FlyDetector flyDetector;
 	private @Getter XrayDetector xrayDetector;
-	private @Getter WrongMovementDetector wrongMovementDetector;
 	
 	private @Getter boolean debug;
 
@@ -129,12 +133,9 @@ public class SwornGuard extends JavaPlugin {
 			new SpamDetector.SpamOptions(this);
 		if (getConfig().getBoolean("xrayDetectorEnabled"))
 			xrayDetector = new XrayDetector(this);
-		
-		if (getConfig().getBoolean("wrongMovementDetectorEnabled", true)) {
-			wrongMovementDetector = new WrongMovementDetector(this);
-			
-			getServer().getLogger().setFilter(wrongMovementDetector);
-		}
+
+		logFilterHandler = new LogFilterHandler(this);
+		getServer().getLogger().setFilter(logFilterHandler);
 		
 		registerListener(new BlockListener(this));
 		registerListener(new ChatListener(this));

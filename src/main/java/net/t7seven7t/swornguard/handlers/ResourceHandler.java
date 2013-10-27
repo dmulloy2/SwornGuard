@@ -1,12 +1,14 @@
 /**
  * Copyright (C) 2012 t7seven7t
  */
-package net.t7seven7t.util;
+package net.t7seven7t.swornguard.handlers;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+
+import net.t7seven7t.util.FileResourceLoader;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
