@@ -61,6 +61,7 @@ public class PlayerData implements ConfigurationSerializable {
 	private transient long lastXrayWarn;
 	private transient long lastFlyWarn;
 	private transient long lastSpamWarn;
+	private transient long lastTeleport;
 	private transient long lastUpdateTimeSpent;
 	private long lastKick;
 	private long lastJail;

@@ -49,25 +49,24 @@ public class FlyDetector {
 	
 	private void step() {
 		for (final Player player : plugin.getServer().getOnlinePlayers()) {
-			if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission) ) {
+			if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission)) {
 				if (! player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity ||
 							(! isInWater(player) && getDistanceToGround(player) >= suspiciousDistFromGround))) {
-					if (! isPlayerFallingIntoVoid(player) && ! isPlayerInsideCar(player) && ! player.isInsideVehicle()) {
-						if (! isNewPlayerJoin(player)) {
-							final PlayerData data = plugin.getPlayerDataCache().getData(player);
-							final Vector previousLocation = player.getLocation().toVector();
-							if (! data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
-								data.setLastFlyWarn(System.currentTimeMillis());
-						
-								new BukkitRunnable() {
-							
-									@Override
-									public void run() {
-										checkPlayer(player, previousLocation);
-									}
-									
-								}.runTaskLater(plugin, 5L);
-							}
+					if (! isPlayerFallingIntoVoid(player) && ! isPlayerInsideCar(player) && ! player.isInsideVehicle() 
+							&& ! isNewPlayerJoin(player) && ! hasRecentlyTeleported(player)) {
+						final PlayerData data = plugin.getPlayerDataCache().getData(player);
+						final Vector previousLocation = player.getLocation().toVector();
+						if (! data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
+							data.setLastFlyWarn(System.currentTimeMillis());
+
+							new BukkitRunnable() {
+
+								@Override
+								public void run() {
+									checkPlayer(player, previousLocation);
+								}
+	
+							}.runTaskLater(plugin, 5L);
 						}
 					}
 				}
@@ -122,6 +121,7 @@ public class FlyDetector {
 		return count;
 	}
 
+	// dmulloy2 new methods
 	public boolean isPlayerFallingIntoVoid(Player player) {
 		Location loc = player.getLocation();
 		if (loc.getBlockY() < 0) {
@@ -141,9 +141,9 @@ public class FlyDetector {
 		if (player.isInsideVehicle()) {
 			Entity ent = player.getVehicle();
 			if (ent instanceof Vehicle) {
-				Vehicle veh = (Vehicle)ent;
+				Vehicle veh = (Vehicle) ent;
 				if (veh instanceof Minecart) {
-					Minecart cart = (Minecart)veh;
+					Minecart cart = (Minecart) veh;
 					Location loc = cart.getLocation();
 					
 					Material type = loc.getBlock().getType();
@@ -167,6 +167,15 @@ public class FlyDetector {
 			return true;
 		}
 		
+		return false;
+	}
+
+	public boolean hasRecentlyTeleported(Player player) {
+		PlayerData data = plugin.getPlayerDataCache().getData(player);
+		if (data != null) {
+			return System.currentTimeMillis() - data.getLastTeleport() > 60L;
+		}
+
 		return false;
 	}
 	

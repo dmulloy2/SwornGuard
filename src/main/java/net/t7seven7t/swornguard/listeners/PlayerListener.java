@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 /**
  * @author t7seven7t
@@ -178,9 +179,18 @@ public class PlayerListener implements Listener {
 	}
 		
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerMove(PlayerMoveEvent event) {
+	public void onPlayerMove(final PlayerMoveEvent event) {
 		if (plugin.getPlayerDataCache().getData(event.getPlayer()).isJailed())
 			plugin.getPlayerDataCache().getData(event.getPlayer()).setLastActivity(System.currentTimeMillis());
+	}
+
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onPlayerTeleport(final PlayerTeleportEvent event) {
+		if (! event.isCancelled()) {
+			// Update last teleport time, prevents false pings
+			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+			data.setLastTeleport(System.currentTimeMillis());
+		}
 	}
 
 }
