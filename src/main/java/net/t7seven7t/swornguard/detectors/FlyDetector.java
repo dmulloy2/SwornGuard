@@ -173,7 +173,7 @@ public class FlyDetector {
 	public boolean hasRecentlyTeleported(Player player) {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		if (data != null) {
-			return System.currentTimeMillis() - data.getLastTeleport() > 60L;
+			return System.currentTimeMillis() - data.getLastTeleport() < 60L;
 		}
 
 		return false;
