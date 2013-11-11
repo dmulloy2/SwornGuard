@@ -135,6 +135,10 @@ public class PlayerData implements ConfigurationSerializable {
 	public void putData(String key, Object object) {
 		data.put(key, object);
 	}
+
+	public boolean removeData(String key) {
+		return data.remove(key) != null;
+	}
 	
 	@SuppressWarnings("rawtypes")
 	@Override
