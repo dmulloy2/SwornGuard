@@ -32,6 +32,7 @@ public class PlayerData implements ConfigurationSerializable {
 	private List<String> profilerList = new ArrayList<String>();
 	private List<String> factionLog = new ArrayList<String>();
 	
+	private transient int consecutivePings;
 	private int logins;
 	private int blocksDeleted;
 	private int blocksBuilt;

@@ -81,9 +81,15 @@ public class FlyDetector {
 				(player.getLocation().getY() >= previousLocation.getY() && 
 					(Math.abs(player.getLocation().getX() - previousLocation.getX()) > suspiciousMoveDist ||
 					Math.abs(player.getLocation().getZ() - previousLocation.getZ()) > suspiciousMoveDist))) {
-			CheatEvent event = new CheatEvent(player.getName(), CheatType.FLYING, 
-					FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "flying!"));
-			plugin.getCheatHandler().announceCheat(event);
+			data.setConsecutivePings(data.getConsecutivePings() + 1);
+			if (data.getConsecutivePings() >= 2) {
+				CheatEvent event = new CheatEvent(player.getName(), CheatType.FLYING, 
+						FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "flying!"));
+				plugin.getCheatHandler().announceCheat(event);
+				
+				data.setConsecutivePings(0);
+			}
+			
 			data.setLastFlyWarn(System.currentTimeMillis());
 		} else {
 			data.setLastFlyWarn(0);
@@ -121,8 +127,9 @@ public class FlyDetector {
 		return count;
 	}
 
-	// dmulloy2 new methods
-	public boolean isPlayerFallingIntoVoid(Player player) {
+	// The following methods essentially work on improving the validity of pings
+	// By dmulloy2
+	private boolean isPlayerFallingIntoVoid(Player player) {
 		Location loc = player.getLocation();
 		if (loc.getBlockY() < 0) {
 			return true;
@@ -137,7 +144,7 @@ public class FlyDetector {
 		return true;
 	}
 
-	public boolean isPlayerInsideCar(Player player) {
+	private boolean isPlayerInsideCar(Player player) {
 		if (player.isInsideVehicle()) {
 			Entity ent = player.getVehicle();
 			if (ent instanceof Vehicle) {
@@ -157,7 +164,7 @@ public class FlyDetector {
 		return false;
 	}
 	
-	public boolean isNewPlayerJoin(Player player) {
+	private boolean isNewPlayerJoin(Player player) {
 		if (! player.hasPlayedBefore()) {
 			PlayerData data = plugin.getPlayerDataCache().getData(player);
 			if (data != null) {
@@ -170,7 +177,7 @@ public class FlyDetector {
 		return false;
 	}
 
-	public boolean hasRecentlyTeleported(Player player) {
+	private boolean hasRecentlyTeleported(Player player) {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		if (data != null) {
 			return System.currentTimeMillis() - data.getLastTeleport() < 60L;

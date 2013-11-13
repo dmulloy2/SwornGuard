@@ -54,9 +54,17 @@ public class LogFilterHandler implements Filter {
 						if (! player.getAllowFlight()) {
 							if (! isPlayerFallingIntoVoid(player) && ! isPlayerInsideCar(player) && ! player.isInsideVehicle() 
 									&& ! isNewPlayerJoin(player) && ! hasRecentlyTeleported(player)) {
-								CheatEvent event = new CheatEvent(player.getName(), CheatType.MOVED_WRONGLY, 
-										FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving too quickly!"));
-								plugin.getCheatHandler().announceCheat(event);
+								PlayerData data = plugin.getPlayerDataCache().getData(player);
+								data.setConsecutivePings(data.getConsecutivePings() + 1);
+								if (data.getConsecutivePings() >= 2) {
+									// Announce the cheat
+									CheatEvent event = new CheatEvent(player.getName(), CheatType.MOVED_WRONGLY, 
+											FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving too quickly!"));
+									plugin.getCheatHandler().announceCheat(event);
+									
+									// Reset their consecutive pings
+									data.setConsecutivePings(0);
+								}
 							}
 						}
 					}
