@@ -1,3 +1,6 @@
+/**
+ * (c) 2013 dmulloy2
+ */
 package net.t7seven7t.swornguard.listeners;
 
 import net.t7seven7t.swornguard.SwornGuard;
@@ -50,10 +53,7 @@ public class FactionsListener implements Listener, Reloadable {
 		}
 		
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}",
-				TimeUtil.getLongDateCurr(), 
-				player.getName(), 
-				action,
+		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}", TimeUtil.getLongDateCurr(), player.getName(), action,
 				event.getFaction().getTag()));
 		
 		data.getFactionLog().add(line.toString());
@@ -87,10 +87,7 @@ public class FactionsListener implements Listener, Reloadable {
 		
 
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}",
-				TimeUtil.getLongDateCurr(),
-				fplayer.getName(),
-				action,
+		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}", TimeUtil.getLongDateCurr(), fplayer.getName(), action,
 				event.getFaction().getTag()));
 		
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getFPlayer().getName());
@@ -104,4 +101,5 @@ public class FactionsListener implements Listener, Reloadable {
 	public void reload() {
 		this.factionBetrayalDetectorEnabled = plugin.getConfig().getBoolean("factionBetrayalDetectorEnabled");
 	}
+	
 }

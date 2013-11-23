@@ -9,23 +9,22 @@ import java.util.List;
 import net.t7seven7t.swornguard.SwornGuard;
 
 /**
- * @author t7seven7t
  * Represents a command that can have pages
+ * 
+ * @author t7seven7t
  */
 public abstract class PaginatedCommand extends SwornGuardCommand {
-	
+	protected int linesPerPage = 10;
+	protected int pageArgIndex = 0;
+
 	public PaginatedCommand(SwornGuard plugin) {
 		super(plugin);
 	}
 
-	protected int linesPerPage = 10;
-	
-	int pageArgIndex = 0;
-	
 	@Override
 	public void perform() {
 		int index = 1;
-		if (this.args.length > pageArgIndex) {
+		if (args.length > pageArgIndex) {
 			try {
 				index = Integer.parseInt(args[pageArgIndex]);
 				if (index < 1 || index > getPageCount())
@@ -102,4 +101,5 @@ public abstract class PaginatedCommand extends SwornGuardCommand {
 	 * @return A string representation of the line
 	 */
 	public abstract String getLine(int index);
+	
 }
