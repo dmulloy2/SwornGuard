@@ -9,7 +9,6 @@ import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-
 /**
  * @author t7seven7t
  */

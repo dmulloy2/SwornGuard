@@ -25,13 +25,17 @@ public class ServerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onServerCommand(ServerCommandEvent event) {
-		String command = event.getCommand().toLowerCase().split(" ")[0];
-		String[] args = event.getCommand().split(" ");
+		String[] args = event.getCommand().toLowerCase().split(" ");
+		String command = args[0];
 		if (args.length > 0) {
-			List<String> Args = new ArrayList<String>();
-			for (int i = 1; i < args.length; i++)
-				Args.add(args[i]);
-			plugin.getCommandDetector().checkCommand(event.getSender(), command, Args.toArray(new String[0]));
+			List<String> argsList = new ArrayList<String>();
+
+			for (int i = 1; i < args.length; i++) {
+				argsList.add(args[i]);
+			}
+
+			plugin.getCommandDetector().checkCommand(event.getSender(), command, argsList.toArray(new String[0]));
 		}
 	}
+
 }

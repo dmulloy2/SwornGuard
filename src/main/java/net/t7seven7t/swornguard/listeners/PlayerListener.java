@@ -7,6 +7,7 @@ import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.tasks.InmateTimerTask;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.swornguard.types.Reloadable;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -26,14 +27,13 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 /**
  * @author t7seven7t
  */
-public class PlayerListener implements Listener {
+public class PlayerListener implements Listener, Reloadable {
 	private final SwornGuard plugin;
-	
-	private final boolean combatLogDetectorEnabled;
+	private boolean combatLogDetectorEnabled;
 	
 	public PlayerListener(final SwornGuard plugin) {
 		this.plugin = plugin;
-		this.combatLogDetectorEnabled = plugin.getConfig().getBoolean("combatLogDetectorEnabled");
+		this.reload();
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -191,6 +191,11 @@ public class PlayerListener implements Listener {
 			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 			data.setLastTeleport(System.currentTimeMillis());
 		}
+	}
+
+	@Override
+	public void reload() {
+		this.combatLogDetectorEnabled = plugin.getConfig().getBoolean("combatLogDetectorEnabled");
 	}
 
 }

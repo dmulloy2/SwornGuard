@@ -3,6 +3,7 @@ package net.t7seven7t.swornguard.listeners;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.FactionKick;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.TimeUtil;
 
@@ -11,30 +12,34 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.event.FPlayerLeaveEvent;
 
 /**
  * @author dmulloy2
  */
-public class FactionsListener implements Listener {
+public class FactionsListener implements Listener, Reloadable {
 	private final SwornGuard plugin;
-	private final boolean factionBetrayalDetectorEnabled;
+	private  boolean factionBetrayalDetectorEnabled;
 	
 	public FactionsListener(final SwornGuard plugin) {
 		this.plugin = plugin;
-		this.factionBetrayalDetectorEnabled = plugin.getConfig().getBoolean("factionBetrayalDetectorEnabled");
+		this.reload();
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoinFaction(FPlayerJoinEvent event) {
-		if (event.isCancelled())
+		FPlayer fplayer = event.getFPlayer();
+		if (event.isCancelled() || fplayer == null) {
 			return;
-		
+		}
+
 		Player player = event.getFPlayer().getPlayer();
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
-		if (data == null)
+		if (player == null || data == null) {
 			return;
+		}
 		
 		data.setFactions(data.getFactions() + 1);
 		data.setLastFaction(event.getFaction().getTag());
@@ -56,12 +61,13 @@ public class FactionsListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerLeaveFaction(FPlayerLeaveEvent event) {
-		if (event.isCancelled())
+		FPlayer fplayer = event.getFPlayer();
+		if (event.isCancelled() || fplayer == null)
 			return;
 		
 		if (factionBetrayalDetectorEnabled) {
 			if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED) {
-				plugin.getFactionBetrayaldetector().addPossibleBetrayedPlayer(event.getFPlayer().getName(), 
+				plugin.getFactionBetrayaldetector().addPossibleBetrayedPlayer(fplayer.getName(), 
 						new FactionKick(event.getFaction().getTag(), System.currentTimeMillis()));
 			}
 		}
@@ -83,7 +89,7 @@ public class FactionsListener implements Listener {
 		StringBuilder line = new StringBuilder();
 		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}",
 				TimeUtil.getLongDateCurr(),
-				event.getFPlayer().getName(),
+				fplayer.getName(),
 				action,
 				event.getFaction().getTag()));
 		
@@ -92,5 +98,10 @@ public class FactionsListener implements Listener {
 			return;
 
 		data.getFactionLog().add(line.toString());
+	}
+
+	@Override
+	public void reload() {
+		this.factionBetrayalDetectorEnabled = plugin.getConfig().getBoolean("factionBetrayalDetectorEnabled");
 	}
 }

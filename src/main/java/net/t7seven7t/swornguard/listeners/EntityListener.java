@@ -5,6 +5,7 @@ package net.t7seven7t.swornguard.listeners;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.swornguard.types.Reloadable;
 
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
@@ -21,17 +22,15 @@ import org.bukkit.event.entity.EntityDamageEvent;
 /**
  * @author t7seven7t
  */
-public class EntityListener implements Listener {
+public class EntityListener implements Listener, Reloadable {
 	private final SwornGuard plugin;
-	private final boolean autoClickerDetectorEnabled;
-	private final boolean factionBetrayalDetectorEnabled;
-	private final boolean combatLogDetectorEnabled;
+	private boolean autoClickerDetectorEnabled;
+	private boolean factionBetrayalDetectorEnabled;
+	private boolean combatLogDetectorEnabled;
 	
 	public EntityListener(final SwornGuard plugin) {
 		this.plugin = plugin;
-		this.autoClickerDetectorEnabled = plugin.getConfig().getBoolean("autoclickerDetectorEnabled");
-		this.combatLogDetectorEnabled = plugin.getConfig().getBoolean("combatLogDetectorEnabled");
-		this.factionBetrayalDetectorEnabled = plugin.getConfig().getBoolean("factionBetrayalDetectorEnabled");
+		this.reload();
 	}
 	
 	@EventHandler(priority = EventPriority.NORMAL)
@@ -137,6 +136,13 @@ public class EntityListener implements Listener {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void reload() {
+		this.autoClickerDetectorEnabled = plugin.getConfig().getBoolean("autoclickerDetectorEnabled");
+		this.combatLogDetectorEnabled = plugin.getConfig().getBoolean("combatLogDetectorEnabled");
+		this.factionBetrayalDetectorEnabled = plugin.getConfig().getBoolean("factionBetrayalDetectorEnabled");
 	}
 
 }

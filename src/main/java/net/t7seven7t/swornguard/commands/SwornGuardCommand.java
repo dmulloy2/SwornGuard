@@ -42,16 +42,15 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 	
 	public SwornGuardCommand(SwornGuard plugin) {
 		this.plugin = plugin;
-		requiredArgs = new ArrayList<String>(2);
-		optionalArgs = new ArrayList<String>(2);
-		aliases = new ArrayList<String>(2);
+		this.requiredArgs = new ArrayList<String>(2);
+		this.optionalArgs = new ArrayList<String>(2);
+		this.aliases = new ArrayList<String>(2);
 	}
 	
 	public abstract void perform();
 	
 	@Override
-	public final boolean onCommand(CommandSender sender, Command command, String label,
-			String[] args) {
+	public final boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		execute(sender, args);
 		return true;
 	}
@@ -62,7 +61,7 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 		if (sender instanceof Player)
 			player = (Player) sender;
 		
-		if (mustBePlayer && !isPlayer()) {
+		if (mustBePlayer && ! isPlayer()) {
 			err(plugin.getMessage("error_must_be_player"));
 			return;
 		}
@@ -71,19 +70,25 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 			err(plugin.getMessage("error_arg_count"), getUsageTemplate(false));
 			return;
 		}
-		
-		if (hasPermission())
-			perform();
-		else
+
+		if (! hasPermission()) {
 			err(plugin.getMessage("error_insufficient_permissions"));
+			return;
+		}
+
+		try {
+			perform();
+		} catch (Exception e) {
+			err(e.getMessage());
+		}
 	}
 	
 	protected final boolean isPlayer() {
-		return (player != null);
+		return player != null;
 	}
 	
 	private final boolean hasPermission() {
-		return (plugin.getPermissionHandler().hasPermission(sender, permission));
+		return plugin.getPermissionHandler().hasPermission(sender, permission);
 	}
 	
 	protected final boolean argMatchesAlias(String arg, String... aliases) {

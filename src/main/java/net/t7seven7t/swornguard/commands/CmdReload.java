@@ -5,11 +5,12 @@ package net.t7seven7t.swornguard.commands;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Reloadable;
 
 /**
  * @author t7seven7t
  */
-public class CmdReload extends SwornGuardCommand {
+public class CmdReload extends SwornGuardCommand implements Reloadable {
 
 	public CmdReload(SwornGuard plugin) {
 		super(plugin);
@@ -21,8 +22,12 @@ public class CmdReload extends SwornGuardCommand {
 	
 	@Override
 	public void perform() {
-		plugin.onDisable();
-		plugin.onEnable();
+		reload(); // Deal with it :3
+	}
+
+	@Override
+	public void reload() {
+		plugin.reload();
 		sendMessage(plugin.getMessage("reload_confirm"));
 		plugin.getLogHandler().log(plugin.getMessage("reload_log"), sender.getName());
 	}

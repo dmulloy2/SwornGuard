@@ -21,14 +21,13 @@ import org.bukkit.command.PluginCommand;
  */
 public class CommandHandler implements CommandExecutor {
 	private final SwornGuard plugin;
-	// Only need the name of command prefix - all other aliases listed in plugin.yml will be usable
 	private String commandPrefix;
 	private List<SwornGuardCommand> registeredPrefixedCommands;
 	private List<SwornGuardCommand> registeredCommands;
 	
 	public CommandHandler(SwornGuard plugin) {
 		this.plugin = plugin;
-		registeredCommands = new ArrayList<SwornGuardCommand>();
+		this.registeredCommands = new ArrayList<SwornGuardCommand>();
 	}
 	
 	public void registerCommand(SwornGuardCommand command) {
@@ -60,7 +59,8 @@ public class CommandHandler implements CommandExecutor {
 
 	public void setCommandPrefix(String commandPrefix) {
 		this.commandPrefix = commandPrefix;
-		registeredPrefixedCommands = new ArrayList<SwornGuardCommand>();
+		this.registeredPrefixedCommands = new ArrayList<SwornGuardCommand>();
+
 		plugin.getCommand(commandPrefix).setExecutor(this);
 	}
 
@@ -69,8 +69,7 @@ public class CommandHandler implements CommandExecutor {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label,
-			String[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> argsList = new ArrayList<String>();
 		
 		if (args.length > 0) {

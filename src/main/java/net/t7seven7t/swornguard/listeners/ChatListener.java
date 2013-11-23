@@ -16,6 +16,7 @@ import net.t7seven7t.swornguard.detectors.SpamDetector.ChatType;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.tasks.FireworkRunnable;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.ChatColor;
@@ -40,19 +41,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * @author t7seven7t
  */
-public class ChatListener implements Listener {
+public class ChatListener implements Listener, Reloadable {
 	private final SwornGuard plugin;
-	private final List<String> allowedCommandsInJail;
-	private final boolean spamDetectorEnabled;
-	private final List<String> blockedCommands;
-	private final List<String> blockedCommandsInHell;
+	private List<String> allowedCommandsInJail;
+	private boolean spamDetectorEnabled;
+	private List<String> blockedCommands;
+	private List<String> blockedCommandsInHell;
 
 	public ChatListener(final SwornGuard plugin) {
 		this.plugin = plugin;
-		this.allowedCommandsInJail = plugin.getConfig().getStringList("allowedCommandsInJail");
-		this.spamDetectorEnabled = plugin.getConfig().getBoolean("spamDetectorEnabled");
-		this.blockedCommands = plugin.getConfig().getStringList("blockedCommands");
-		this.blockedCommandsInHell = plugin.getConfig().getStringList("blockedCommandsInHell");
+		this.reload();
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -326,6 +324,14 @@ public class ChatListener implements Listener {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void reload() {
+		this.allowedCommandsInJail = plugin.getConfig().getStringList("allowedCommandsInJail");
+		this.spamDetectorEnabled = plugin.getConfig().getBoolean("spamDetectorEnabled");
+		this.blockedCommands = plugin.getConfig().getStringList("blockedCommands");
+		this.blockedCommandsInHell = plugin.getConfig().getStringList("blockedCommandsInHell");
 	}
 
 }

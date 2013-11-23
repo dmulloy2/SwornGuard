@@ -3,6 +3,8 @@
  */
 package net.t7seven7t.swornguard;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
 
@@ -57,6 +59,7 @@ import net.t7seven7t.swornguard.listeners.EntityListener;
 import net.t7seven7t.swornguard.listeners.FactionsListener;
 import net.t7seven7t.swornguard.listeners.PlayerListener;
 import net.t7seven7t.swornguard.listeners.ServerListener;
+import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.swornguard.types.ServerData;
 import net.t7seven7t.util.SimpleVector;
 
@@ -69,7 +72,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * @author t7seven7t
  */
-public class SwornGuard extends JavaPlugin {
+public class SwornGuard extends JavaPlugin implements Reloadable {
 	private @Getter LogHandler logHandler;
 	private @Getter CommandHandler commandHandler;
 	private @Getter PermissionHandler permissionHandler;
@@ -89,6 +92,8 @@ public class SwornGuard extends JavaPlugin {
 	private @Getter FactionBetrayalDetector factionBetrayaldetector;
 	private @Getter FlyDetector flyDetector;
 	private @Getter XrayDetector xrayDetector;
+
+	private List<Listener> listeners;
 	
 	private @Getter boolean debug;
 
@@ -137,6 +142,7 @@ public class SwornGuard extends JavaPlugin {
 		logFilterHandler = new LogFilterHandler(this);
 		getServer().getLogger().setFilter(logFilterHandler);
 		
+		listeners = new ArrayList<Listener>();
 		registerListener(new BlockListener(this));
 		registerListener(new ChatListener(this));
 		registerListener(new EntityListener(this));
@@ -210,7 +216,25 @@ public class SwornGuard extends JavaPlugin {
 	}
 	
 	public void registerListener(Listener listener) {
+		listeners.add(listener);
+
 		getServer().getPluginManager().registerEvents(listener, this);
+	}
+
+	@Override
+	public void reload() {
+		// Config
+		reloadConfig();
+		
+		// Handler(s)
+		logFilterHandler.reload();
+		
+		// Listeners
+		for (Listener listener : listeners) {
+			if (listener instanceof Reloadable) {
+				((Reloadable) listener).reload();
+			}
+		}
 	}
 	
 	public String getMessage(String string) {

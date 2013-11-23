@@ -13,6 +13,7 @@ import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.CheatType;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.Util;
 
@@ -26,17 +27,14 @@ import org.bukkit.entity.Vehicle;
 /**
  * @author dmulloy2
  */
-
-public class LogFilterHandler implements Filter {
+public class LogFilterHandler implements Filter, Reloadable {
 	private final SwornGuard plugin;
-	private final boolean wrongMovementDetectorEnabled;
-	private final List<String> filterMessagesFromLog;
+	private boolean wrongMovementDetectorEnabled;
+	private List<String> filterMessagesFromLog;
 
 	public LogFilterHandler(SwornGuard plugin) {
 		this.plugin = plugin;
-
-		this.wrongMovementDetectorEnabled = plugin.getConfig().getBoolean("wrongMovementDetectorEnabled");
-		this.filterMessagesFromLog = plugin.getConfig().getStringList("filterMessagesFromLog");
+		this.reload();
 	}
 
 	@Override
@@ -144,6 +142,12 @@ public class LogFilterHandler implements Filter {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void reload() {
+		this.wrongMovementDetectorEnabled = plugin.getConfig().getBoolean("wrongMovementDetectorEnabled");
+		this.filterMessagesFromLog = plugin.getConfig().getStringList("filterMessagesFromLog");
 	}
 	
 }
