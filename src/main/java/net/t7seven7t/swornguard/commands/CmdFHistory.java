@@ -32,18 +32,16 @@ public class CmdFHistory extends PaginatedCommand {
 	
 	@Override
 	public void perform() {
-		if (args.length == 0 && isPlayer())
-			target = player;
-		else if (args.length > 0)
-			target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
 		
-		PlayerData data = plugin.getPlayerDataCache().getData(target);
+		PlayerData data = getPlayerData(target);
+
 		if (data.getFactionLog() != null) {
 			factionHistory = new ArrayList<String>();
-			for (int x = data.getFactionLog().size() - 1; x >= 0; x--) {
-				factionHistory.add(data.getFactionLog().get(x));
+			for (int i = data.getFactionLog().size() - 1; i >= 0; i--) {
+				factionHistory.add(data.getFactionLog().get(i));
 			}
 			
 			super.perform();

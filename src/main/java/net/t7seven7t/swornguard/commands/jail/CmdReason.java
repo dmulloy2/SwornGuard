@@ -28,18 +28,18 @@ public class CmdReason extends SwornGuardCommand {
 	
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
 		
+		PlayerData data = getPlayerData(target);
+
 		StringBuilder reason = new StringBuilder();
 		for (int i = 1; i < args.length; i++)
 			reason.append(args[i] + " ");
 		
 		reason.deleteCharAt(reason.lastIndexOf(" "));
-		
-		PlayerData data = plugin.getPlayerDataCache().getData(target);
-		
+
 		if (data.isJailed()) {
 			data.setLastJailReason(reason.toString());
 			data.getProfilerList().add(FormatUtil.format(	plugin.getMessage("profiler_event"), 

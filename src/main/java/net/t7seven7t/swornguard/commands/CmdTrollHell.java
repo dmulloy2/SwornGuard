@@ -29,15 +29,13 @@ public class CmdTrollHell extends SwornGuardCommand {
 
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
 		
 		PlayerData data = getPlayerData(target);
-		if (data == null)
-			return;
-		
-		data.setTrollHell(!data.isTrollHell());
+
+		data.setTrollHell(! data.isTrollHell());
 		
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();

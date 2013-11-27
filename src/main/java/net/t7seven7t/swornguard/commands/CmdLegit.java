@@ -24,11 +24,7 @@ public class CmdLegit extends SwornGuardCommand {
 	
 	@Override
 	public void perform() {
-		OfflinePlayer target = null;
-		if (args.length == 0 && isPlayer())
-			target = player;
-		else if (args.length > 0)
-			target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
 		

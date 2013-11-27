@@ -32,24 +32,12 @@ public class CmdInfo extends SwornGuardCommand {
 
 	@Override
 	public void perform() {
-		OfflinePlayer target = null;
-		if (args.length == 0 && isPlayer())
-			target = player;
-		else if (args.length > 0)
-			target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0, hasPermission(sender, PermissionType.CMD_INFO_OTHERS.permission));
 		if (target == null)
 			return;
-		
-		if (isPlayer() && !target.getName().equalsIgnoreCase(player.getName()) && 
-				!plugin.getPermissionHandler().hasPermission(player, PermissionType.CMD_INFO_OTHERS.permission)) {
-			err(plugin.getMessage("error_insufficient_permissions"));
-			return;
-		}
-		
+
 		PlayerData data = getPlayerData(target);
-		if (data == null)
-			return;
-		
+
 		List<String> lines = new ArrayList<String>();
 		StringBuilder line = new StringBuilder();
 		line.append(FormatUtil.format(plugin.getMessage("info_header"), 

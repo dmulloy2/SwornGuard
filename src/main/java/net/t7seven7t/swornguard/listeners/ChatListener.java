@@ -165,8 +165,6 @@ public class ChatListener implements Listener, Reloadable {
 					event.setCancelled(true);
 					event.getPlayer().sendMessage(FormatUtil.format(plugin.getMessage("jail_cannot_use_command")));
 			}
-			
-
 		}
 	}
 	

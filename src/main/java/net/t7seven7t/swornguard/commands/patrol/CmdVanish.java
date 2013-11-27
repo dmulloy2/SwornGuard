@@ -29,7 +29,7 @@ public class CmdVanish extends SwornGuardCommand {
 	public void perform() {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		
-		boolean vanish = !data.isVanished();
+		boolean vanish = ! data.isVanished();
 		
 		if (args.length > 0) {
 			if (args[0].equalsIgnoreCase("on"))

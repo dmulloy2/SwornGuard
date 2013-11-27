@@ -33,6 +33,8 @@ public class PlayerData implements ConfigurationSerializable {
 	private List<String> factionLog = new ArrayList<String>();
 	
 	private transient int consecutivePings;
+	private transient int patrolInterval;
+
 	private int logins;
 	private int blocksDeleted;
 	private int blocksBuilt;

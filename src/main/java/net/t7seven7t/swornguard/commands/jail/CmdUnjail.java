@@ -25,12 +25,12 @@ public class CmdUnjail extends SwornGuardCommand {
 	
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
-		
-		PlayerData data = plugin.getPlayerDataCache().getData(target);
-		
+
+		PlayerData data = getPlayerData(target);
+
 		if (data.isJailed()) {
 			plugin.getJailHandler().unjail(target, sender.getName());
 			plugin.getLogHandler().log(plugin.getMessage("jail_log_unjail"), target.getName(), sender.getName());

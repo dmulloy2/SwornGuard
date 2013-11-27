@@ -32,18 +32,12 @@ public class CmdBanInfo extends SwornGuardCommand {
 
 	@Override
 	public void perform() {
-		OfflinePlayer target = null;
-		if (args.length == 0 && isPlayer())
-			target = player;
-		else if (args.length > 0)
-			target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
 		
 		PlayerData data = getPlayerData(target);
-		if (data == null)
-			return;
-		
+
 		List<String> lines = new ArrayList<String>();
 		
 		StringBuilder line = new StringBuilder();

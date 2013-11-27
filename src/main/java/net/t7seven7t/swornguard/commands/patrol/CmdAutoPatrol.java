@@ -27,7 +27,7 @@ public class CmdAutoPatrol extends SwornGuardCommand {
 	public void perform() {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		
-		if (data.isPatrolling() && !data.isCooldownPatrolling()) {
+		if (data.isPatrolling() && ! data.isCooldownPatrolling()) {
 			plugin.getPatrolHandler().unAutoPatrol(player);
 			return;
 		}

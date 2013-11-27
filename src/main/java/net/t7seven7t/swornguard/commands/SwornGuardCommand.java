@@ -91,8 +91,12 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 		return player != null;
 	}
 	
-	private final boolean hasPermission() {
+	protected boolean hasPermission(CommandSender sender, Permission permission) {
 		return plugin.getPermissionHandler().hasPermission(sender, permission);
+	}
+	
+	private final boolean hasPermission() {
+		return hasPermission(sender, permission);
 	}
 	
 	protected final boolean argMatchesAlias(String arg, String... aliases) {
@@ -142,10 +146,40 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 		
 		return FormatUtil.format(ret.toString());
 	}
-	
-	protected OfflinePlayer getTarget(String name) {
+
+	protected OfflinePlayer getTarget(int argIndex) {
+		return getTarget(argIndex, true);
+	}
+
+	protected OfflinePlayer getTarget(int argIndex, boolean others) {
+		OfflinePlayer target = null;
+
+		if (! isPlayer()) {
+			if (args.length == 1) {
+				target = getTarget(args[argIndex], false);
+			}
+		} else {
+			if (args.length == 0) {
+				target = player;
+			} else if (others) {
+				target = getTarget(args[argIndex], false);
+			}
+		}
+
+		if (target == null) {
+			err(plugin.getMessage("error_player_not_found"));
+		}
+
+		if (getPlayerData(target) == null) {
+			err(plugin.getMessage("error_player_not_found"));
+		}
+
+		return target;
+	}
+
+	protected OfflinePlayer getTarget(String name, boolean msg) {
 		OfflinePlayer target = Util.matchOfflinePlayer(name);
-		if (target == null)
+		if (target == null && msg)
 			err(plugin.getMessage("error_player_not_found"), name);
 		return target;
 	}

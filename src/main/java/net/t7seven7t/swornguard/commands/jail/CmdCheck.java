@@ -23,25 +23,21 @@ public class CmdCheck extends SwornGuardCommand {
 		this.permission = PermissionType.CMD_JAIL_CHECK.permission;
 		this.requiredArgs.add("player");
 	}
-	
+
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
-		
-		PlayerData data = plugin.getPlayerDataCache().getData(target);
-		
+
+		PlayerData data = getPlayerData(target);
+
 		if (data.isJailed()) {
-			sendMessage(plugin.getMessage("jail_check"), 
-						target.getName(), 
-						TimeUtil.formatTime(data.getJailTime()), 
-						data.getLastJailReason(), 
-						data.getLastJailer());
+			sendMessage(plugin.getMessage("jail_check"), target.getName(), TimeUtil.formatTime(data.getJailTime()), data.getLastJailReason(),
+					data.getLastJailer());
 		} else {
-			sendMessage(plugin.getMessage("jail_not_jailed"),
-						target.getName() + " is");
+			sendMessage(plugin.getMessage("jail_not_jailed"), target.getName() + " is");
 		}
 	}
-	
+
 }

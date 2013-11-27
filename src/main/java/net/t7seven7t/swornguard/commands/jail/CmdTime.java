@@ -3,12 +3,15 @@
  */
 package net.t7seven7t.swornguard.commands.jail;
 
+import java.util.logging.Level;
+
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.TimeUtil;
+import net.t7seven7t.util.Util;
 
 import org.bukkit.OfflinePlayer;
 
@@ -28,26 +31,32 @@ public class CmdTime extends SwornGuardCommand {
 	
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
+		
+		PlayerData data = getPlayerData(target);
 		
 		long time;
 		try {
 			time = TimeUtil.parseTime(args[1]);
-		} catch (Exception ex) {
-			if (ex != null && ex.getMessage() != null && ex.getMessage().equals("badtime"))
+		} catch (Exception e) {
+			if (e.getMessage().equals("badtime")) {
 				err(plugin.getMessage("jail_error_time_format"), args[1]);
+			} else {
+				if (plugin.isDebug()) {
+					plugin.getLogHandler().log(Level.SEVERE, Util.getUsefulStack(e, "getting jail time"));
+				}
+			}
+
 			return;
 		}
-		
+
 		if (time < 1000) {
 			err(plugin.getMessage("jail_error_time_out_of_range"), args[1]);
 			return;
 		}
-		
-		PlayerData data = plugin.getPlayerDataCache().getData(target);
-		
+
 		if (data.isJailed()) {
 			data.setJailTime(time);
 			data.getProfilerList().add(FormatUtil.format(	plugin.getMessage("profiler_event"), 

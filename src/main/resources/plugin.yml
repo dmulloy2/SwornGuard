@@ -216,6 +216,6 @@ permissions:
     swornguard.trollspy:
         default: false
     swornguard.firework:
-        default: true
+        default: false
     swornguard.creepfun:
         default: false

@@ -25,18 +25,12 @@ public class CmdRatio extends SwornGuardCommand {
 	
 	@Override
 	public void perform() {
-		OfflinePlayer target = null;
-		if (args.length == 0 && isPlayer())
-			target = player;
-		else if (args.length > 0)
-			target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
 		
 		PlayerData data = getPlayerData(target);
-		if (data == null)
-			return;
-		
+
 		sendMessage(plugin.getMessage("ratio_header"), target.getName());
 		if (data.getDiamondMined() == 0)
 			sendMessage(plugin.getMessage("ratio_not_mined"), plugin.getMessage("ratio_diamond"));

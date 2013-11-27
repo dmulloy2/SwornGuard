@@ -30,13 +30,11 @@ public class CmdNote extends SwornGuardCommand {
 	
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
 		
 		final PlayerData data = getPlayerData(target);
-		if (data == null)
-			return;
 		
 		final StringBuilder line = new StringBuilder();
 		line.append(FormatUtil.format(plugin.getMessage("note_format"), TimeUtil.getLongDateCurr(), sender.getName()));

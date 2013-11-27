@@ -19,7 +19,7 @@ import org.bukkit.OfflinePlayer;
 public class CmdShow extends PaginatedCommand {
 	private OfflinePlayer target = null;
 	private List<String> profilerList = null;
-	
+
 	public CmdShow(SwornGuard plugin) {
 		super(plugin);
 		this.name = "show";
@@ -31,23 +31,21 @@ public class CmdShow extends PaginatedCommand {
 		this.pageArgIndex = 1;
 		this.usesPrefix = true;
 	}
-	
+
 	@Override
 	public void perform() {
-		if (args.length == 0 && isPlayer())
-			target = player;
-		else if (args.length > 0)
-			target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
 		
-		PlayerData data = plugin.getPlayerDataCache().getData(target);
+		PlayerData data = getPlayerData(target);
+
 		if (data.getProfilerList() != null) {
 			profilerList = new ArrayList<String>();
 			for (int x = data.getProfilerList().size() - 1; x >= 0; x--) {
 				profilerList.add(data.getProfilerList().get(x));
 			}
-			
+
 			super.perform();
 		} else {
 			err(plugin.getMessage("error_no_profiler_data"), target.getName());
@@ -68,5 +66,5 @@ public class CmdShow extends PaginatedCommand {
 	public String getLine(int index) {
 		return FormatUtil.format("&e{0}", profilerList.get(index));
 	}
-	
+
 }

@@ -84,6 +84,8 @@ public class PatrolHandler {
 			data.setPreviousLocation(player.getLocation());
 		
 		data.setPatrolling(true);
+		data.setPatrolInterval(interval);
+
 		applyPatrolBuffs(player, true);
 		plugin.getLogHandler().log(player.getName() + " has started auto patrolling.");
 		
@@ -107,7 +109,8 @@ public class PatrolHandler {
 	public void unAutoPatrol(final Player player) {
 		final PlayerData data = plugin.getPlayerDataCache().getData(player);
 		data.setCooldownPatrolling(true);
-		player.sendMessage(ChatColor.YELLOW + "Patrol mode will wear off in 30 seconds.");
+		int interval = data.getPatrolInterval();
+		player.sendMessage(ChatColor.YELLOW + "Patrol mode will wear off in " + interval + " seconds.");
 		int id = plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
 			
 			@Override
@@ -121,7 +124,7 @@ public class PatrolHandler {
 				}
 			}
 			
-		}, 30 * 20L).getTaskId();
+		}, interval * 20L).getTaskId();
 		
 		cancelTasks(player);
 		

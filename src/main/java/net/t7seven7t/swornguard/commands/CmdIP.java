@@ -19,7 +19,7 @@ import org.bukkit.OfflinePlayer;
 public class CmdIP extends PaginatedCommand {
 	private OfflinePlayer target = null;
 	private List<String> ipList = null;
-	
+
 	public CmdIP(SwornGuard plugin) {
 		super(plugin);
 		this.name = "ip";
@@ -30,35 +30,34 @@ public class CmdIP extends PaginatedCommand {
 		this.pageArgIndex = 1;
 		this.usesPrefix = true;
 	}
-	
+
 	@Override
 	public void perform() {
-		if (args.length == 0 && isPlayer())
-			target = player;
-		else if (args.length > 0)
-			target = getTarget(args[0]);
+		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
 		
-		PlayerData data = plugin.getPlayerDataCache().getData(target);
+		PlayerData data = getPlayerData(target);
+
 		if (data.getIpAddressList() != null) {
 			ipList = new ArrayList<String>();
-			for (int x = data.getIpAddressList().size() - 1; x >= 0; x--) {
-				ipList.add(data.getIpAddressList().get(x));
+			for (int i = data.getIpAddressList().size() - 1; i >= 0; i--) {
+				ipList.add(data.getIpAddressList().get(i));
 			}
-			
+
 			super.perform();
+		} else {
+			err(plugin.getMessage("error_no_ip_data"), target.getName());
 		}
-		
 	}
 
 	@Override
-	public int getListSize() {		
+	public int getListSize() {
 		return ipList.size();
 	}
 
 	@Override
-	public String getHeader(int index) {		
+	public String getHeader(int index) {
 		return FormatUtil.format(plugin.getMessage("ip_header"), target.getName(), index, getPageCount());
 	}
 
@@ -66,5 +65,5 @@ public class CmdIP extends PaginatedCommand {
 	public String getLine(int index) {
 		return FormatUtil.format("&e{0}", ipList.get(index));
 	}
-	
+
 }
