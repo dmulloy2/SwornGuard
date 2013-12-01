@@ -97,7 +97,7 @@ public class PlayerData implements ConfigurationSerializable {
 	private String lastKickReason;
 	private String lastFaction;
 	
-	@Setter(AccessLevel.NONE) 
+	@Setter(AccessLevel.PRIVATE) 
 	private Map<String, Object> data = new HashMap<String, Object>();
 	
 	public void updateSpentTime() {
@@ -155,8 +155,6 @@ public class PlayerData implements ConfigurationSerializable {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Map<String, Object> serialize() {
-		
-		
 		Map<String, Object> data = new HashMap<String, Object>();
 		
 		for (Field field : getClass().getDeclaredFields()) {
@@ -185,20 +183,19 @@ public class PlayerData implements ConfigurationSerializable {
 					if (((String) field.get(this)) != null)
 						data.put(field.getName(), field.get(this));
 				} else if (field.getType().isAssignableFrom(Map.class)) {
-					if (!((Map) field.get(this)).isEmpty())
-						data.put(field.getName(), field.get(this));
+					data.put(field.getName(), field.get(this));
 				} else {
 					if (field.get(this) != null)
 						data.put(field.getName(), field.get(this));
 				}
-								
+				
 				if (!accessible)
 					field.setAccessible(false);
 				
 			} catch (Throwable ex) {
 			}
 		}
-		
+
 		return data;
 	}
 }
