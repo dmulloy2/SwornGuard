@@ -97,7 +97,8 @@ public class PlayerData implements ConfigurationSerializable {
 	private String lastKickReason;
 	private String lastFaction;
 	
-	@Setter(AccessLevel.NONE) private Map<String, Object> data = new HashMap<String, Object>();
+	@Setter(AccessLevel.NONE) 
+	private Map<String, Object> data = new HashMap<String, Object>();
 	
 	public void updateSpentTime() {
 		long now = System.currentTimeMillis();
@@ -115,16 +116,16 @@ public class PlayerData implements ConfigurationSerializable {
 				for (Field field : getClass().getDeclaredFields()) {
 					if (field.getName().equals(entry.getKey())) {
 						boolean accessible = field.isAccessible();
-						if (!accessible)
-							field.setAccessible(true);
+
+						field.setAccessible(true);
 												
 						field.set(this, entry.getValue());
-												
-						if (!accessible)
-							field.setAccessible(false);
+
+						field.setAccessible(accessible);
 					}
 				}
 			} catch (Throwable ex) {
+				//
 			}
 		}
 	}
@@ -141,6 +142,14 @@ public class PlayerData implements ConfigurationSerializable {
 
 	public boolean removeData(String key) {
 		return data.remove(key) != null;
+	}
+
+	public Object getData(String key) {
+		return data.get(key);
+	}
+
+	public boolean containsKey(String key) {
+		return data.containsKey(key);
 	}
 	
 	@SuppressWarnings("rawtypes")
