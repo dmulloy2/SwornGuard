@@ -94,8 +94,6 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 	private @Getter XrayDetector xrayDetector;
 
 	private List<Listener> listeners;
-	
-	private @Getter boolean debug;
 
 	@Override
 	public void onEnable() {
@@ -163,8 +161,6 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 			}.runTaskTimerAsynchronously(this, interval, interval);
 		}
 
-		debug = getConfig().getBoolean("debug");
-		
 		commandHandler.setCommandPrefix("sg");
 		commandHandler.registerPrefixedCommand(new CmdBanInfo(this));
 		commandHandler.registerPrefixedCommand(new CmdHelp(this));

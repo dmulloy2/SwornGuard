@@ -5,7 +5,6 @@ package net.t7seven7t.swornguard.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.Permission;
@@ -81,9 +80,7 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 			perform();
 		} catch (Throwable e) {
 			err("Error executing command: {0}", e.getMessage());
-			if (plugin.isDebug()) {
-				plugin.getLogHandler().log(Level.SEVERE, Util.getUsefulStack(e, "executing command " + name));
-			}
+			plugin.getLogHandler().debug(Util.getUsefulStack(e, "executing command " + name));
 		}
 	}
 	

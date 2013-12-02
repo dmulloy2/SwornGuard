@@ -3,8 +3,6 @@
  */
 package net.t7seven7t.swornguard.commands.jail;
 
-import java.util.logging.Level;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.swornguard.permissions.PermissionType;
@@ -44,9 +42,8 @@ public class CmdTime extends SwornGuardCommand {
 			if (e.getMessage().equals("badtime")) {
 				err(plugin.getMessage("jail_error_time_format"), args[1]);
 			} else {
-				if (plugin.isDebug()) {
-					plugin.getLogHandler().log(Level.SEVERE, Util.getUsefulStack(e, "getting jail time"));
-				}
+				err("Error getting jail time: {0}", e.getMessage());
+				plugin.getLogHandler().debug(Util.getUsefulStack(e, "getting jail time"));
 			}
 
 			return;
