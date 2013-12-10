@@ -32,7 +32,7 @@ public class CmdFHistory extends PaginatedCommand {
 	
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(0);
+		target = getTarget(0);
 		if (target == null)
 			return;
 		
