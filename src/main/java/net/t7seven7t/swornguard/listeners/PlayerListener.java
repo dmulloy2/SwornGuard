@@ -30,48 +30,53 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 public class PlayerListener implements Listener, Reloadable {
 	private final SwornGuard plugin;
 	private boolean combatLogDetectorEnabled;
-	
+
 	public PlayerListener(final SwornGuard plugin) {
 		this.plugin = plugin;
 		this.reload();
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerJoin(final PlayerJoinEvent event) {
 		// Store current time - will use it later
 		final long now = System.currentTimeMillis();
-		
+
 		// Try to get the player's data from the cache otherwise create a new data entry
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-		if (data == null)
+		if (data == null) {
 			data = plugin.getPlayerDataCache().newData(event.getPlayer());
-		
+		}
+
 		// Set first login time if the player's first visit to the server
 		if (data.getFirstLogin() == 0)
 			data.setFirstLogin(now);
-		
+
 		// Set most recent login time (now)
 		data.setLastOnline(now);
-		
+
 		// Add to the number of times the player has joined the server
 		data.setLogins(data.getLogins() + 1);
-		
+
 		// Add the player's ip address to the address list
 		String ip = event.getPlayer().getAddress().getAddress().getHostAddress();
 		if (data.getIpAddressList().isEmpty() || !data.getIpAddressList().contains(ip))
 			data.getIpAddressList().add(ip);
-		
+
 		// Hide vanished players from newly joined players.
-		if (!plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.VANISH_SPY.permission))
-			for (Player player : plugin.getServer().getOnlinePlayers())
-				if (plugin.getPlayerDataCache().getData(player).isVanished())
+		if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.VANISH_SPY.permission)) {
+			for (Player player : plugin.getServer().getOnlinePlayers()) {
+				if (plugin.getPlayerDataCache().getData(player).isVanished()) {
 					event.getPlayer().hidePlayer(player);
-		
-		if (data.isUnjailNextLogin())
+				}
+			}
+		}
+
+		if (data.isUnjailNextLogin()) {
 			plugin.getJailHandler().release(event.getPlayer());
-		else if (data.isJailed()) 
+		} else if (data.isJailed()) {
 			new InmateTimerTask(plugin, event.getPlayer(), data).runTaskTimer(plugin, 20L, 20L);
-		
+		}
+
 		if (data.isTrollHell()) {
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
@@ -83,113 +88,120 @@ public class PlayerListener implements Listener, Reloadable {
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(final PlayerQuitEvent event) {
 		// Treat as player disconnect
 		onPlayerDisconnect(event.getPlayer());
 	}
-	
-	@EventHandler(priority = EventPriority.MONITOR)
+
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerKick(final PlayerKickEvent event) {
-		if (!event.isCancelled()) {
-			// Treat as player disconnect
-			onPlayerDisconnect(event.getPlayer());
-		}
+		// Treat as player disconnect
+		onPlayerDisconnect(event.getPlayer());
 	}
-	
+
 	public void onPlayerDisconnect(final Player player) {
 		final PlayerData data = plugin.getPlayerDataCache().getData(player);
-		
+
 		// Update spent time before setting their disconnect time
 		data.updateSpentTime();
 		data.setLastOnline(System.currentTimeMillis());
-		
+
 		// Check if player is combat logging
 		if (combatLogDetectorEnabled) {
 			plugin.getCombatLogDetector().check(player);
 		}
-		
+
 		// Take player out of patrol mode/inspecting/vanish before they log out.
 		if (data.isCooldownPatrolling() || data.isPatrolling()) {
 			plugin.getPatrolHandler().unAutoPatrolNoCooldown(player);
 		}
-		
+
 		if (data.isInspecting()) {
 			plugin.getPatrolHandler().returnFromInspecting(player);
 		}
-		
+
 		if (data.isVanished()) {
 			plugin.getPatrolHandler().vanish(player, false);
 		}
-		
+
 		if (data.isTrollHell()) {
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
-				if (!plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
+				if (! plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
 					p.showPlayer(player);
 					player.showPlayer(p);
 				}
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(final PlayerDeathEvent event) {
-		final PlayerData data = plugin.getPlayerDataCache().getData(event.getEntity());
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getEntity());
 		data.setDeaths(data.getDeaths() + 1);
 		data.setLastAttacked(0);
 	}
-	
-	@EventHandler(priority = EventPriority.NORMAL)
+
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
 	public void onPlayerPickupItem(final PlayerPickupItemEvent event) {
-		if (!event.isCancelled()) {
-			final PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-			
-			// If player is vanished they shouldn't pick up items lest confuse people
-			if (data.isVanished())
-				event.setCancelled(true);
-			
-			// If player is jailed they shouldn't pick up items
-			if (data.isJailed())
-				event.setCancelled(true);
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerDropItem(final PlayerDropItemEvent event) {
-		if (!event.isCancelled()) {
-			final PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-			
-			if (data.isJailed()) {
-				event.setCancelled(true);
-				event.getPlayer().sendMessage(ChatColor.RED + plugin.getMessage("jail_cannot_drop_items"));
+		Player player = event.getPlayer();
+		if (player != null) {
+			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+			if (data != null) {
+				// If player is vanished they shouldn't pick up items lest confuse people
+				// If player is jailed they shouldn't pick up items
+				if (data.isVanished() || data.isJailed()) {
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
-	
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
-		final PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-		
-		// Re-set fly abilities for patrollers upon changing worlds
-		if (data.isPatrolling() || data.isInspecting()) {
-			event.getPlayer().setAllowFlight(true);
-			event.getPlayer().setFlying(true);
+
+	@EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+	public void onPlayerDropItem(final PlayerDropItemEvent event) {
+		Player player = event.getPlayer();
+		if (player != null) {
+			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+			if (data != null) {
+				if (data.isJailed()) {
+					event.setCancelled(true);
+					event.getPlayer().sendMessage(ChatColor.RED + plugin.getMessage("jail_cannot_drop_items"));
+				}
+			}
 		}
 	}
-		
+
+	@EventHandler(priority = EventPriority.NORMAL)
+	public void onPlayerChangedWorld(final PlayerChangedWorldEvent event) {
+		Player player = event.getPlayer();
+		if (player != null) {
+			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+			if (data != null) {
+				// Re-set fly abilities for patrollers upon changing worlds
+				if (data.isPatrolling() || data.isInspecting()) {
+					event.getPlayer().setAllowFlight(true);
+					event.getPlayer().setFlying(true);
+				}
+			}
+		}	
+	}
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerMove(final PlayerMoveEvent event) {
 		if (plugin.getPlayerDataCache().getData(event.getPlayer()).isJailed())
 			plugin.getPlayerDataCache().getData(event.getPlayer()).setLastActivity(System.currentTimeMillis());
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerTeleport(final PlayerTeleportEvent event) {
-		if (! event.isCancelled()) {
+		Player player = event.getPlayer();
+		if (player != null) {
 			// Update last teleport time, prevents false pings
 			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-			data.setLastTeleport(System.currentTimeMillis());
+			if (data != null) {
+				data.setLastTeleport(System.currentTimeMillis());
+			}
 		}
 	}
 
