@@ -146,7 +146,10 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		registerListener(new EntityListener(this));
 		registerListener(new PlayerListener(this));
 		registerListener(new ServerListener(this));
-		registerListener(new FactionsListener(this));
+		
+		if (getServer().getPluginManager().isPluginEnabled("Factions") || getServer().getPluginManager().isPluginEnabled("SwornNations")) {
+			registerListener(new FactionsListener(this));
+		}
 		
 		if (getConfig().getBoolean("autosave.enabled", true)) {
 			int interval = 20 * 60 * getConfig().getInt("autosave.interval", 15);
