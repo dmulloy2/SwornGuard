@@ -3,6 +3,8 @@
  */
 package net.t7seven7t.swornguard.types;
 
+import java.lang.management.ManagementFactory;
+
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.util.TimeUtil;
 
@@ -11,15 +13,13 @@ import net.t7seven7t.util.TimeUtil;
  */
 public class ServerData {
 	private final SwornGuard plugin;
-	private final long startup;
-	
+
 	public ServerData(SwornGuard plugin) {
 		this.plugin = plugin;
-		this.startup = System.currentTimeMillis();
 	}
 	
 	public long getUptime() {
-		return TimeUtil.getTimeDifference(startup, System.currentTimeMillis());
+		return TimeUtil.getTimeDifference(ManagementFactory.getRuntimeMXBean().getStartTime(), System.currentTimeMillis());
 	}
 	
 	public String getBukkitVersion() {

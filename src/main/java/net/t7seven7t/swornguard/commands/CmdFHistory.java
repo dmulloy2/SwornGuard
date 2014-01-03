@@ -37,7 +37,6 @@ public class CmdFHistory extends PaginatedCommand {
 			return;
 		
 		PlayerData data = getPlayerData(target);
-
 		if (data.getFactionLog() != null) {
 			factionHistory = new ArrayList<String>();
 			for (int i = data.getFactionLog().size() - 1; i >= 0; i--) {
@@ -48,6 +47,8 @@ public class CmdFHistory extends PaginatedCommand {
 		} else {
 			err(plugin.getMessage("fhistory_no_data"), target.getName());
 		}
+
+		target = null;
 	}
 
 	@Override

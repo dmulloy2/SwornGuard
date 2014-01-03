@@ -33,12 +33,11 @@ public class CmdIP extends PaginatedCommand {
 
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(0);
+		target = getTarget(0);
 		if (target == null)
 			return;
 		
 		PlayerData data = getPlayerData(target);
-
 		if (data.getIpAddressList() != null) {
 			ipList = new ArrayList<String>();
 			for (int i = data.getIpAddressList().size() - 1; i >= 0; i--) {
@@ -49,6 +48,8 @@ public class CmdIP extends PaginatedCommand {
 		} else {
 			err(plugin.getMessage("error_no_ip_data"), target.getName());
 		}
+
+		target = null;
 	}
 
 	@Override

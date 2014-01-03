@@ -39,7 +39,6 @@ public class CmdShow extends PaginatedCommand {
 			return;
 		
 		PlayerData data = getPlayerData(target);
-
 		if (data.getProfilerList() != null) {
 			profilerList = new ArrayList<String>();
 			for (int x = data.getProfilerList().size() - 1; x >= 0; x--) {
@@ -50,6 +49,8 @@ public class CmdShow extends PaginatedCommand {
 		} else {
 			err(plugin.getMessage("error_no_profiler_data"), target.getName());
 		}
+
+		target = null;
 	}
 
 	@Override
