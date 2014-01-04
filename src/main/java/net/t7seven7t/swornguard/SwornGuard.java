@@ -1,5 +1,5 @@
 /**
- * UltimateArena - a bukkit plugin 
+ * SwornGuard - a bukkit plugin 
  * Copyright (C) 2012 - 2014 MineSworn and Affiliates
  * 
  * This program is free software: you can redistribute it and/or modify it under
