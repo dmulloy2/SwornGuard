@@ -32,8 +32,16 @@ public class CmdTrollHell extends SwornGuardCommand {
 		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
-		
+
 		PlayerData data = getPlayerData(target);
+		if (data == null)
+			return;
+
+		if (target.isOnline() && plugin.getPermissionHandler().hasPermission(target.getPlayer(), PermissionType.TROLL_EXEMPT.permission)) {
+			err("You may not put &4{0} &cin troll hell!", target.getName());
+			data.setTrollHell(false);
+			return;
+		}
 
 		data.setTrollHell(! data.isTrollHell());
 		
@@ -41,7 +49,7 @@ public class CmdTrollHell extends SwornGuardCommand {
 			Player troll = target.getPlayer();
 			
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
-				if (!plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
+				if (! plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
 					if (data.isTrollHell()) {
 						p.hidePlayer(troll);
 						troll.hidePlayer(p);

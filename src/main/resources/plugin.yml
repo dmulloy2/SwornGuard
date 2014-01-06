@@ -102,6 +102,7 @@ permissions:
             swornguard.allow.usecommandshell: true
             swornguard.firework: true
             swornguard.creepfun: true
+            swornguard.troll.exempt: true
     swornguard.moderator:
         description: Gives access to features intended for moderators.
         children:
@@ -218,4 +219,6 @@ permissions:
     swornguard.firework:
         default: false
     swornguard.creepfun:
+        default: false
+    swornguard.troll.exempt:
         default: false
