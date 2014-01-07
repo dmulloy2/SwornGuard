@@ -15,6 +15,10 @@
       <id>bukkit-repo</id>
       <url>http://repo.bukkit.org/content/groups/public</url>
     </repository>
+    <repository>
+      <id>minesworn-repo</id>
+      <url>http://ci.minesworn.com/plugin/repository/everything/</url>
+    </repository>
   </repositories>
 
   <profiles>
@@ -89,11 +93,9 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>com.massivecraft</groupId>
-      <artifactId>factions</artifactId>
-      <version>1.6.9.5</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/Factions.jar</systemPath>
+      <groupId>com.minesworn</groupId>
+      <artifactId>swornnations</artifactId>
+      <version>1.2</version>
     </dependency>
   </dependencies>
 </project>

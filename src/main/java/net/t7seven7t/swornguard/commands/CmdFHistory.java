@@ -1,3 +1,6 @@
+/**
+ * Copyright (c) 2013 - 2014 dmulloy2
+ */
 package net.t7seven7t.swornguard.commands;
 
 import java.util.ArrayList;
@@ -37,6 +40,9 @@ public class CmdFHistory extends PaginatedCommand {
 			return;
 		
 		PlayerData data = getPlayerData(target);
+		if (data == null)
+			return;
+		
 		if (data.getFactionLog() != null) {
 			factionHistory = new ArrayList<String>();
 			for (int i = data.getFactionLog().size() - 1; i >= 0; i--) {
@@ -49,6 +55,7 @@ public class CmdFHistory extends PaginatedCommand {
 		}
 
 		target = null;
+		factionHistory = null;
 	}
 
 	@Override

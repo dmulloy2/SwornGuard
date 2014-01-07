@@ -1,6 +1,6 @@
 /**
-Copyright (C) 2012 t7seven7t
-**/
+ * Copyright (C) 2012 t7seven7t
+ */
 package net.t7seven7t.swornguard.commands;
 
 import java.util.ArrayList;
@@ -10,9 +10,8 @@ import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.util.FormatUtil;
 
 /**
+ * Help command that shows descriptions of other commands.
  * @author t7seven7t
- * Help command that shows descriptions of other commands. 
- * Has pagination.
  */
 public class CmdHelp extends PaginatedCommand {
 

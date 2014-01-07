@@ -165,6 +165,7 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 
 		if (target == null) {
 			err(plugin.getMessage("error_player_not_found"));
+			return null;
 		}
 
 		if (getPlayerData(target) == null) {
