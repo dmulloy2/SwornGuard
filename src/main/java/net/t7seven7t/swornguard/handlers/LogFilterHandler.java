@@ -1,12 +1,13 @@
 /**
- * (c) 2013 dmulloy2
+ * (c) 2013 - 2014 dmulloy2
  */
 package net.t7seven7t.swornguard.handlers;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Filter;
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
@@ -17,6 +18,12 @@ import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.Util;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Marker;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.message.Message;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -27,20 +34,17 @@ import org.bukkit.entity.Vehicle;
 /**
  * @author dmulloy2
  */
-public class LogFilterHandler implements Filter, Reloadable {
+public class LogFilterHandler implements java.util.logging.Filter, org.apache.logging.log4j.core.Filter, Reloadable {
 	private final SwornGuard plugin;
 	private boolean wrongMovementDetectorEnabled;
-	private List<String> filterMessagesFromLog;
+	private List<Pattern> logFilters;
 
 	public LogFilterHandler(SwornGuard plugin) {
 		this.plugin = plugin;
 		this.reload();
 	}
 
-	@Override
-	public boolean isLoggable(LogRecord record) {
-		String message = record.getMessage();
-
+	public final boolean filter(String message) {
 		// Do internal checks first
 		if (message.contains("moved too quickly!")) {
 			String playerName = message.split(" ")[0];
@@ -73,21 +77,29 @@ public class LogFilterHandler implements Filter, Reloadable {
 		}
 
 		// Always show severe exceptions
-		if (record.getLevel() == Level.SEVERE) {
-			return true;
-		}
+//		if (record.getLevel() == Level.SEVERE) {
+//			return true;
+//		}
 
 		// Now filter messages defined in the config
-		for (String filterMessage : filterMessagesFromLog) {
-			if (message.contains(filterMessage)) {
-				return false;
+		if (! logFilters.isEmpty()) {
+			for (Pattern filter : logFilters) {
+				if (filter.matcher(message).matches()) {
+					return false;
+				}
 			}
 		}
 
 		return true;
 	}
 
-	public boolean isPlayerFallingIntoVoid(Player player) {
+	public final void applyFilters() {
+    	Bukkit.getLogger().setFilter(this);
+    	java.util.logging.Logger.getLogger("Minecraft").setFilter(this);
+    	((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(this);
+	}
+
+	public final boolean isPlayerFallingIntoVoid(Player player) {
 		Location loc = player.getLocation();
 		if (loc.getBlockY() < 0) {
 			return true;
@@ -102,7 +114,7 @@ public class LogFilterHandler implements Filter, Reloadable {
 		return true;
 	}
 
-	public boolean isPlayerInsideCar(Player player) {
+	public final boolean isPlayerInsideCar(Player player) {
 		if (player.isInsideVehicle()) {
 			Entity ent = player.getVehicle();
 			if (ent instanceof Vehicle) {
@@ -122,7 +134,7 @@ public class LogFilterHandler implements Filter, Reloadable {
 		return false;
 	}
 	
-	public boolean isNewPlayerJoin(Player player) {
+	public final boolean isNewPlayerJoin(Player player) {
 		if (! player.hasPlayedBefore()) {
 			PlayerData data = plugin.getPlayerDataCache().getData(player);
 			if (data != null) {
@@ -147,7 +159,56 @@ public class LogFilterHandler implements Filter, Reloadable {
 	@Override
 	public void reload() {
 		this.wrongMovementDetectorEnabled = plugin.getConfig().getBoolean("wrongMovementDetectorEnabled");
-		this.filterMessagesFromLog = plugin.getConfig().getStringList("filterMessagesFromLog");
+		this.logFilters = new ArrayList<Pattern>();
+
+		for (String string : plugin.getConfig().getStringList("log-filters")) {
+			try {
+				logFilters.add(Pattern.compile(string));
+			} catch (PatternSyntaxException ex) {
+				plugin.getLogHandler().log(java.util.logging.Level.WARNING, "Supplied regex filter {0} is invalid! Ignoring!", string);
+			}
+		}
+
+		this.applyFilters();
+	}
+
+	// Default Filter Method
+
+	@Override
+	public boolean isLoggable(LogRecord record) {
+		return filter(record.getMessage());
+	}
+
+	// ---- Log4J Filter Methods ---- //
+
+	@Override
+	public Result filter(LogEvent event) {
+		return filter(event.getMessage().getFormattedMessage()) ? Result.ACCEPT : Result.DENY;
+	}
+
+	@Override
+	public Result filter(Logger logger, org.apache.logging.log4j.Level level, Marker marker, String message, Object... args) {
+		return filter(message) ? Result.ACCEPT : Result.DENY;
+	}
+
+	@Override
+	public Result filter(Logger logger, org.apache.logging.log4j.Level level, Marker marker, Object message, Throwable ex) {
+		return filter(message.toString()) ? Result.ACCEPT : Result.DENY;
+	}
+
+	@Override
+	public Result filter(Logger logger, org.apache.logging.log4j.Level level, Marker marker, Message message, Throwable ex) {
+		return filter(message.getFormattedMessage()) ? Result.ACCEPT : Result.DENY;
+	}
+
+	@Override
+	public Result getOnMatch() {
+		return Result.NEUTRAL;
+	}
+
+	@Override
+	public Result getOnMismatch() {
+		return Result.NEUTRAL;
 	}
 	
 }

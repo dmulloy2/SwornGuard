@@ -38,7 +38,7 @@ public class CmdTrollHell extends SwornGuardCommand {
 			return;
 
 		if (target.isOnline() && plugin.getPermissionHandler().hasPermission(target.getPlayer(), PermissionType.TROLL_EXEMPT.permission)) {
-			err("You may not put &4{0} &cin troll hell!", target.getName());
+			err("You may not put &c{0} &4in troll hell!", target.getName());
 			data.setTrollHell(false);
 			return;
 		}

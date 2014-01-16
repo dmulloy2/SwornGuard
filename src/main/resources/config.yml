@@ -89,6 +89,11 @@ joinMessage: "&e{0} joined the game."
 
 quitMessage: "&e{0} left the game."
 
-# Log Filtering
-filterMessagesFromLog:
-- "moved wrongly!"
+# Log Filters (regex)
+log-filters:
+- ^(.*)(/login)(.*)$
+- ^(.*)(UUID of player)(.*)$
+- ^(.*)(Loaded player file for)(.*)$
+- ^(.*)(Removing player from memory)(.*)$
+- ^(.*)(HTTP request failed)(.*)$
+- ^(.*)(No response/invalid key)(.*)$
