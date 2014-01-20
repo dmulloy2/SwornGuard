@@ -15,8 +15,6 @@ import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -26,21 +24,25 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class PatrolHandler {
 	private final SwornGuard plugin;
 	private int index = 0;
-	private List<String> recentCheaters = new ArrayList<String>();
-	private Map<String, Integer> taskIDs = new HashMap<String, Integer>();
+	private List<String> recentCheaters;
+	private Map<String, Integer> taskIDs;
 	
 	public PatrolHandler(final SwornGuard plugin) {
 		this.plugin = plugin;
+		this.recentCheaters = new ArrayList<String>();
+		this.taskIDs = new HashMap<String, Integer>();
 	}
 	
 	public void patrol(Player player) {
+		patrol(player, null);
+	}
+	
+	public void patrol(Player player, Player target) {
 		int n = plugin.getServer().getOnlinePlayers().length;
 		if (index >= n)
 			index = 0;
 		
-		Player target = null;
-		
-		if (!recentCheaters.isEmpty()) {
+		if (! recentCheaters.isEmpty()) {
 			target = plugin.getServer().getPlayerExact(recentCheaters.get(0));
 			recentCheaters.remove(0);
 		}
@@ -204,7 +206,8 @@ public class PatrolHandler {
 			data.setReportsRespondedTo(data.getReportsRespondedTo() + 1);
 		data.setInspecting(true);
 		applyPatrolBuffs(player, true);
-		teleportToGround(player, target);
+//		teleportToGround(player, target);
+		player.teleport(target);
 		plugin.getLogHandler().log("{0} is now inspecting {1} for cheat report.", player.getName(), target.getName());
 		
 		int id = plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
@@ -243,11 +246,11 @@ public class PatrolHandler {
 		taskIDs.put(player.getName(), id);
 	}
 	
-	public void teleportToGround(Player player, Player target) {
-		Location loc = target.getLocation();
-		while (target.getWorld().getBlockAt(loc.subtract(0, 1, 0)).getType() == Material.AIR);
-		player.teleport(loc);
-	}
+//	public void teleportToGround(Player player, Player target) {
+//		Location loc = target.getLocation();
+//		while (target.getWorld().getBlockAt(loc.subtract(0, 1, 0)).getType() == Material.AIR);
+//		player.teleport(loc);
+//	}
 	
 	public void addCheater(final String player) {
 		recentCheaters.add(player);

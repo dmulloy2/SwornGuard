@@ -8,6 +8,7 @@ autoModEnabled: true
 autoModAlwaysEnabled: false
 autoModKickReasonFly: "Remove your fly hack."
 autoModKickReasonSpam: "Do not spam."
+autoModKickReasonSpeed: "Remove your speed hack."
 autoModKickReasonXray: "Remove your xray hack/texture pack."
 
 # Detector settings
@@ -16,8 +17,8 @@ combatLogDetectorEnabled: true
 factionBetrayalDetectorEnabled: true
 flyDetectorEnabled: true
 spamDetectorEnabled: true
+speedDetectorEnabled: true
 xrayDetectorEnabled: true
-wrongMovementDetectorEnabled: true
 
 # AutoClicker settings
 # The following are items that won't be detected - needed for most guns to actually work

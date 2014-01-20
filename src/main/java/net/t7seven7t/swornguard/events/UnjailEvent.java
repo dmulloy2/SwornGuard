@@ -12,9 +12,9 @@ import org.bukkit.event.HandlerList;
  * @author t7seven7t
  */
 public class UnjailEvent extends Event implements Cancellable {
-
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancel = false;
+
 	private OfflinePlayer player;
 	
 	public UnjailEvent(final OfflinePlayer player) {

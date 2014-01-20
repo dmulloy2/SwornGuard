@@ -152,7 +152,6 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 			xrayDetector = new XrayDetector(this);
 
 		logFilterHandler = new LogFilterHandler(this);
-		getServer().getLogger().setFilter(logFilterHandler);
 		
 		listeners = new ArrayList<Listener>();
 		registerListener(new BlockListener(this));

@@ -9,11 +9,10 @@ package net.t7seven7t.swornguard.types;
 public enum CheatType {
 	AUTO_CLICKER,
 	FLYING,
+	SPEED,
 	KICK_AND_KILL,
 	COMBAT_LOG,
 	SPAM,
-	XRAY,
-	
-	MOVED_WRONGLY;
+	XRAY;
 	
 }

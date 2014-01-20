@@ -26,8 +26,8 @@ public class CheatHandler {
 	}
 	
 	public void announceCheat(CheatEvent event) {
-		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayerName());
 		plugin.getServer().getPluginManager().callEvent(event);
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayerName());
 		
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
 			if (plugin.getPermissionHandler().hasPermission(player, PermissionType.SHOW_CHEAT_REPORTS.permission)) {
@@ -46,7 +46,7 @@ public class CheatHandler {
 					TimeUtil.getLongDateCurr(), WordUtils.capitalize(event.getCheat().toString().replaceAll("_", " "))));
 		}
 		
-		if (event.getCheat() == CheatType.FLYING || event.getCheat() == CheatType.XRAY || event.getCheat() == CheatType.MOVED_WRONGLY) {
+		if (event.getCheat() == CheatType.FLYING || event.getCheat() == CheatType.XRAY || event.getCheat() == CheatType.SPEED) {
 			// Add cheater to patrol list
 			plugin.getPatrolHandler().addCheater(event.getPlayerName());
 			

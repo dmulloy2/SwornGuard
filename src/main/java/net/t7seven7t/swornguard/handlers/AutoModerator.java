@@ -29,11 +29,13 @@ public class AutoModerator {
 		
 		switch (event.getCheat()) {
 		case FLYING:
-		case MOVED_WRONGLY:
 			reason = plugin.getConfig().getString("autoModKickReasonFly");
 			break;
 		case SPAM:
 			reason = plugin.getConfig().getString("autoModKickReasonSpam");
+			break;
+		case SPEED:
+			reason = plugin.getConfig().getString("autoModKickReasonSpeed", "Remove your speed hack.");
 			break;
 		case XRAY:
 			reason = plugin.getConfig().getString("autoModKickReasonXray");

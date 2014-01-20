@@ -23,7 +23,6 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.message.Message;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -60,7 +59,7 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 								data.setConsecutivePings(data.getConsecutivePings() + 1);
 								if (data.getConsecutivePings() >= 2) {
 									// Announce the cheat
-									CheatEvent event = new CheatEvent(player.getName(), CheatType.MOVED_WRONGLY, 
+									CheatEvent event = new CheatEvent(player.getName(), CheatType.SPEED, 
 											FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving too quickly!"));
 									plugin.getCheatHandler().announceCheat(event);
 									
@@ -76,11 +75,6 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 			}
 		}
 
-		// Always show severe exceptions
-//		if (record.getLevel() == Level.SEVERE) {
-//			return true;
-//		}
-
 		// Now filter messages defined in the config
 		if (! logFilters.isEmpty()) {
 			for (Pattern filter : logFilters) {
@@ -94,7 +88,7 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 	}
 
 	public final void applyFilters() {
-    	Bukkit.getLogger().setFilter(this);
+    	plugin.getServer().getLogger().setFilter(this);
     	java.util.logging.Logger.getLogger("Minecraft").setFilter(this);
     	((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(this);
 	}
