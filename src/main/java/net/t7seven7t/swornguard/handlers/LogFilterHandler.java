@@ -35,7 +35,7 @@ import org.bukkit.entity.Vehicle;
  */
 public class LogFilterHandler implements java.util.logging.Filter, org.apache.logging.log4j.core.Filter, Reloadable {
 	private final SwornGuard plugin;
-	private boolean wrongMovementDetectorEnabled;
+	private boolean speedDetectorEnabled;
 	private List<Pattern> logFilters;
 
 	public LogFilterHandler(SwornGuard plugin) {
@@ -50,7 +50,7 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 			
 			Player player = Util.matchPlayer(playerName);
 			if (player != null) {
-				if (wrongMovementDetectorEnabled) {
+				if (speedDetectorEnabled) {
 					if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission)) {
 						if (! player.getAllowFlight()) {
 							if (! isPlayerFallingIntoVoid(player) && ! isPlayerInsideCar(player) && ! player.isInsideVehicle() 
@@ -104,7 +104,7 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 				return false;
 			}
 		}
-
+		
 		return true;
 	}
 
@@ -144,7 +144,7 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 	public boolean hasRecentlyTeleported(Player player) {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		if (data != null) {
-			return System.currentTimeMillis() - data.getLastTeleport() > 60L;
+			return (System.currentTimeMillis() - data.getLastTeleport()) > 60L;
 		}
 
 		return false;
@@ -152,14 +152,16 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 
 	@Override
 	public void reload() {
-		this.wrongMovementDetectorEnabled = plugin.getConfig().getBoolean("wrongMovementDetectorEnabled");
+		this.speedDetectorEnabled = plugin.getConfig().getBoolean("speedDetectorEnabled", true);
 		this.logFilters = new ArrayList<Pattern>();
 
-		for (String string : plugin.getConfig().getStringList("log-filters")) {
-			try {
-				logFilters.add(Pattern.compile(string));
-			} catch (PatternSyntaxException ex) {
-				plugin.getLogHandler().log(java.util.logging.Level.WARNING, "Supplied regex filter {0} is invalid! Ignoring!", string);
+		if (plugin.getConfig().isSet("log-filters")) {
+			for (String string : plugin.getConfig().getStringList("log-filters")) {
+				try {
+					logFilters.add(Pattern.compile(string));
+				} catch (PatternSyntaxException ex) {
+					plugin.getLogHandler().log(java.util.logging.Level.WARNING, "Supplied regex filter {0} is invalid! Ignoring!", string);
+				}
 			}
 		}
 
