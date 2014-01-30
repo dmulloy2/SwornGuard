@@ -43,6 +43,8 @@ flyDetectorSuspiciousVelocity: -2.0
 flyDetectorSuspiciousDistFromGround: 7
 flyDetectorSuspiciousMoveDist: 5
 
+clipHackersWings: false
+
 # Spam Detector Settings
 spamDetectorMessageDecayTime: 2
 spamDetectorThresholdPerSecond: 5

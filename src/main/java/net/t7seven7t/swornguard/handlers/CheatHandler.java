@@ -13,6 +13,8 @@ import net.t7seven7t.util.TimeUtil;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 /**
@@ -26,6 +28,15 @@ public class CheatHandler {
 	}
 	
 	public void announceCheat(CheatEvent event) {
+		// "Wing Clipping"
+		if (event.getCheat() == CheatType.FLYING) {
+			if (plugin.getConfig().getBoolean("clipHackersWings", false)) {
+				plugin.getLogHandler().log("Clipping {0}\'s wings", event.getPlayerName());
+				teleportToGround(event.getPlayer());
+				return;
+			}
+		}
+
 		plugin.getServer().getPluginManager().callEvent(event);
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayerName());
 		
@@ -58,5 +69,11 @@ public class CheatHandler {
 		
 		plugin.getLogHandler().log("Cheatevent player: {0}", event.getPlayerName());
 		plugin.getLogHandler().log("Cheatevent type: {0}", event.getCheat().toString().replaceAll("_", " "));
+	}
+
+	public void teleportToGround(Player player) {
+		Location loc = player.getLocation().clone();
+		while (loc.getWorld().getBlockAt(loc.subtract(0, 1, 0)).getType() == Material.AIR);
+		player.teleport(loc);
 	}
 }

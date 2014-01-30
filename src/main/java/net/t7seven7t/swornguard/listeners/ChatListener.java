@@ -84,24 +84,6 @@ public class ChatListener implements Listener, Reloadable {
 			String node = plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission);
 			plugin.getServer().broadcast(admMsg, node);
 		}
-		
-/*		Random r = new Random();
-		int chance = r.nextInt(100);
-				
-		for (Iterator<Player> i = event.getRecipients().iterator(); i.hasNext(); ) {
-			Player p = i.next();
-			PlayerData d = plugin.getPlayerDataCache().getData(p);
-			
-			if (d == null)
-				continue;
-			
-			if (d.isTrollHell()) {
-				if (chance >= hellSeeChatChance) {
-					i.remove();
-				}
-			}
-		}
-*/		
 	}
 	
 	// Needs to be at high because factions cancels event for its colour tags :(
@@ -148,6 +130,7 @@ public class ChatListener implements Listener, Reloadable {
 			if (data.isTrollHell() && !plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
 				for (String command : blockedCommandsInHell) {
 					if (event.getMessage().matches("/" + command.toLowerCase() + ".*")) {
+						// TODO: More troll hell simulation here?
 						event.setCancelled(true);
 						return;
 					}
