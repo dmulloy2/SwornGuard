@@ -18,6 +18,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.projectiles.ProjectileSource;
 
 /**
  * @author t7seven7t
@@ -87,9 +88,9 @@ public class EntityListener implements Listener, Reloadable {
 			if (attacker instanceof Player) {
 				att = (Player) attacker;
 			} else if (attacker instanceof Projectile) {
-				Entity shooter = ((Projectile) attacker).getShooter();
-				if (shooter instanceof Player) {
-					att = (Player) shooter;
+				ProjectileSource source = ((Projectile) attacker).getShooter();
+				if (source instanceof Player) {
+					att = (Player) source;
 				}
 			}
 

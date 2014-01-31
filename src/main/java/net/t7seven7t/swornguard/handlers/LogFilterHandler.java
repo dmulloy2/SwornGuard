@@ -14,6 +14,7 @@ import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.CheatType;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.swornguard.types.Preconditions;
 import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.util.FormatUtil;
 import net.t7seven7t.util.Util;
@@ -23,27 +24,24 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
 import org.apache.logging.log4j.message.Message;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 
 /**
  * @author dmulloy2
  */
 public class LogFilterHandler implements java.util.logging.Filter, org.apache.logging.log4j.core.Filter, Reloadable {
 	private final SwornGuard plugin;
+	private final Preconditions preconditions;
 	private boolean speedDetectorEnabled;
 	private List<Pattern> logFilters;
 
 	public LogFilterHandler(SwornGuard plugin) {
 		this.plugin = plugin;
+		this.preconditions = plugin.getPreconditions();
 		this.reload();
 	}
 
-	public final boolean filter(String message) {
+	private final boolean filter(String message) {
 		// Do internal checks first
 		if (message.contains("moved too quickly!")) {
 			String playerName = message.split(" ")[0];
@@ -52,9 +50,9 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 			if (player != null) {
 				if (speedDetectorEnabled) {
 					if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission)) {
-						if (! player.getAllowFlight()) {
-							if (! isPlayerFallingIntoVoid(player) && ! isPlayerInsideCar(player) && ! player.isInsideVehicle() 
-									&& ! isNewPlayerJoin(player) && ! hasRecentlyTeleported(player)) {
+						if (! player.getAllowFlight() && ! player.isInsideVehicle()) {
+							if (! preconditions.isPlayerFallingIntoVoid(player) && ! preconditions.isPlayerInsideCar(player) 
+									&& ! preconditions.isNewPlayerJoin(player) && ! preconditions.hasRecentlyTeleported(player)) {
 								PlayerData data = plugin.getPlayerDataCache().getData(player);
 								data.setConsecutivePings(data.getConsecutivePings() + 1);
 								if (data.getConsecutivePings() >= 2) {
@@ -87,67 +85,10 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 		return true;
 	}
 
-	public final void applyFilters() {
+	private final void applyFilters() {
     	plugin.getServer().getLogger().setFilter(this);
     	java.util.logging.Logger.getLogger("Minecraft").setFilter(this);
     	((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(this);
-	}
-
-	public final boolean isPlayerFallingIntoVoid(Player player) {
-		Location loc = player.getLocation();
-		if (loc.getBlockY() < 0) {
-			return true;
-		}
-		
-		for (int y = loc.getBlockY(); y >= 0; y--) {
-			if (loc.getWorld().getBlockAt(loc.getBlockX(), y, loc.getBlockZ()).getType() != Material.AIR) {
-				return false;
-			}
-		}
-		
-		return true;
-	}
-
-	public final boolean isPlayerInsideCar(Player player) {
-		if (player.isInsideVehicle()) {
-			Entity ent = player.getVehicle();
-			if (ent instanceof Vehicle) {
-				Vehicle veh = (Vehicle) ent;
-				if (veh instanceof Minecart) {
-					Minecart cart = (Minecart) veh;
-					Location loc = cart.getLocation();
-					
-					Material type = loc.getBlock().getType();
-					
-					return type != Material.POWERED_RAIL && type != Material.RAILS
-							&& type != Material.DETECTOR_RAIL && type != Material.ACTIVATOR_RAIL;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	public final boolean isNewPlayerJoin(Player player) {
-		if (! player.hasPlayedBefore()) {
-			PlayerData data = plugin.getPlayerDataCache().getData(player);
-			if (data != null) {
-				return data.getOnlineTime() < 200L;
-			}
-			
-			return true;
-		}
-		
-		return false;
-	}
-
-	public boolean hasRecentlyTeleported(Player player) {
-		PlayerData data = plugin.getPlayerDataCache().getData(player);
-		if (data != null) {
-			return (System.currentTimeMillis() - data.getLastTeleport()) > 60L;
-		}
-
-		return false;
 	}
 
 	@Override

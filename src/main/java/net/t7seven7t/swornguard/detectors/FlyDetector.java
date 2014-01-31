@@ -8,16 +8,14 @@ import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.CheatType;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.swornguard.types.Preconditions;
 import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -27,12 +25,14 @@ import org.bukkit.util.Vector;
 public class FlyDetector {
 	private static final BlockFace[] directions = new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST };
 	private final SwornGuard plugin;
+	private final Preconditions preconditions;
 	private final double suspiciousVelocity;
 	private final int suspiciousDistFromGround;
 	private final int suspiciousMoveDist;
 	
 	public FlyDetector(final SwornGuard plugin) {
 		this.plugin = plugin;
+		this.preconditions = plugin.getPreconditions();
 		this.suspiciousVelocity = plugin.getConfig().getDouble("flyDetectorSuspiciousVelocity");
 		this.suspiciousDistFromGround = plugin.getConfig().getInt("flyDetectorSuspiciousDistFromGround");
 		this.suspiciousMoveDist = plugin.getConfig().getInt("flyDetectorSuspiciousMoveDist");
@@ -50,22 +50,20 @@ public class FlyDetector {
 	private void step() {
 		for (final Player player : plugin.getServer().getOnlinePlayers()) {
 			if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission)) {
-				if (! player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity ||
-							(! isInWater(player) && getDistanceToGround(player) >= suspiciousDistFromGround))) {
-					if (! isPlayerFallingIntoVoid(player) && ! isPlayerInsideCar(player) && ! player.isInsideVehicle() 
-							&& ! isNewPlayerJoin(player) && ! hasRecentlyTeleported(player)) {
+				if (! player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity || (! isInWater(player) && getDistanceToGround(player) >= suspiciousDistFromGround))) {
+					if (! preconditions.isPlayerFallingIntoVoid(player) && ! preconditions.isPlayerInsideCar(player) && ! player.isInsideVehicle() && ! preconditions.isNewPlayerJoin(player) && ! preconditions.hasRecentlyTeleported(player)) {
 						final PlayerData data = plugin.getPlayerDataCache().getData(player);
 						final Vector previousLocation = player.getLocation().toVector();
 						if (! data.isJailed() && System.currentTimeMillis() - data.getLastFlyWarn() > 45000L) {
 							data.setLastFlyWarn(System.currentTimeMillis());
-
+							
 							new BukkitRunnable() {
-
+								
 								@Override
 								public void run() {
 									checkPlayer(player, previousLocation);
 								}
-	
+								
 							}.runTaskLater(plugin, 5L);
 						}
 					}
@@ -73,7 +71,7 @@ public class FlyDetector {
 			}
 		}
 	}
-
+	
 	private void checkPlayer(Player player, Vector previousLocation) {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		
@@ -125,65 +123,6 @@ public class FlyDetector {
 		}
 		
 		return count;
-	}
-
-	// The following methods essentially work on improving the validity of pings
-	// By dmulloy2
-	private boolean isPlayerFallingIntoVoid(Player player) {
-		Location loc = player.getLocation();
-		if (loc.getBlockY() < 0) {
-			return true;
-		}
-		
-		for (int y = loc.getBlockY(); y >= 0; y--) {
-			if (loc.getWorld().getBlockAt(loc.getBlockX(), y, loc.getBlockZ()).getType() != Material.AIR) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	private boolean isPlayerInsideCar(Player player) {
-		if (player.isInsideVehicle()) {
-			Entity ent = player.getVehicle();
-			if (ent instanceof Vehicle) {
-				Vehicle veh = (Vehicle) ent;
-				if (veh instanceof Minecart) {
-					Minecart cart = (Minecart) veh;
-					Location loc = cart.getLocation();
-					
-					Material type = loc.getBlock().getType();
-					
-					return type != Material.POWERED_RAIL && type != Material.RAILS
-							&& type != Material.DETECTOR_RAIL && type != Material.ACTIVATOR_RAIL;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	private boolean isNewPlayerJoin(Player player) {
-		if (! player.hasPlayedBefore()) {
-			PlayerData data = plugin.getPlayerDataCache().getData(player);
-			if (data != null) {
-				return data.getOnlineTime() < 200L;
-			}
-			
-			return true;
-		}
-		
-		return false;
-	}
-
-	private boolean hasRecentlyTeleported(Player player) {
-		PlayerData data = plugin.getPlayerDataCache().getData(player);
-		if (data != null) {
-			return System.currentTimeMillis() - data.getLastTeleport() < 60L;
-		}
-
-		return false;
 	}
 	
 }

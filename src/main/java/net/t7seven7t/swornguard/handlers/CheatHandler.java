@@ -70,10 +70,28 @@ public class CheatHandler {
 		plugin.getLogHandler().log("Cheatevent player: {0}", event.getPlayerName());
 		plugin.getLogHandler().log("Cheatevent type: {0}", event.getCheat().toString().replaceAll("_", " "));
 	}
-
+	
 	public void teleportToGround(Player player) {
-		Location loc = player.getLocation().clone();
-		while (loc.getWorld().getBlockAt(loc.subtract(0, 1, 0)).getType() == Material.AIR);
-		player.teleport(loc);
+		if (! isPlayerFallingIntoVoid(player)) {
+			Location loc = player.getLocation().clone();
+			while (loc.getWorld().getBlockAt(loc.subtract(0, 1, 0)).getType() == Material.AIR);
+			player.teleport(loc);
+		}
 	}
+	
+	public final boolean isPlayerFallingIntoVoid(Player player) {
+		Location loc = player.getLocation();
+		if (loc.getBlockY() < 0) {
+			return true;
+		}
+		
+		for (int y = loc.getBlockY(); y >= 0; y--) {
+			if (loc.getWorld().getBlockAt(loc.getBlockX(), y, loc.getBlockZ()).getType() != Material.AIR) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
 }

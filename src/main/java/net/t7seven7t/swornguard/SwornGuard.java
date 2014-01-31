@@ -73,12 +73,14 @@ import net.t7seven7t.swornguard.listeners.EntityListener;
 import net.t7seven7t.swornguard.listeners.FactionsListener;
 import net.t7seven7t.swornguard.listeners.PlayerListener;
 import net.t7seven7t.swornguard.listeners.ServerListener;
+import net.t7seven7t.swornguard.types.Preconditions;
 import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.swornguard.types.ServerData;
 import net.t7seven7t.util.SimpleVector;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -92,6 +94,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 	private @Getter PermissionHandler permissionHandler;
 	private @Getter ResourceHandler resourceHandler;
 	private @Getter PlayerDataCache playerDataCache;
+	private @Getter Preconditions preconditions;
 	private @Getter ServerData serverData;
 	
 	private @Getter CheatHandler cheatHandler;
@@ -108,7 +111,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 	private @Getter XrayDetector xrayDetector;
 
 	private List<Listener> listeners;
-
+	
 	@Override
 	public void onEnable() {
 		long start = System.currentTimeMillis();
@@ -128,8 +131,10 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		reloadConfig();
 		
 		playerDataCache = new PlayerDataCache(this);
-		getServer().getServicesManager().register(PlayerDataServiceProvider.class, playerDataCache, this, ServicePriority.Normal);		
+		getServer().getServicesManager().register(PlayerDataServiceProvider.class, playerDataCache, this, ServicePriority.Normal);
+		
 		serverData = new ServerData(this);
+		preconditions = new Preconditions(this);
 		
 		cheatHandler = new CheatHandler(this);
 		autoModerator = new AutoModerator(this);
@@ -160,7 +165,8 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		registerListener(new PlayerListener(this));
 		registerListener(new ServerListener(this));
 		
-		if (getServer().getPluginManager().isPluginEnabled("Factions") || getServer().getPluginManager().isPluginEnabled("SwornNations")) {
+		PluginManager pm = getServer().getPluginManager();
+		if (pm.getPlugin("Factions") != null || pm.getPlugin("SwornNations") != null) {
 			registerListener(new FactionsListener(this));
 		}
 		
@@ -176,7 +182,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 				
 			}.runTaskTimerAsynchronously(this, interval, interval);
 		}
-
+		
 		commandHandler.setCommandPrefix("sg");
 		commandHandler.registerPrefixedCommand(new CmdBanInfo(this));
 		commandHandler.registerPrefixedCommand(new CmdHelp(this));
@@ -208,9 +214,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		
 		commandHandler.registerCommand(new CmdTrollHell(this));
 		
-		long finish = System.currentTimeMillis();
-		
-		logHandler.log("{0} has been enabled ({1}ms)", getDescription().getFullName(), finish-start);
+		logHandler.log("{0} has been enabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
 	@Override
@@ -221,18 +225,17 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		jailHandler.saveJail();
 		
 		getServer().getScheduler().cancelTasks(this);
+		getServer().getServicesManager().unregisterAll(this);
 		
-		long finish = System.currentTimeMillis();
-		
-		logHandler.log("{0} has been disabled ({1}ms)", getDescription().getFullName(), finish-start);
+		logHandler.log("{0} has been disabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 	
 	public void registerListener(Listener listener) {
 		listeners.add(listener);
-
+		
 		getServer().getPluginManager().registerEvents(listener, this);
 	}
-
+	
 	@Override
 	public void reload() {
 		// Config
