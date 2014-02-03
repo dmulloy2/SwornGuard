@@ -76,6 +76,8 @@ allowedCommandsInJail:
 - "whisper"
 - "r"
 - "reply"
+- "f c"
+- "f chat"
 
 # Blocked Commands in hell
 blockedCommandsInHell:

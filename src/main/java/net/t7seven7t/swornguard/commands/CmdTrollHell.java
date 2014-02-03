@@ -10,6 +10,12 @@ import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+
+import com.massivecraft.factions.Conf;
+import com.massivecraft.factions.FPlayer;
+import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.struct.ChatMode;
 
 /**
  * @author t7seven7t
@@ -57,6 +63,30 @@ public class CmdTrollHell extends SwornGuardCommand {
 						p.showPlayer(troll);
 						troll.showPlayer(p);
 					}
+				}
+			}
+
+			// dmulloy2 - try to force the troll into public chat,
+			// since we can't control faction chat
+			if ( data.isTrollHell() ) 
+			{
+				try
+				{
+					PluginManager pm = plugin.getServer().getPluginManager();
+					if ( pm.getPlugin( "Factions" ) != null || pm.getPlugin( "SwornNations" ) != null ) 
+					{
+						if ( Conf.factionOnlyChat ) 
+						{
+							FPlayer fplayer = FPlayers.i.get( troll );
+							if ( fplayer.getChatMode() != ChatMode.PUBLIC ) 
+							{
+								fplayer.setChatMode( ChatMode.PUBLIC );
+							}
+						}
+					}
+				} catch ( Throwable ex )
+				{
+					// Probably a different version of Factions
 				}
 			}
 		}
