@@ -54,33 +54,39 @@ public class ChatListener implements Listener, Reloadable {
 	}
 	
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {		
+	public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 
 		if (spamDetectorEnabled) {
-			if (!plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_SPAM.permission)) {
+			if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_SPAM.permission)) {
 				if (data.getSpamManager() == null)
 					data.setSpamManager(new SpamDetector(plugin, event.getPlayer()));
-				
+
 				if (data.getSpamManager().checkSpam(event.getMessage(), ChatType.CHAT)) {
 					event.setCancelled(true);
 					return;
 				}
 			}
 		}
-		
+
 		if (data.isJailMuted()) {
 			event.setCancelled(true);
 			event.getPlayer().sendMessage(ChatColor.RED + "You have been muted.");
 			return;
 		}
-		
+
+		if (data.isTrollMuted()) {
+			event.getRecipients().clear();
+			event.getRecipients().add(event.getPlayer());
+			return;
+		}
+
 		if (data.isTrollHell()) {
 			event.getRecipients().clear();
 			event.getRecipients().add(event.getPlayer());
-			
+
 			String admMsg = FormatUtil.format("&7[&4TROLL&7]&c {0} &4: &f{1}", event.getPlayer().getName(), event.getMessage());
-			
+
 			String node = plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission);
 			plugin.getServer().broadcast(admMsg, node);
 		}
