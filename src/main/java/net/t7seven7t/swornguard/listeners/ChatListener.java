@@ -107,52 +107,58 @@ public class ChatListener implements Listener, Reloadable {
 		}
 	}
 	
-	@EventHandler(priority = EventPriority.LOWEST) 
-	public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) {
-		if (!event.isCancelled()) {
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		if (! event.isCancelled()) {
 			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-			
+
 			if (spamDetectorEnabled) {
-				if (!plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_SPAM.permission)) {
+				if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_SPAM.permission)) {
 					if (data.getSpamManager() == null)
 						data.setSpamManager(new SpamDetector(plugin, event.getPlayer()));
-					
+
 					if (data.getSpamManager().checkSpam(event.getMessage(), ChatType.COMMAND)) {
 						event.setCancelled(true);
 						return;
 					}
 				}
 			}
-			
-			if (plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_BLOCKED_COMMANDS.permission)) {
+
+			if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_BLOCKED_COMMANDS.permission)) {
 				for (String command : blockedCommands) {
-					if (event.getMessage().matches("/" + command + ".*")) {
+					if (! command.startsWith("/")) command = "/" + command;
+					if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*")) {
 						event.setCancelled(true);
 						return;
 					}
 				}
 			}
 
-			if (data.isTrollHell() && !plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
-				for (String command : blockedCommandsInHell) {
-					if (event.getMessage().matches("/" + command.toLowerCase() + ".*")) {
-						// TODO: More troll hell simulation here?
-						event.setCancelled(true);
-						return;
+			if (data.isTrollHell() || data.isTrollMuted()) {
+				if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
+					for (String command : blockedCommandsInHell) {
+						if (! command.startsWith("/")) command = "/" + command;
+						if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*")) {
+							event.setCancelled(true);
+							return;
+						}
 					}
 				}
 			}
-			
-			if (data.isJailed() && 
-				!plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_JAILED.permission) && 
-				!event.getMessage().equalsIgnoreCase("/jailstatus")) {
-					for (String command : allowedCommandsInJail) {
-						if (event.getMessage().matches("/" + command.toLowerCase() + ".*"))
-							return;
+
+			if (data.isJailed()) {
+				if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_JAILED.permission)) {
+					if (! event.getMessage().equalsIgnoreCase("/jailstatus")) {
+						for (String command : allowedCommandsInJail) {
+							if (! command.startsWith("/")) command = "/" + command;
+							if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*"))
+								return;
+						}
+
+						event.setCancelled(true);
+						event.getPlayer().sendMessage(FormatUtil.format(plugin.getMessage("jail_cannot_use_command")));
 					}
-					
-					event.setCancelled(true);
-					event.getPlayer().sendMessage(FormatUtil.format(plugin.getMessage("jail_cannot_use_command")));
+				}
 			}
 		}
 	}
@@ -160,7 +166,7 @@ public class ChatListener implements Listener, Reloadable {
 	// Factions why you use such low command preprocess priority? T_T
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandPreprocessMonitor(final PlayerCommandPreprocessEvent event) {
-		if (!event.isCancelled()) {
+		if (! event.isCancelled()) {
 			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 			if (data.isJailed())
 				data.setLastActivity(System.currentTimeMillis());
