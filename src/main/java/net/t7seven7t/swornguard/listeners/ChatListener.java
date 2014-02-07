@@ -47,6 +47,7 @@ public class ChatListener implements Listener, Reloadable {
 	private boolean spamDetectorEnabled;
 	private List<String> blockedCommands;
 	private List<String> blockedCommandsInHell;
+	private List<String> trollOverrideCommands;
 
 	public ChatListener(final SwornGuard plugin) {
 		this.plugin = plugin;
@@ -75,20 +76,8 @@ public class ChatListener implements Listener, Reloadable {
 			return;
 		}
 
-		if (data.isTrollMuted()) {
-			event.getRecipients().clear();
-			event.getRecipients().add(event.getPlayer());
-			return;
-		}
-
 		if (data.isTrollHell()) {
-			event.getRecipients().clear();
-			event.getRecipients().add(event.getPlayer());
-
-			String admMsg = FormatUtil.format("&7[&4TROLL&7]&c {0} &4: &f{1}", event.getPlayer().getName(), event.getMessage());
-
-			String node = plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission);
-			plugin.getServer().broadcast(admMsg, node);
+			plugin.getTrollHandler().regulateChat(event);
 		}
 	}
 	
@@ -134,13 +123,32 @@ public class ChatListener implements Listener, Reloadable {
 				}
 			}
 
-			if (data.isTrollHell() || data.isTrollMuted()) {
+			if (data.isTrollHell()) {
 				if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
 					for (String command : blockedCommandsInHell) {
 						if (! command.startsWith("/")) command = "/" + command;
 						if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*")) {
 							event.setCancelled(true);
 							return;
+						}
+					}
+				}
+			}
+
+			if (trollOverrideCommands != null && ! trollOverrideCommands.isEmpty()) {
+				for (String command : trollOverrideCommands) {
+					if (! command.startsWith("/")) command = "/" + command;
+					if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*")) {
+						try {
+							String[] args = event.getMessage().split(" ");
+							StringBuilder message = new StringBuilder();
+							message.append("/troll ");
+							message.append(args[1]);
+							event.setMessage(message.toString());
+
+							event.setCancelled(true);
+						} catch (Exception e) {
+							// Filter failed, completely optional and not really necessary
 						}
 					}
 				}
@@ -324,7 +332,8 @@ public class ChatListener implements Listener, Reloadable {
 		this.allowedCommandsInJail = plugin.getConfig().getStringList("allowedCommandsInJail");
 		this.spamDetectorEnabled = plugin.getConfig().getBoolean("spamDetectorEnabled");
 		this.blockedCommands = plugin.getConfig().getStringList("blockedCommands");
-		this.blockedCommandsInHell = plugin.getConfig().getStringList("blockedCommandsInHell");
+		this.blockedCommandsInHell = plugin.getConfig().getStringList("trollHell.blockedCommands");
+		this.trollOverrideCommands = plugin.getConfig().getStringList("trollHell.overrideCommands");
 	}
 
 }

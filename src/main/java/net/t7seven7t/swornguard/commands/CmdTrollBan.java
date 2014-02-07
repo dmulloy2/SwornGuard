@@ -15,14 +15,14 @@ import org.bukkit.entity.Player;
 /**
  * @author dmulloy2
  */
+public class CmdTrollBan extends SwornGuardCommand {
 
-public class CmdTrollMute extends SwornGuardCommand {
-	public CmdTrollMute(SwornGuard plugin) {
+	public CmdTrollBan(SwornGuard plugin) {
 		super(plugin);
-		this.name = "trollmute";
-		this.aliases.add("hellmute");
+		this.name = "trollban";
+		this.aliases.add("hellban");
 		this.requiredArgs.add("player");
-		this.description = "Temporarily silence a troll";
+		this.description = "Permanently silence a troll";
 		this.permission = PermissionType.CMD_TROLL.permission;
 		this.usesPrefix = false;
 	}
@@ -38,28 +38,28 @@ public class CmdTrollMute extends SwornGuardCommand {
 			return;
 
 		if (target.isOnline() && plugin.getPermissionHandler().hasPermission(target.getPlayer(), PermissionType.TROLL_EXEMPT.permission)) {
-			err("You may not troll mute &c{0}&4!", target.getName());
+			err("You may not troll ban &c{0}&4!", target.getName());
 			return;
 		}
 
-		if (data.isTrollMuted()) {
-			data.setTrollMuted(false);
+		if (data.isTrollBanned()) {
+			data.setTrollBanned(false);
 			data.setTrollHell(false);
 		} else {
-			data.setTrollMuted(true);
+			data.setTrollBanned(true);
 			data.setTrollHell(true);
 		}
 
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();
-			if (data.isTrollMuted()) {
-				plugin.getTrollHandler().putTrollInHell(troll, TrollType.MUTE);
+			if (data.isTrollHell()) {
+				plugin.getTrollHandler().putTrollInHell(troll, TrollType.BAN);
 			} else {
-				plugin.getTrollHandler().freeFromHell(troll, TrollType.MUTE);
+				plugin.getTrollHandler().freeFromHell(troll, TrollType.BAN);
 			}
 		}
 
-		String result = FormatUtil.format(plugin.getMessage("troll_mute"), target.getName(), data.isTrollHell() ? "muted" : "unmuted");
+		String result = FormatUtil.format(plugin.getMessage("troll_ban"), target.getName(), data.isTrollHell() ? "banned" : "unbanned");
 		sendMessage(result);
 		plugin.getLogHandler().log(result);
 	}

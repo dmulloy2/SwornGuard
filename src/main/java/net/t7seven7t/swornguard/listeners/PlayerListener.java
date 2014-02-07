@@ -36,7 +36,7 @@ public class PlayerListener implements Listener, Reloadable {
 		this.reload();
 	}
 
-	@EventHandler(priority = EventPriority.MONITOR)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(final PlayerJoinEvent event) {
 		// Store current time - will use it later
 		final long now = System.currentTimeMillis();
@@ -77,28 +77,21 @@ public class PlayerListener implements Listener, Reloadable {
 			new InmateTimerTask(plugin, event.getPlayer(), data).runTaskTimer(plugin, 20L, 20L);
 		}
 
-		if (data.isTrollHell()) {
-			for (Player p : plugin.getServer().getOnlinePlayers()) {
-				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
-					p.sendMessage(ChatColor.YELLOW + event.getPlayer().getName() + " has just logged on in troll hell");
-				} else {
-					p.hidePlayer(event.getPlayer());
-					event.getPlayer().hidePlayer(p);
-				}
-			}
-		}
+		plugin.getTrollHandler().handleJoin(event);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(final PlayerQuitEvent event) {
 		// Treat as player disconnect
 		onPlayerDisconnect(event.getPlayer());
+		plugin.getTrollHandler().handleQuit(event);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerKick(final PlayerKickEvent event) {
 		// Treat as player disconnect
 		onPlayerDisconnect(event.getPlayer());
+		plugin.getTrollHandler().handleKick(event);
 	}
 
 	public void onPlayerDisconnect(final Player player) {
@@ -124,15 +117,6 @@ public class PlayerListener implements Listener, Reloadable {
 
 		if (data.isVanished()) {
 			plugin.getPatrolHandler().vanish(player, false);
-		}
-
-		if (data.isTrollHell()) {
-			for (Player p : plugin.getServer().getOnlinePlayers()) {
-				if (! plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
-					p.showPlayer(player);
-					player.showPlayer(p);
-				}
-			}
 		}
 	}
 

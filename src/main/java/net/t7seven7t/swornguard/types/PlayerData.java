@@ -82,8 +82,10 @@ public class PlayerData implements ConfigurationSerializable {
 	private boolean jailMuted;
 	private boolean unjailNextLogin;
 
+	// Troll Hell
 	private boolean trollHell;
-	private boolean trollMuted;
+	private boolean trollBanned;
+	private transient boolean trollMuted;
 	
 	private transient Location previousLocation;
 	

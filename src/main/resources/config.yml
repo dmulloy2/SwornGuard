@@ -70,18 +70,20 @@ allowedCommandsInJail:
 - "jailhelp"
 - "rules"
 - "help"
-- "message"
-- "t"
-- "msg"
-- "whisper"
-- "r"
-- "reply"
-- "f c"
-- "f chat"
 
-# Blocked Commands in hell
-blockedCommandsInHell:
-- "someCommand"
+# Troll Hell Settings
+trollHell:
+  blockedCommands:
+  - "message"
+  - "t"
+  - "msg"
+  - "whisper"
+  - "r"
+  - "reply"
+  - "f c"
+  - "f chat"
+  overrideCommands:
+  - "someCommand"
 
 # AutoSave Task
 autosave:

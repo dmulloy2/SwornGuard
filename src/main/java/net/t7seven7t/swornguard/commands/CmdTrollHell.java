@@ -1,24 +1,19 @@
 /**
- * Copyright (C) 2012 t7seven7t
+ * (c) 2014 dmulloy2
  */
 package net.t7seven7t.swornguard.commands;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.swornguard.types.TrollType;
 import net.t7seven7t.util.FormatUtil;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-
-import com.massivecraft.factions.Conf;
-import com.massivecraft.factions.FPlayer;
-import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.struct.ChatMode;
 
 /**
- * @author t7seven7t
+ * @author dmulloy2
  */
 public class CmdTrollHell extends SwornGuardCommand {
 
@@ -49,39 +44,14 @@ public class CmdTrollHell extends SwornGuardCommand {
 			return;
 		}
 
-		data.setTrollHell(!data.isTrollHell());
+		data.setTrollHell(! data.isTrollHell());
 
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();
-
-			for (Player p : plugin.getServer().getOnlinePlayers()) {
-				if (!plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
-					if (data.isTrollHell()) {
-						p.hidePlayer(troll);
-						troll.hidePlayer(p);
-					} else {
-						p.showPlayer(troll);
-						troll.showPlayer(p);
-					}
-				}
-			}
-
-			// dmulloy2 - try to force the troll into public chat,
-			// since we can't control faction chat
 			if (data.isTrollHell()) {
-				try {
-					PluginManager pm = plugin.getServer().getPluginManager();
-					if (pm.getPlugin("Factions") != null || pm.getPlugin("SwornNations") != null) {
-						if (Conf.factionOnlyChat) {
-							FPlayer fplayer = FPlayers.i.get(troll);
-							if (fplayer.getChatMode() != ChatMode.PUBLIC) {
-								fplayer.setChatMode(ChatMode.PUBLIC);
-							}
-						}
-					}
-				} catch (Throwable ex) {
-					// Probably a different version of Factions
-				}
+				plugin.getTrollHandler().putTrollInHell(troll, TrollType.HELL);
+			} else {
+				plugin.getTrollHandler().freeFromHell(troll, TrollType.HELL);
 			}
 		}
 

@@ -34,6 +34,7 @@ import net.t7seven7t.swornguard.commands.CmdRatio;
 import net.t7seven7t.swornguard.commands.CmdReload;
 import net.t7seven7t.swornguard.commands.CmdSInfo;
 import net.t7seven7t.swornguard.commands.CmdShow;
+import net.t7seven7t.swornguard.commands.CmdTrollBan;
 import net.t7seven7t.swornguard.commands.CmdTrollHell;
 import net.t7seven7t.swornguard.commands.CmdTrollMute;
 import net.t7seven7t.swornguard.commands.jail.CmdCheck;
@@ -66,6 +67,7 @@ import net.t7seven7t.swornguard.handlers.LogHandler;
 import net.t7seven7t.swornguard.handlers.PatrolHandler;
 import net.t7seven7t.swornguard.handlers.PermissionHandler;
 import net.t7seven7t.swornguard.handlers.ResourceHandler;
+import net.t7seven7t.swornguard.handlers.TrollHandler;
 import net.t7seven7t.swornguard.io.PlayerDataCache;
 import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
 import net.t7seven7t.swornguard.listeners.BlockListener;
@@ -96,6 +98,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 	private @Getter ResourceHandler resourceHandler;
 	private @Getter PlayerDataCache playerDataCache;
 	private @Getter Preconditions preconditions;
+	private @Getter TrollHandler trollHandler;
 	private @Getter ServerData serverData;
 	
 	private @Getter CheatHandler cheatHandler;
@@ -136,7 +139,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		
 		serverData = new ServerData(this);
 		preconditions = new Preconditions(this);
-		
+		trollHandler = new TrollHandler(this);
 		cheatHandler = new CheatHandler(this);
 		autoModerator = new AutoModerator(this);
 		patrolHandler = new PatrolHandler(this);
@@ -215,6 +218,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		
 		commandHandler.registerCommand(new CmdTrollHell(this));
 		commandHandler.registerCommand(new CmdTrollMute(this));
+		commandHandler.registerCommand(new CmdTrollBan(this));
 		
 		logHandler.log("{0} has been enabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
