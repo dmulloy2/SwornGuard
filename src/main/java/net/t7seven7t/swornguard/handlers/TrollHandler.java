@@ -38,14 +38,14 @@ public class TrollHandler implements Reloadable {
 
 		data.setTrollHell(true);
 
-		forceIntoPublicChat(troll);
-		hidePlayers(troll);
-
 		if (type == TrollType.MUTE) {
 			data.setTrollMuted(true);
 		} else if (type == TrollType.BAN) {
 			data.setTrollBanned(true);
 		}
+
+		forceIntoPublicChat(troll);
+		hidePlayers(troll);
 	}
 
 	public final void freeFromHell(Player troll, TrollType type) {
@@ -55,8 +55,8 @@ public class TrollHandler implements Reloadable {
 		data.setTrollMuted(false);
 
 		if (type == TrollType.HELL) {
-			data.setTrollHell(false);
 			showPlayers(troll);
+			data.setTrollHell(false);
 		}
 	}
 

@@ -144,7 +144,7 @@ public class ChatListener implements Listener, Reloadable {
 							StringBuilder message = new StringBuilder();
 							message.append("/troll ");
 							message.append(args[1]);
-							event.setMessage(message.toString());
+							event.getPlayer().chat(message.toString());
 
 							event.setCancelled(true);
 						} catch (Exception e) {
