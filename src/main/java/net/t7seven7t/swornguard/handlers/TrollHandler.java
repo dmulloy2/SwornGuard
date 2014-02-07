@@ -10,7 +10,6 @@ import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.swornguard.types.TrollType;
 import net.t7seven7t.util.FormatUtil;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -96,7 +95,7 @@ public class TrollHandler implements Reloadable {
 				}
 			}
 
-			String admMsg = FormatUtil.format("&7[&4TROLL&7]&c {0} &4: &f{1}", event.getPlayer().getName(), event.getMessage());
+			String admMsg = FormatUtil.format(plugin.getMessage("troll_format"), event.getPlayer().getName(), event.getMessage());
 
 			String node = plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission);
 			plugin.getServer().broadcast(admMsg, node);
@@ -116,7 +115,7 @@ public class TrollHandler implements Reloadable {
 				}
 
 				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
-					p.sendMessage(ChatColor.YELLOW + event.getPlayer().getName() + " has just logged on in troll hell");
+					p.sendMessage(FormatUtil.format(plugin.getMessage("troll_join"), event.getPlayer().getName()));
 				}
 			}
 
@@ -138,7 +137,7 @@ public class TrollHandler implements Reloadable {
 				}
 
 				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
-					p.sendMessage(ChatColor.YELLOW + event.getPlayer().getName() + " has just logged out in troll hell");
+					p.sendMessage(FormatUtil.format("troll_leave", event.getPlayer().getName()));
 				}
 			}
 		}
@@ -159,7 +158,7 @@ public class TrollHandler implements Reloadable {
 				}
 
 				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
-					p.sendMessage(ChatColor.YELLOW + event.getPlayer().getName() + " has just logged out in troll hell");
+					p.sendMessage(FormatUtil.format(plugin.getMessage("troll_join"), event.getPlayer().getName()));
 				}
 			}
 		}
