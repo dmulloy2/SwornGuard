@@ -137,7 +137,7 @@ public class TrollHandler implements Reloadable {
 				}
 
 				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
-					p.sendMessage(FormatUtil.format("troll_leave", event.getPlayer().getName()));
+					p.sendMessage(FormatUtil.format(plugin.getMessage("troll_leave"), event.getPlayer().getName()));
 				}
 			}
 		}
@@ -158,7 +158,7 @@ public class TrollHandler implements Reloadable {
 				}
 
 				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.TROLL_SPY.permission)) {
-					p.sendMessage(FormatUtil.format(plugin.getMessage("troll_join"), event.getPlayer().getName()));
+					p.sendMessage(FormatUtil.format(plugin.getMessage("troll_leave"), event.getPlayer().getName()));
 				}
 			}
 		}
