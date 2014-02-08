@@ -42,20 +42,20 @@ public class CmdTrollBan extends SwornGuardCommand {
 			return;
 		}
 
-		if (data.isTrollBanned()) {
-			data.setTrollBanned(false);
-			data.setTrollHell(false);
-		} else {
-			data.setTrollBanned(true);
-			data.setTrollHell(true);
-		}
-
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();
-			if (data.isTrollHell()) {
+			if (! data.isTrollBanned()) {
 				plugin.getTrollHandler().putTrollInHell(troll, TrollType.BAN);
 			} else {
 				plugin.getTrollHandler().freeFromHell(troll, TrollType.BAN);
+			}
+		} else {
+			if (data.isTrollBanned()) {
+				data.setTrollBanned(false);
+				data.setTrollHell(false);
+			} else {
+				data.setTrollBanned(true);
+				data.setTrollHell(true);
 			}
 		}
 

@@ -42,20 +42,20 @@ public class CmdTrollMute extends SwornGuardCommand {
 			return;
 		}
 
-		if (data.isTrollMuted()) {
-			data.setTrollMuted(false);
-			data.setTrollHell(false);
-		} else {
-			data.setTrollMuted(true);
-			data.setTrollHell(true);
-		}
-
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();
-			if (data.isTrollMuted()) {
+			if (! data.isTrollMuted()) {
 				plugin.getTrollHandler().putTrollInHell(troll, TrollType.MUTE);
 			} else {
 				plugin.getTrollHandler().freeFromHell(troll, TrollType.MUTE);
+			}
+		} else {
+			if (data.isTrollMuted()) {
+				data.setTrollMuted(false);
+				data.setTrollHell(false);
+			} else {
+				data.setTrollMuted(true);
+				data.setTrollHell(true);
 			}
 		}
 

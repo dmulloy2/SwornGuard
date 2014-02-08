@@ -44,15 +44,15 @@ public class CmdTrollHell extends SwornGuardCommand {
 			return;
 		}
 
-		data.setTrollHell(! data.isTrollHell());
-
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();
-			if (data.isTrollHell()) {
+			if (! data.isTrollHell()) {
 				plugin.getTrollHandler().putTrollInHell(troll, TrollType.HELL);
 			} else {
 				plugin.getTrollHandler().freeFromHell(troll, TrollType.HELL);
 			}
+		} else {
+			data.setTrollHell(! data.isTrollHell());
 		}
 
 		String result = FormatUtil.format(plugin.getMessage("troll_hell"), target.getName(), data.isTrollHell() ? "in" : "freed from");
