@@ -20,7 +20,7 @@ import org.bukkit.plugin.PluginManager;
 import com.massivecraft.factions.Conf;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.struct.ChatMode;
+import com.massivecraft.factions.types.ChatMode;
 
 /**
  * @author dmulloy2
