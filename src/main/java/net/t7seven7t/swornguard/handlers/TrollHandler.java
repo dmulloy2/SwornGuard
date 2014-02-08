@@ -105,7 +105,6 @@ public class TrollHandler implements Reloadable {
 	public final void handleJoin(PlayerJoinEvent event) {
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 		if (data.isTrollHell()) {
-			event.setJoinMessage(null);
 			plugin.getTrollHandler().hidePlayers(event.getPlayer());
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				PlayerData data1 = plugin.getPlayerDataCache().getData(p);
@@ -121,13 +120,13 @@ public class TrollHandler implements Reloadable {
 
 			hidePlayers(event.getPlayer());
 			forceIntoPublicChat(event.getPlayer());
+			event.setJoinMessage(null);
 		}
 	}
 
 	public final void handleQuit(PlayerQuitEvent event) {
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 		if (data.isTrollHell()) {
-			event.setQuitMessage(null);
 			plugin.getTrollHandler().hidePlayers(event.getPlayer());
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				PlayerData data1 = plugin.getPlayerDataCache().getData(p);
@@ -140,15 +139,15 @@ public class TrollHandler implements Reloadable {
 					p.sendMessage(FormatUtil.format(plugin.getMessage("troll_leave"), event.getPlayer().getName()));
 				}
 			}
-		}
 
-		showPlayers(event.getPlayer());
+			event.setQuitMessage(null);
+			showPlayers(event.getPlayer());
+		}
 	}
 
 	public final void handleKick(PlayerKickEvent event) {
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 		if (data.isTrollHell()) {
-			event.setLeaveMessage(null);
 			plugin.getTrollHandler().hidePlayers(event.getPlayer());
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				PlayerData data1 = plugin.getPlayerDataCache().getData(p);
@@ -161,9 +160,10 @@ public class TrollHandler implements Reloadable {
 					p.sendMessage(FormatUtil.format(plugin.getMessage("troll_leave"), event.getPlayer().getName()));
 				}
 			}
-		}
 
-		showPlayers(event.getPlayer());
+			event.setLeaveMessage(null);
+			showPlayers(event.getPlayer());
+		}
 	}
 
 	public final void hidePlayers(Player player) {
@@ -185,7 +185,7 @@ public class TrollHandler implements Reloadable {
 		if (data.isTrollHell()) {
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				PlayerData data1 = plugin.getPlayerDataCache().getData(p);
-				if (data1.isTrollHell() && ! data1.isTrollMuted() && ! data1.isTrollBanned()) {
+				if (data1.isVanished()) {
 					continue;
 				}
 
