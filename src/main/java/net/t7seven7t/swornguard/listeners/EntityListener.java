@@ -88,9 +88,8 @@ public class EntityListener implements Listener, Reloadable {
 				att = (Player) attacker;
 			} else if (attacker instanceof Projectile) {
 				Projectile proj = (Projectile) attacker;
-				LivingEntity shooter = (LivingEntity) proj.getShooter();
-				if (shooter instanceof Player) {
-					att = (Player) shooter;
+				if (proj.getShooter() instanceof Player) {
+					att = (Player) proj.getShooter();
 				}
 			}
 
