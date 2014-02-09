@@ -44,7 +44,12 @@ public class CmdTrollHell extends SwornGuardCommand {
 			return;
 		}
 
+		boolean wasInHell = data.isTrollHell();
 		boolean putInHell = argAsBoolean(1, ! data.isTrollHell());
+		if (wasInHell == putInHell) {
+			sendMessage("&e{0} is already {1} troll hell!", target.getName(), wasInHell ? "in" : "out of");
+			return;
+		}
 
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();

@@ -43,7 +43,12 @@ public class CmdTrollBan extends SwornGuardCommand {
 			return;
 		}
 
+		boolean wasInHell = data.isTrollBanned();
 		boolean putInHell = argAsBoolean(1, ! data.isTrollBanned());
+		if (wasInHell == putInHell) {
+			sendMessage("&e{0} is already troll {1}!", target.getName(), wasInHell ? "banned" : "unbanned");
+			return;
+		}
 
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();

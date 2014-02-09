@@ -43,7 +43,12 @@ public class CmdTrollMute extends SwornGuardCommand {
 			return;
 		}
 
+		boolean wasInHell = data.isTrollMuted();
 		boolean putInHell = argAsBoolean(1, ! data.isTrollMuted());
+		if (wasInHell == putInHell) {
+			sendMessage("&e{0} is already troll {1}!", target.getName(), wasInHell ? "muted" : "unmuted");
+			return;
+		}
 
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();
