@@ -22,6 +22,7 @@ public class CmdTrollBan extends SwornGuardCommand {
 		this.name = "trollban";
 		this.aliases.add("hellban");
 		this.requiredArgs.add("player");
+		this.optionalArgs.add("on/off");
 		this.description = "Permanently silence a troll";
 		this.permission = PermissionType.CMD_TROLL.permission;
 		this.usesPrefix = false;
@@ -42,24 +43,25 @@ public class CmdTrollBan extends SwornGuardCommand {
 			return;
 		}
 
+		boolean putInHell = argAsBoolean(1, ! data.isTrollBanned());
+
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();
-			if (! data.isTrollBanned()) {
+			if (putInHell) {
 				plugin.getTrollHandler().putTrollInHell(troll, TrollType.BAN);
 			} else {
 				plugin.getTrollHandler().freeFromHell(troll, TrollType.BAN);
 			}
 		} else {
-			if (data.isTrollBanned()) {
-				data.setTrollBanned(false);
-				data.setTrollHell(false);
-			} else {
+			if (putInHell) {
 				data.setTrollBanned(true);
 				data.setTrollHell(true);
+			} else {
+				data.setTrollBanned(false);
 			}
 		}
 
-		String result = FormatUtil.format(plugin.getMessage("troll_ban"), target.getName(), data.isTrollHell() ? "banned" : "unbanned");
+		String result = FormatUtil.format(plugin.getMessage("troll_ban"), target.getName(), data.isTrollBanned() ? "banned" : "unbanned");
 		sendMessage(result);
 		plugin.getLogHandler().log(result);
 	}

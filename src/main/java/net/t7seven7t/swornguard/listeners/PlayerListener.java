@@ -89,9 +89,12 @@ public class PlayerListener implements Listener, Reloadable {
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerKick(final PlayerKickEvent event) {
-		// Treat as player disconnect
-		onPlayerDisconnect(event.getPlayer());
-		plugin.getTrollHandler().handleKick(event);
+		// PlayerQuitEvent should be fired as well as this event,
+		// so we don't really need to do anything here.
+		// TODO: Verify this
+
+		// onPlayerDisconnect(event.getPlayer());
+		// plugin.getTrollHandler().handleKick(event);
 	}
 
 	public void onPlayerDisconnect(final Player player) {

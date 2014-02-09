@@ -187,4 +187,18 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 		return plugin.getPlayerDataCache().getData(target.getName());
 	}
 
+	protected boolean argAsBoolean(int arg, boolean def) {
+		if (arg > args.length) {
+			return def;
+		}
+
+		try {
+			return Boolean.parseBoolean(args[arg]);
+		} catch (Exception e) {
+			//
+		}
+
+		return def;
+	}
+
 }

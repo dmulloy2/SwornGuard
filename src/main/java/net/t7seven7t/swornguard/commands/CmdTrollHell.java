@@ -23,6 +23,7 @@ public class CmdTrollHell extends SwornGuardCommand {
 		this.aliases.add("troll");
 		this.aliases.add("hell");
 		this.requiredArgs.add("player");
+		this.optionalArgs.add("on/off");
 		this.description = "Put someone in troll hell ;)";
 		this.permission = PermissionType.CMD_TROLL.permission;
 		this.usesPrefix = false;
@@ -40,19 +41,20 @@ public class CmdTrollHell extends SwornGuardCommand {
 
 		if (target.isOnline() && plugin.getPermissionHandler().hasPermission(target.getPlayer(), PermissionType.TROLL_EXEMPT.permission)) {
 			err("You may not put &c{0} &4in troll hell!", target.getName());
-			data.setTrollHell(false);
 			return;
 		}
 
+		boolean putInHell = argAsBoolean(1, ! data.isTrollHell());
+
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();
-			if (! data.isTrollHell()) {
+			if (putInHell) {
 				plugin.getTrollHandler().putTrollInHell(troll, TrollType.HELL);
 			} else {
 				plugin.getTrollHandler().freeFromHell(troll, TrollType.HELL);
 			}
 		} else {
-			data.setTrollHell(! data.isTrollHell());
+			data.setTrollHell(putInHell);
 		}
 
 		String result = FormatUtil.format(plugin.getMessage("troll_hell"), target.getName(), data.isTrollHell() ? "in" : "freed from");

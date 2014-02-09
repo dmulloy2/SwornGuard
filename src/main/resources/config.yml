@@ -74,16 +74,36 @@ allowedCommandsInJail:
 # Troll Hell Settings
 trollHell:
   blockedCommands:
-  - "message"
-  - "t"
   - "msg"
+  - "m"
+  - "w"
+  - "t"
+  - "emsg"
+  - "tell"
+  - "etell"
   - "whisper"
+  - "ewhisper"
   - "r"
   - "reply"
+  - "er"
+  - "ereply"
+  - "message"
+  - "t"
   - "f c"
   - "f chat"
+  - "f leave"
+  - "f join"
+  - "f desc"
+  - "helpop"
+  - "ehelpop"
   overrideCommands:
-  - "someCommand"
+  # - "mute"
+  # - "ban"
+  # - "eban"
+  # - "jail"
+  # - "tempban"
+  # - "etempban"
+  # - "jailmute"
 
 # AutoSave Task
 autosave:

@@ -22,6 +22,7 @@ public class CmdTrollMute extends SwornGuardCommand {
 		this.name = "trollmute";
 		this.aliases.add("hellmute");
 		this.requiredArgs.add("player");
+		this.optionalArgs.add("on/off");
 		this.description = "Temporarily silence a troll";
 		this.permission = PermissionType.CMD_TROLL.permission;
 		this.usesPrefix = false;
@@ -42,24 +43,25 @@ public class CmdTrollMute extends SwornGuardCommand {
 			return;
 		}
 
+		boolean putInHell = argAsBoolean(1, ! data.isTrollMuted());
+
 		if (target.isOnline()) {
 			Player troll = target.getPlayer();
-			if (! data.isTrollMuted()) {
+			if (putInHell) {
 				plugin.getTrollHandler().putTrollInHell(troll, TrollType.MUTE);
 			} else {
 				plugin.getTrollHandler().freeFromHell(troll, TrollType.MUTE);
 			}
 		} else {
-			if (data.isTrollMuted()) {
-				data.setTrollMuted(false);
-				data.setTrollHell(false);
-			} else {
+			if (putInHell) {
 				data.setTrollMuted(true);
 				data.setTrollHell(true);
+			} else {
+				data.setTrollMuted(false);
 			}
 		}
 
-		String result = FormatUtil.format(plugin.getMessage("troll_mute"), target.getName(), data.isTrollHell() ? "muted" : "unmuted");
+		String result = FormatUtil.format(plugin.getMessage("troll_mute"), target.getName(), data.isTrollMuted() ? "muted" : "unmuted");
 		sendMessage(result);
 		plugin.getLogHandler().log(result);
 	}
