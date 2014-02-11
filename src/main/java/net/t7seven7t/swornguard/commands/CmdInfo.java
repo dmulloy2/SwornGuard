@@ -56,7 +56,7 @@ public class CmdInfo extends SwornGuardCommand {
 		line = new StringBuilder();
 		line.append("  " + FormatUtil.format(plugin.getMessage("info_logins"), 
 					data.getLogins(), 
-					TimeUtil.getSimpleDate(data.getFirstLogin())));
+					TimeUtil.getSimpleDate(target.getFirstPlayed())));
 		lines.add(line.toString());
 		
 		line = new StringBuilder();
