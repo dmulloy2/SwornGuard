@@ -54,7 +54,7 @@ public class EntityListener implements Listener, Reloadable {
 				
 				if (event.getEntity() instanceof Player) {					
 					if (factionBetrayalDetectorEnabled) {
-						plugin.getFactionBetrayaldetector().check((Player) event.getEntity(), (int) event.getDamage(), (Player) event.getDamager());
+						plugin.getFactionBetrayalDetector().check((Player) event.getEntity(), (int) event.getDamage(), (Player) event.getDamager());
 					}
 				}
 			}

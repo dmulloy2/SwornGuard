@@ -65,7 +65,7 @@ public class FactionsListener implements Listener, Reloadable {
 
 		if (factionBetrayalDetectorEnabled) {
 			if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED) {
-				plugin.getFactionBetrayaldetector().addPossibleBetrayedPlayer(fplayer.getName(),
+				plugin.getFactionBetrayalDetector().addPossibleBetrayedPlayer(fplayer.getName(),
 						new FactionKick(event.getFaction().getTag(), System.currentTimeMillis()));
 			}
 		}

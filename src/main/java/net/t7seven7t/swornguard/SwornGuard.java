@@ -110,7 +110,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 	private @Getter AutoClickerDetector autoClickerDetector;
 	private @Getter CombatLogDetector combatLogDetector;
 	private @Getter CommandDetector commandDetector;
-	private @Getter FactionBetrayalDetector factionBetrayaldetector;
+	private @Getter FactionBetrayalDetector factionBetrayalDetector;
 	private @Getter FlyDetector flyDetector;
 	private @Getter XrayDetector xrayDetector;
 
@@ -152,7 +152,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		if (getConfig().getBoolean("combatLogDetectorEnabled"))
 			combatLogDetector = new CombatLogDetector(this);
 		if (getConfig().getBoolean("factionBetrayalDetectorEnabled"))
-			factionBetrayaldetector = new FactionBetrayalDetector(this);
+			factionBetrayalDetector = new FactionBetrayalDetector(this);
 		if (getConfig().getBoolean("flyDetectorEnabled"))
 			flyDetector = new FlyDetector(this);
 		if (getConfig().getBoolean("spamDetectorEnabled"))
