@@ -47,9 +47,11 @@ public class CmdInfo extends SwornGuardCommand {
 							: FormatUtil.format(plugin.getMessage("info_last_seen"), 
 												TimeUtil.formatTimeDifference(	data.getLastOnline(), 
 																				System.currentTimeMillis()))));
-				
+			
+		String ip = target.isOnline() ? target.getPlayer().getAddress().getAddress().getHostAddress() :
+			data.getIpAddressList().get(data.getIpAddressList().size() - 1);
 		if (plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_IP.permission))
-			line.append(" from " + data.getIpAddressList().get(data.getIpAddressList().size() - 1));
+			line.append(" from " + ip);
 
 		lines.add(line.toString());
 		

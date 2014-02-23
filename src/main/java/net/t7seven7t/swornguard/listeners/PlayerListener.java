@@ -59,7 +59,7 @@ public class PlayerListener implements Listener, Reloadable {
 
 		// Add the player's ip address to the address list
 		String ip = event.getPlayer().getAddress().getAddress().getHostAddress();
-		if (data.getIpAddressList().isEmpty() || !data.getIpAddressList().contains(ip))
+		if (data.getIpAddressList().isEmpty() || ! data.getIpAddressList().contains(ip))
 			data.getIpAddressList().add(ip);
 
 		// Hide vanished players from newly joined players.
