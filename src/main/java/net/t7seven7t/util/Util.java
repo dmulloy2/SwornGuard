@@ -19,11 +19,11 @@ import org.bukkit.entity.Player;
  */
 
 public class Util {
-	private Util() {
-	}
+
+	private Util() { }
 
 	/**
-	 * Gets the OfflinePlayer from a given string
+	 * Gets the Player from a given string
 	 * 
 	 * @param pl
 	 *        - String to match with a player
@@ -43,7 +43,7 @@ public class Util {
 	 * 
 	 * @param pl
 	 *        - String to match with a player
-	 * @return Player from the given string, null if none exists
+	 * @return OfflinePlayer from the given string, null if none exists
 	 */
 	public static OfflinePlayer matchOfflinePlayer(String pl) {
 		if (matchPlayer(pl) != null)

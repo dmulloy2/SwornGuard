@@ -23,6 +23,7 @@ public class CmdTrollStatus extends SwornGuardCommand {
 	public CmdTrollStatus(SwornGuard plugin) {
 		super(plugin);
 		this.name = "trollstatus";
+		this.aliases.add("hellstatus");
 		this.optionalArgs.add("player");
 		this.description = "Check a player''s troll status";
 		this.permission = PermissionType.TROLL_STATUS.permission;
