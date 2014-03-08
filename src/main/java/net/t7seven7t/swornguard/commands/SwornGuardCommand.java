@@ -192,13 +192,8 @@ public abstract class SwornGuardCommand implements CommandExecutor {
 			return def;
 		}
 
-		try {
-			return Boolean.parseBoolean(args[arg]);
-		} catch (Exception e) {
-			//
-		}
-
-		return def;
+		String string = args[arg].toLowerCase();
+		return string.startsWith("y") || string.startsWith("t") || string.equals("on");
 	}
 
 }

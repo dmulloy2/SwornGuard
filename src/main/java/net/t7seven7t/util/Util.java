@@ -1,6 +1,3 @@
-/**
- * (c) 2013 dmulloy2
- */
 package net.t7seven7t.util;
 
 import java.text.DecimalFormat;
@@ -22,6 +19,8 @@ import org.bukkit.entity.Player;
  */
 
 public class Util {
+	private Util() {
+	}
 
 	/**
 	 * Gets the OfflinePlayer from a given string
@@ -181,7 +180,6 @@ public class Util {
 		return ret.toString();
 	}
 
-
 	/**
 	 * Constructs a new list from an existing {@link List}
 	 * <p>
@@ -194,13 +192,7 @@ public class Util {
 	 * @return a new list from the given list
 	 */
 	public static <T> List<T> newList(List<T> list) {
-		List<T> ret = new ArrayList<T>();
-
-		for (int i = 0; i < list.size(); i++) {
-			ret.add(list.get(i));
-		}
-
-		return ret;
+		return new ArrayList<T>(list);
 	}
 
 	/**
@@ -221,43 +213,24 @@ public class Util {
 		return ret;
 	}
 
-	/**
-	 * Basically just a wrapper for {@link Integer#parseInt(String)}
-	 * <p>
-	 * Catches the {@link NumberFormatException} and returns -1
-	 * 
-	 * @param s
-	 *        - String to attempt to parse into an Integer
-	 */
-	public static int parseInt(String s) {
-		int ret = -1;
-
-		try {
-			ret = Integer.parseInt(s);
-		} catch (Exception e) {
-			// Return -1, move on
+	public static String implode(String glue, String... args) {
+		StringBuilder ret = new StringBuilder();
+		for (String arg : args) {
+			ret.append(arg + glue);
 		}
 
-		return ret;
-	}
+		if (ret.lastIndexOf(glue) >= 0) {
+			ret.delete(ret.lastIndexOf(glue), ret.length());
+		}
 
-	/**
-	 * Returns whether or not a String can be parsed as an Integer
-	 * 
-	 * @param string
-	 *        - String to check
-	 * @return Whether or not a String can be parsed as an Integer
-	 */
-	public static boolean isInteger(String s) {
-		return parseInt(s) != -1;
+		return ret.toString();
 	}
 
 	public static double roundNumDecimals(double d, int num) {
 		StringBuilder format = new StringBuilder("#.");
 		for (int i = 0; i < num; i++)
 			format.append("#");
-        DecimalFormat f = new DecimalFormat(format.toString());
-        return Double.valueOf(f.format(d));
+		DecimalFormat f = new DecimalFormat(format.toString());
+		return Double.valueOf(f.format(d));
 	}
-
 }

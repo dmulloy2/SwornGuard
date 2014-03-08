@@ -139,8 +139,18 @@ permissions:
             swornguard.cmd.unjail: true
             swornguard.cmd.cheatteleport: true
             swornguard.showcheatreports: true
-            swornguard.trollspy: true
             swornguard.cmd.jailmute: true
+            swornguard.trollhell: true
+    swornguard.trollhell:
+        description: Troll Hell commands
+        children:
+            swornguard.troll.hell: true
+            swornguard.troll.mute: true
+            swornguard.troll.ban: true
+            swornguard.troll.exempt: true
+            swornguard.troll.spy: true
+            swornguard.troll.status: true
+            swornguard.troll.status.others: true
     swornguard.default:
         description: Permissions for everyone
         children:
@@ -218,8 +228,6 @@ permissions:
         default: true
     swornguard.cmd.jailmute:
         default: false
-    swornguard.cmd.troll:
-        default: false
     swornguard.allow.usecommandshell:
         default: false
     swornguard.trollspy:
@@ -228,5 +236,17 @@ permissions:
         default: false
     swornguard.creepfun:
         default: false
+    swornguard.troll.hell:
+        default: false
+    swornguard.troll.mute:
+        default: false
+    swornguard.troll.ban:
+        default: false
     swornguard.troll.exempt:
+        default: false
+    swornguard.troll.spy:
+        default: false
+    swornguard.troll.status:
+        default: false
+    swornguard.troll.status.others:
         default: false

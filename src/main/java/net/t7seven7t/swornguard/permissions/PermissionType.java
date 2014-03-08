@@ -36,17 +36,24 @@ public enum PermissionType {
 	CMD_RELOAD("cmd.reload"),
 	CMD_SHOW("cmd.show"),
 	CMD_SERVER_INFO("cmd.serverinfo"),
-	CMD_TROLL("cmd.troll"),
 	CMD_UNJAIL("cmd.unjail"),
 	CMD_UNBAN("cmd.unban"),
 	CMD_VANISH("cmd.vanish"),
 	CMD_VANISH_LIST("cmd.vanishlist"),
 	SHOW_CHEAT_REPORTS("showcheatreports"),
-	TROLL_SPY("trollspy"),
-	TROLL_EXEMPT("troll.exempt"),
 	VANISH_SPY("vanishspy"),
 	FIREWORK("firework"),
-	CREEPFUN("creepfun");
+	CREEPFUN("creepfun"),
+
+	// Troll Hell
+	CMD_TROLL_HELL("troll.hell"),
+	CMD_TROLL_MUTE("troll.mute"),
+	CMD_TROLL_BAN("troll.ban"),
+	TROLL_EXEMPT("troll.exempt"),
+	TROLL_SPY("troll.spy"),
+	TROLL_STATUS("troll.status"),
+	TROLL_STATUS_OTHERS("troll.status.others")
+	;
 	
 	public final Permission permission;
 	PermissionType(final String node) {

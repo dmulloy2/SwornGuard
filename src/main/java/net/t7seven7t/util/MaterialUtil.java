@@ -21,7 +21,7 @@ public class MaterialUtil {
 	 * @return The {@link org.bukkit.Material} from a given string
 	 */
 	public static org.bukkit.Material getMaterial(String string) {
-		if (Util.isInteger(string)) {
+		if (NumberUtil.isInt(string)) {
 			return getMaterial(Integer.parseInt(string));
 		} else {
 			return org.bukkit.Material.matchMaterial(string);

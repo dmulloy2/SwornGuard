@@ -144,6 +144,18 @@ public class CmdInfo extends SwornGuardCommand {
 			line.append("  " + FormatUtil.format(plugin.getMessage("info_jail_reason"), data.getLastJailReason()));
 			lines.add(line.toString());
 		}
+
+		if (data.getTrollHells() != 0) {
+			line = new StringBuilder();
+			line.append("  " + FormatUtil.format(plugin.getMessage("info_trolls"),
+					data.getTrollHells(),
+					TimeUtil.formatTimeDifference(data.getLastTrollHell(), System.currentTimeMillis()),
+					data.getLastTroller()));
+			lines.add(line.toString());
+
+			line = new StringBuilder();
+			line.append(" " + FormatUtil.format(plugin.getMessage("info_troll_reason"), data.getLastTrollReason()));
+		}
 		
 		if (target.isOnline())
 			data.updateSpentTime();

@@ -34,9 +34,6 @@ import net.t7seven7t.swornguard.commands.CmdRatio;
 import net.t7seven7t.swornguard.commands.CmdReload;
 import net.t7seven7t.swornguard.commands.CmdSInfo;
 import net.t7seven7t.swornguard.commands.CmdShow;
-import net.t7seven7t.swornguard.commands.CmdTrollBan;
-import net.t7seven7t.swornguard.commands.CmdTrollHell;
-import net.t7seven7t.swornguard.commands.CmdTrollMute;
 import net.t7seven7t.swornguard.commands.jail.CmdCheck;
 import net.t7seven7t.swornguard.commands.jail.CmdJail;
 import net.t7seven7t.swornguard.commands.jail.CmdJailHelp;
@@ -51,6 +48,10 @@ import net.t7seven7t.swornguard.commands.patrol.CmdCheatTeleport;
 import net.t7seven7t.swornguard.commands.patrol.CmdPatrol;
 import net.t7seven7t.swornguard.commands.patrol.CmdVanish;
 import net.t7seven7t.swornguard.commands.patrol.CmdVanishList;
+import net.t7seven7t.swornguard.commands.troll.CmdTrollBan;
+import net.t7seven7t.swornguard.commands.troll.CmdTrollHell;
+import net.t7seven7t.swornguard.commands.troll.CmdTrollMute;
+import net.t7seven7t.swornguard.commands.troll.CmdTrollStatus;
 import net.t7seven7t.swornguard.detectors.AutoClickerDetector;
 import net.t7seven7t.swornguard.detectors.CombatLogDetector;
 import net.t7seven7t.swornguard.detectors.CommandDetector;
@@ -216,9 +217,10 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		commandHandler.registerCommand(new CmdTime(this));
 		commandHandler.registerCommand(new CmdUnjail(this));
 		
+		commandHandler.registerCommand(new CmdTrollBan(this));
 		commandHandler.registerCommand(new CmdTrollHell(this));
 		commandHandler.registerCommand(new CmdTrollMute(this));
-		commandHandler.registerCommand(new CmdTrollBan(this));
+		commandHandler.registerCommand(new CmdTrollStatus(this));
 		
 		logHandler.log("{0} has been enabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}

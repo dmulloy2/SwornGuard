@@ -89,6 +89,11 @@ public class PlayerData implements ConfigurationSerializable {
 	private boolean trollBanned;
 	private transient boolean trollMuted;
 
+	private int trollHells;
+	private long lastTrollHell;
+	private String lastTroller;
+	private String lastTrollReason;
+
 	private transient Location previousLocation;
 
 	private transient SpamDetector spamManager;
