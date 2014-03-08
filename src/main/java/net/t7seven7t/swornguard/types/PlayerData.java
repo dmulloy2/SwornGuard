@@ -14,10 +14,12 @@ import java.util.Map.Entry;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 import net.t7seven7t.swornguard.detectors.SpamDetector;
 
 import org.bukkit.Location;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 /**
@@ -27,11 +29,11 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 public class PlayerData implements ConfigurationSerializable {
 	private long firstLogin;
 	private long lastOnline;
-	
+
 	private List<String> ipAddressList = new ArrayList<String>();
 	private List<String> profilerList = new ArrayList<String>();
 	private List<String> factionLog = new ArrayList<String>();
-	
+
 	private transient int consecutivePings;
 	private transient int patrolInterval;
 
@@ -55,7 +57,7 @@ public class PlayerData implements ConfigurationSerializable {
 	private int diamondMined;
 	private int ironMined;
 	private int factions;
-	
+
 	private transient long lastActivity;
 	private transient long lastAttacked;
 	private transient long lastMonsterKill;
@@ -72,7 +74,7 @@ public class PlayerData implements ConfigurationSerializable {
 	private long lastUnban;
 	private long onlineTime;
 	private long jailTime;
-	
+
 	private transient boolean patrolling;
 	private transient boolean cooldownPatrolling;
 	private transient boolean inspecting;
@@ -86,11 +88,11 @@ public class PlayerData implements ConfigurationSerializable {
 	private boolean trollHell;
 	private boolean trollBanned;
 	private transient boolean trollMuted;
-	
+
 	private transient Location previousLocation;
-	
+
 	private transient SpamDetector spamManager;
-	
+
 	private String lastJailer;
 	private String lastJailReason;
 	private String lastBanner;
@@ -100,31 +102,35 @@ public class PlayerData implements ConfigurationSerializable {
 	private String lastKicker;
 	private String lastKickReason;
 	private String lastFaction;
-	
-	@Setter(AccessLevel.PRIVATE) 
+
+	@Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)
 	private Map<String, Object> data = new HashMap<String, Object>();
-	
+
 	public void updateSpentTime() {
 		long now = System.currentTimeMillis();
 		onlineTime = onlineTime + (now - ((lastUpdateTimeSpent > lastOnline) ? lastUpdateTimeSpent : lastOnline));
 		lastUpdateTimeSpent = now;
 	}
-	
+
 	public PlayerData() {
-		
+		//
 	}
-	
+
 	public PlayerData(Map<String, Object> args) {
 		for (Entry<String, Object> entry : args.entrySet()) {
 			try {
+				// Special case for data
+				if (entry.getKey().equals("data")) {
+					MemorySection mem = (MemorySection) entry.getValue();
+					data = mem.getValues(false);
+					continue;
+				}
+
 				for (Field field : getClass().getDeclaredFields()) {
 					if (field.getName().equals(entry.getKey())) {
 						boolean accessible = field.isAccessible();
-
 						field.setAccessible(true);
-												
 						field.set(this, entry.getValue());
-
 						field.setAccessible(accessible);
 					}
 				}
@@ -133,12 +139,15 @@ public class PlayerData implements ConfigurationSerializable {
 			}
 		}
 	}
-	
+
 	/**
-	 * Any data put into this map needs to be inherently serializable, 
-	 * either using ConfigurationSerializable or being a java primitive.
-	 * @param key Key to store the object under
-	 * @param object Object to store.
+	 * Any data put into this map needs to be inherently serializable, either
+	 * using ConfigurationSerializable or being a java primitive.
+	 * 
+	 * @param key
+	 *        Key to store the object under
+	 * @param object
+	 *        Object to store.
 	 */
 	public void putData(String key, Object object) {
 		data.put(key, object);
@@ -155,22 +164,20 @@ public class PlayerData implements ConfigurationSerializable {
 	public boolean containsKey(String key) {
 		return data.containsKey(key);
 	}
-	
-	@SuppressWarnings("rawtypes")
+
 	@Override
 	public Map<String, Object> serialize() {
 		Map<String, Object> data = new HashMap<String, Object>();
-		
+
 		for (Field field : getClass().getDeclaredFields()) {
 			if (Modifier.isTransient(field.getModifiers()))
 				continue;
-			
+
 			try {
 				boolean accessible = field.isAccessible();
-				
-				if (!accessible)
-					field.setAccessible(true);
-				
+
+				field.setAccessible(true);
+
 				if (field.getType().equals(Integer.TYPE)) {
 					if (field.getInt(this) != 0)
 						data.put(field.getName(), field.getInt(this));
@@ -181,25 +188,26 @@ public class PlayerData implements ConfigurationSerializable {
 					if (field.getBoolean(this))
 						data.put(field.getName(), field.getBoolean(this));
 				} else if (field.getType().isAssignableFrom(Collection.class)) {
-					if (!((Collection) field.get(this)).isEmpty())
+					if (! ((Collection<?>) field.get(this)).isEmpty())
 						data.put(field.getName(), field.get(this));
 				} else if (field.getType().isAssignableFrom(String.class)) {
 					if (((String) field.get(this)) != null)
 						data.put(field.getName(), field.get(this));
 				} else if (field.getType().isAssignableFrom(Map.class)) {
-					data.put(field.getName(), field.get(this));
+					if (! ((Map<?, ?>) field.get(this)).isEmpty())
+						data.put(field.getName(), field.get(this));
 				} else {
 					if (field.get(this) != null)
 						data.put(field.getName(), field.get(this));
 				}
-				
-				if (!accessible)
-					field.setAccessible(false);
-				
+
+				field.setAccessible(accessible);
 			} catch (Throwable ex) {
+				//
 			}
 		}
 
 		return data;
 	}
+
 }
