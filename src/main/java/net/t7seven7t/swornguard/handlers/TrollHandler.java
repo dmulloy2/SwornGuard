@@ -8,11 +8,15 @@ import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.TrollType;
 import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.util.TimeUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -28,11 +32,12 @@ import com.massivecraft.factions.types.ChatMode;
  * @author dmulloy2
  */
 
-public class TrollHandler {
+public class TrollHandler implements Listener {
 	private final SwornGuard plugin;
 
 	public TrollHandler(SwornGuard plugin) {
 		this.plugin = plugin;
+		this.registerEvents();
 	}
 
 	public final void putInHell(CommandSender sender, OfflinePlayer troll, TrollType type, String reason) {
@@ -72,7 +77,7 @@ public class TrollHandler {
 		sender.sendMessage(send);
 
 		profiler = FormatUtil.format(profiler, troll.getName(), sender.getName(), reason);
-		data.getProfilerList().add(profiler);
+		data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(), profiler));
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
 
 		data.setTrollHells(data.getTrollHells() + 1);
@@ -101,7 +106,7 @@ public class TrollHandler {
 			if (troll.isOnline()) {
 				for (Player online : plugin.getServer().getOnlinePlayers()) {
 					PlayerData data1 = plugin.getPlayerDataCache().getData(online);
-					if (!data1.isVanished()) {
+					if (! data1.isVanished()) {
 						troll.getPlayer().showPlayer(online);
 					}
 				}
@@ -111,7 +116,8 @@ public class TrollHandler {
 		send = FormatUtil.format(send, troll.getName());
 		sender.sendMessage(send);
 
-		profiler = FormatUtil.format(profiler, troll.getName(), sender.getName());
+		profiler = FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(),
+				FormatUtil.format(profiler, troll.getName(), sender.getName()));
 		data.getProfilerList().add(profiler);
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
 	}
@@ -135,8 +141,16 @@ public class TrollHandler {
 		}
 	}
 
-	public final void regulateChat(AsyncPlayerChatEvent event) {
-		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+	// ---- Event Listeners ---- //
+
+	private final void registerEvents() {
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+		Player player = event.getPlayer();
+		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		if (data.isTrollHell()) {
 			event.getRecipients().clear();
 			if (data.isTrollMuted() || data.isTrollBanned()) {
@@ -160,14 +174,15 @@ public class TrollHandler {
 		}
 	}
 
-	public final void handleJoin(PlayerJoinEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player troll = event.getPlayer();
 		PlayerData trollData = plugin.getPlayerDataCache().getData(troll);
 		if (trollData.isTrollHell()) {
 			for (Player online : plugin.getServer().getOnlinePlayers()) {
 				PlayerData data = plugin.getPlayerDataCache().getData(online);
 				if (data.isTrollHell()) {
-					if (!trollData.isTrollMuted() && !trollData.isTrollBanned()) {
+					if (! trollData.isTrollMuted() && ! trollData.isTrollBanned()) {
 						online.sendMessage(event.getJoinMessage());
 					} else {
 						troll.hidePlayer(online);
@@ -177,7 +192,8 @@ public class TrollHandler {
 				}
 
 				if (plugin.getPermissionHandler().hasPermission(online, PermissionType.TROLL_SPY.permission)) {
-					online.sendMessage(FormatUtil.format(plugin.getMessage("troll_join"), event.getPlayer().getName()));
+					online.sendMessage(FormatUtil.format(plugin.getMessage("troll_join"), event.getPlayer().getName(),
+							trollData.getLastTrollReason()));
 				}
 			}
 
@@ -193,10 +209,11 @@ public class TrollHandler {
 		}
 	}
 
-	public final void handleQuit(PlayerQuitEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerQuit(PlayerQuitEvent event) {
 		Player troll = event.getPlayer();
 		PlayerData trollData = plugin.getPlayerDataCache().getData(troll);
-		if (!trollData.isTrollHell()) {
+		if (! trollData.isTrollHell()) {
 			return;
 		}
 
@@ -216,7 +233,8 @@ public class TrollHandler {
 		event.setQuitMessage(null);
 	}
 
-	public final void handleKick(PlayerKickEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerKick(PlayerKickEvent event) {
 		Player troll = event.getPlayer();
 		PlayerData trollData = plugin.getPlayerDataCache().getData(troll);
 		if (! trollData.isTrollHell()) {
@@ -225,5 +243,4 @@ public class TrollHandler {
 
 		event.setLeaveMessage(null);
 	}
-
 }

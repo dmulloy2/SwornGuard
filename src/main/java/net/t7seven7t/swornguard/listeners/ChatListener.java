@@ -75,10 +75,6 @@ public class ChatListener implements Listener, Reloadable {
 			event.getPlayer().sendMessage(ChatColor.RED + "You have been muted.");
 			return;
 		}
-
-		if (data.isTrollHell()) {
-			plugin.getTrollHandler().regulateChat(event);
-		}
 	}
 	
 	// Needs to be at high because factions cancels event for its colour tags :(

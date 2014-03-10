@@ -18,7 +18,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -76,25 +75,12 @@ public class PlayerListener implements Listener, Reloadable {
 		} else if (data.isJailed()) {
 			new InmateTimerTask(plugin, event.getPlayer(), data).runTaskTimer(plugin, 20L, 20L);
 		}
-
-		plugin.getTrollHandler().handleJoin(event);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerQuit(final PlayerQuitEvent event) {
 		// Treat as player disconnect
 		onPlayerDisconnect(event.getPlayer());
-		plugin.getTrollHandler().handleQuit(event);
-	}
-
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onPlayerKick(final PlayerKickEvent event) {
-		// PlayerQuitEvent should be fired as well as this event,
-		// so we don't really need to do anything here.
-		// TODO: Verify this
-
-		// onPlayerDisconnect(event.getPlayer());
-		// plugin.getTrollHandler().handleKick(event);
 	}
 
 	public void onPlayerDisconnect(final Player player) {
