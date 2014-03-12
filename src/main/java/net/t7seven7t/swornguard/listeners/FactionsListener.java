@@ -7,8 +7,8 @@ import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.FactionKick;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.Reloadable;
-import net.t7seven7t.util.FormatUtil;
-import net.t7seven7t.util.TimeUtil;
+import net.t7seven7t.swornguard.util.FormatUtil;
+import net.t7seven7t.swornguard.util.TimeUtil;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

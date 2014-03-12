@@ -3,7 +3,7 @@ package net.t7seven7t.swornguard.handlers;
 import java.util.logging.Level;
 
 import lombok.AllArgsConstructor;
-import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

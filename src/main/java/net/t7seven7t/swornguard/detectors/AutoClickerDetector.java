@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.util.MaterialUtil;
+import net.t7seven7t.swornguard.util.MaterialUtil;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;

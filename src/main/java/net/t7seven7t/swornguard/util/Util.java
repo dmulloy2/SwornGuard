@@ -1,4 +1,4 @@
-package net.t7seven7t.util;
+package net.t7seven7t.swornguard.util;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

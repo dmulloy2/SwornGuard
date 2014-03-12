@@ -9,8 +9,8 @@ import java.util.List;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.permissions.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.util.FormatUtil;
-import net.t7seven7t.util.Util;
+import net.t7seven7t.swornguard.util.FormatUtil;
+import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;

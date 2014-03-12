@@ -9,7 +9,7 @@ import java.util.List;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.CmdHelp;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

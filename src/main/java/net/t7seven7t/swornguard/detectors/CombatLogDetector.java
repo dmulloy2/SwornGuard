@@ -7,7 +7,7 @@ import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.types.CheatType;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.entity.Player;
 

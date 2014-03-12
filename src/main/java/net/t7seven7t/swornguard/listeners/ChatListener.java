@@ -17,7 +17,7 @@ import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.tasks.FireworkRunnable;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.Reloadable;
-import net.t7seven7t.util.FormatUtil;
+import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;

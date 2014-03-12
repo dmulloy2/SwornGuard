@@ -4,7 +4,7 @@
 package net.t7seven7t.swornguard.events;
 
 import net.t7seven7t.swornguard.types.CheatType;
-import net.t7seven7t.util.Util;
+import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;

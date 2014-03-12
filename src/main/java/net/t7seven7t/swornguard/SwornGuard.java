@@ -80,7 +80,7 @@ import net.t7seven7t.swornguard.listeners.ServerListener;
 import net.t7seven7t.swornguard.types.Preconditions;
 import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.swornguard.types.ServerData;
-import net.t7seven7t.util.SimpleVector;
+import net.t7seven7t.swornguard.types.SimpleVector;
 
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Listener;
