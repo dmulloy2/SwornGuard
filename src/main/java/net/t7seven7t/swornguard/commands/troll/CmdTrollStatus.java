@@ -67,9 +67,9 @@ public class CmdTrollStatus extends SwornGuardCommand {
 		String lastTroller = data.getLastTroller();
 		long lastTrollTime = data.getLastTrollHell();
 		String lastTrollReason = data.getLastTrollReason();
-		line.append(FormatUtil.format("&eLast put in troll hell by {0} on {1} for {2}", lastTroller.isEmpty() ? "not applicable"
-				: lastTroller, lastTrollTime == 0 ? "not applicable" : TimeUtil.formatTime(lastTrollTime),
-				lastTrollReason.isEmpty() ? "not specified" : lastTrollReason));
+		line.append(FormatUtil.format("&eLast put in troll hell by {0} on {1} for {2}", lastTroller == null ? "not applicable" : lastTroller,
+				lastTrollTime == 0 ? "not applicable" : TimeUtil.formatTime(lastTrollTime), lastTrollReason == null ? "not specified"
+						: lastTrollReason));
 
 		for (String s : lines)
 			sendMessage(s);

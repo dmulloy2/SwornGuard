@@ -83,6 +83,7 @@ public class TrollHandler implements Listener {
 		data.setTrollHells(data.getTrollHells() + 1);
 		data.setLastTroller(sender.getName());
 		data.setLastTrollHell(System.currentTimeMillis());
+		data.setLastTrollReason(reason);
 	}
 
 	public final void freeFromHell(CommandSender sender, OfflinePlayer troll, TrollType type) {
@@ -178,7 +179,8 @@ public class TrollHandler implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player troll = event.getPlayer();
 		PlayerData trollData = plugin.getPlayerDataCache().getData(troll);
-		if (trollData.isTrollHell()) {
+		// Weird exception for newly joined players
+		if (trollData != null && trollData.isTrollHell()) {
 			for (Player online : plugin.getServer().getOnlinePlayers()) {
 				PlayerData data = plugin.getPlayerDataCache().getData(online);
 				if (data.isTrollHell()) {
@@ -192,8 +194,9 @@ public class TrollHandler implements Listener {
 				}
 
 				if (plugin.getPermissionHandler().hasPermission(online, PermissionType.TROLL_SPY.permission)) {
+					String lastReason = trollData.getLastTrollReason();
 					online.sendMessage(FormatUtil.format(plugin.getMessage("troll_join"), event.getPlayer().getName(),
-							trollData.getLastTrollReason()));
+							lastReason != null ? lastReason : "not applicable"));
 				}
 			}
 
