@@ -179,7 +179,6 @@ public class TrollHandler implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player troll = event.getPlayer();
 		PlayerData trollData = plugin.getPlayerDataCache().getData(troll);
-		// Weird exception for newly joined players
 		if (trollData != null && trollData.isTrollHell()) {
 			for (Player online : plugin.getServer().getOnlinePlayers()) {
 				PlayerData data = plugin.getPlayerDataCache().getData(online);
@@ -205,7 +204,7 @@ public class TrollHandler implements Listener {
 		} else {
 			for (Player online : plugin.getServer().getOnlinePlayers()) {
 				PlayerData data = plugin.getPlayerDataCache().getData(online);
-				if (data.isTrollHell()) {
+				if (data != null && data.isTrollHell()) {
 					troll.hidePlayer(online);
 				}
 			}

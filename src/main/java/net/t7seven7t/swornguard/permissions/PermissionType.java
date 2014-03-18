@@ -51,8 +51,7 @@ public enum PermissionType {
 	CMD_TROLL_BAN("troll.ban"),
 	TROLL_EXEMPT("troll.exempt"),
 	TROLL_SPY("troll.spy"),
-	TROLL_STATUS("troll.status"),
-	TROLL_STATUS_OTHERS("troll.status.others")
+	TROLL_CHECK("troll.status")
 	;
 	
 	public final Permission permission;

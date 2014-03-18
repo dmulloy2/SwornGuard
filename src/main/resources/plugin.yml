@@ -85,10 +85,10 @@ commands:
         description: Permanently silence a troll
         usage: /<command> <player> [reason]
         aliases: [hellban]
-    trollstatus:
+    trollcheck:
         description: Checks a player's troll status
         usage: /<command> [player]
-        aliases: [hellstatus]
+        aliases: [trollstatus]
     firework:
         description: Fireworks!
         usage: /<command>
@@ -250,7 +250,5 @@ permissions:
         default: false
     swornguard.troll.spy:
         default: false
-    swornguard.troll.status:
-        default: false
-    swornguard.troll.status.others:
+    swornguard.troll.check:
         default: false

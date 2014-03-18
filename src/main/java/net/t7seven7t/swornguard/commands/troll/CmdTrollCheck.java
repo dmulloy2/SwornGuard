@@ -18,21 +18,21 @@ import org.bukkit.OfflinePlayer;
 /**
  * @author dmulloy2
  */
-public class CmdTrollStatus extends SwornGuardCommand {
+public class CmdTrollCheck extends SwornGuardCommand {
 
-	public CmdTrollStatus(SwornGuard plugin) {
+	public CmdTrollCheck(SwornGuard plugin) {
 		super(plugin);
-		this.name = "trollstatus";
-		this.aliases.add("hellstatus");
+		this.name = "trollcheck";
+		this.aliases.add("trollstatus");
 		this.optionalArgs.add("player");
 		this.description = "Check a player''s troll status";
-		this.permission = PermissionType.TROLL_STATUS.permission;
+		this.permission = PermissionType.TROLL_CHECK.permission;
 		this.usesPrefix = false;
 	}
 
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(0, hasPermission(sender, PermissionType.TROLL_STATUS_OTHERS.permission));
+		OfflinePlayer target = getTarget(0, true);
 		if (target == null)
 			return;
 
@@ -48,7 +48,7 @@ public class CmdTrollStatus extends SwornGuardCommand {
 		List<String> lines = new ArrayList<String>();
 
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format("&ePlayer &a{0} &eis currently {0}&ein troll hell.", data.isTrollHell() ? "" : "not "));
+		line.append(FormatUtil.format("&ePlayer &a{0} &eis currently {0}&ein troll hell.", target.getName(), data.isTrollHell() ? "" : "not "));
 		lines.add(line.toString());
 
 		if (data.isTrollMuted()) {
@@ -70,6 +70,7 @@ public class CmdTrollStatus extends SwornGuardCommand {
 		line.append(FormatUtil.format("&eLast put in troll hell by {0} on {1} for {2}", lastTroller == null ? "not applicable" : lastTroller,
 				lastTrollTime == 0 ? "not applicable" : TimeUtil.formatTime(lastTrollTime), lastTrollReason == null ? "not specified"
 						: lastTrollReason));
+		lines.add(line.toString());
 
 		for (String s : lines)
 			sendMessage(s);

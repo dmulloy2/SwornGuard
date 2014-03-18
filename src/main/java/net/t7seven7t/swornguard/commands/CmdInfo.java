@@ -154,7 +154,9 @@ public class CmdInfo extends SwornGuardCommand {
 			lines.add(line.toString());
 
 			line = new StringBuilder();
-			line.append(" " + FormatUtil.format(plugin.getMessage("info_troll_reason"), data.getLastTrollReason()));
+			String lastReason = data.getLastTrollReason();
+			line.append(" " + FormatUtil.format(plugin.getMessage("info_troll_reason"), lastReason == null ? "not applicable" : lastReason));
+			lines.add(line.toString());
 		}
 		
 		if (target.isOnline())

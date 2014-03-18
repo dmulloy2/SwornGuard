@@ -49,9 +49,9 @@ import net.t7seven7t.swornguard.commands.patrol.CmdPatrol;
 import net.t7seven7t.swornguard.commands.patrol.CmdVanish;
 import net.t7seven7t.swornguard.commands.patrol.CmdVanishList;
 import net.t7seven7t.swornguard.commands.troll.CmdTrollBan;
+import net.t7seven7t.swornguard.commands.troll.CmdTrollCheck;
 import net.t7seven7t.swornguard.commands.troll.CmdTrollHell;
 import net.t7seven7t.swornguard.commands.troll.CmdTrollMute;
-import net.t7seven7t.swornguard.commands.troll.CmdTrollStatus;
 import net.t7seven7t.swornguard.detectors.AutoClickerDetector;
 import net.t7seven7t.swornguard.detectors.CombatLogDetector;
 import net.t7seven7t.swornguard.detectors.CommandDetector;
@@ -220,7 +220,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 		commandHandler.registerCommand(new CmdTrollBan(this));
 		commandHandler.registerCommand(new CmdTrollHell(this));
 		commandHandler.registerCommand(new CmdTrollMute(this));
-		commandHandler.registerCommand(new CmdTrollStatus(this));
+		commandHandler.registerCommand(new CmdTrollCheck(this));
 		
 		logHandler.log("{0} has been enabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
