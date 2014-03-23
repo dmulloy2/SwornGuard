@@ -68,10 +68,10 @@ public class CmdTrollCheck extends SwornGuardCommand {
 		long lastTrollTime = data.getLastTrollHell();
 		String lastTrollReason = data.getLastTrollReason();
 		line.append(FormatUtil.format("&eLast put in troll hell by {0} on {1} ({2}) for {3}", 
-				lastTroller == null ? "not applicable" : lastTroller,
-				lastTrollTime == 0 ? "not applicable" : TimeUtil.getSimpleDate(lastTrollTime), 
-				lastTrollTime == 0 ? "not applicable" : TimeUtil.formatTimeDifference(lastTrollTime, System.currentTimeMillis()),
-				lastTrollReason == null ? "not specified" : lastTrollReason));
+				lastTroller == null ? "N/A" : lastTroller,
+				lastTrollTime == 0 ? "N/A" : TimeUtil.getSimpleDate(lastTrollTime), 
+				lastTrollTime == 0 ? "N/A" : TimeUtil.formatTimeDifference(lastTrollTime, System.currentTimeMillis()),
+				lastTrollReason == null ? "unspecified" : lastTrollReason));
 		lines.add(line.toString());
 
 		for (String s : lines)
