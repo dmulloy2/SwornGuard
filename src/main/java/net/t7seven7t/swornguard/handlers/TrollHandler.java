@@ -42,18 +42,18 @@ public class TrollHandler implements Listener {
 
 	public final void putInHell(CommandSender sender, OfflinePlayer troll, TrollType type, String reason) {
 		PlayerData data = plugin.getPlayerDataCache().getData(troll);
-		String send = "&eYou have put {0} in troll hell for {1}";
-		String profiler = "&b{0} was put in troll hell by {1} for {2}";
+		String send = "&eYou have put &c{0} &ein troll hell for &c{1}&e.";
+		String profiler = "&b{0} was put in troll hell by {1} for {2}.";
 
 		data.setTrollHell(true);
 
 		if (type == TrollType.MUTE) {
-			send = "&eYou have troll muted {0} for {1}";
-			profiler = "&b{0} was troll muted by {1} for {2}";
+			send = "&eYou have troll muted &c{0} &efor &c{1}&e.";
+			profiler = "&b{0} was troll muted by {1} for {2}.";
 			data.setTrollMuted(true);
 		} else if (type == TrollType.BAN) {
-			send = "&eYou have troll banned {0} for {1}";
-			profiler = "&b{0} was troll banned by {1} for {2}";
+			send = "&eYou have troll banned &c{0} &efor &c{1}&e.";
+			profiler = "&b{0} was troll banned by {1} for {2}.";
 			data.setTrollBanned(true);
 		}
 
@@ -88,18 +88,18 @@ public class TrollHandler implements Listener {
 
 	public final void freeFromHell(CommandSender sender, OfflinePlayer troll, TrollType type) {
 		PlayerData data = plugin.getPlayerDataCache().getData(troll);
-		String send = "&eYou have freed {0} from troll hell";
-		String profiler = "&b{0} was freed from troll hell by {1}";
+		String send = "&eYou have freed &c{0} &efrom troll hell.";
+		String profiler = "&b{0} was freed from troll hell by {1}.";
 
 		data.setTrollBanned(false);
 		data.setTrollMuted(false);
 
 		if (type == TrollType.BAN) {
-			send = "&eYou have troll unbanned {0}";
-			profiler = "&b{0} was troll unbanned by {1}";
+			send = "&eYou have troll unbanned &c{0}&e.";
+			profiler = "&b{0} was troll unbanned by {1}.";
 		} else if (type == TrollType.MUTE) {
-			send = "&eYou have troll unmuted {0}";
-			profiler = "&b{0} was troll unmuted by {1}";
+			send = "&eYou have troll unmuted &c{0}&e.";
+			profiler = "&b{0} was troll unmuted by {1}.";
 		} else if (type == TrollType.HELL) {
 			data.setTrollHell(false);
 
