@@ -48,7 +48,7 @@ public class CmdTrollCheck extends SwornGuardCommand {
 		List<String> lines = new ArrayList<String>();
 
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format("&ePlayer &a{0} &eis currently {0}&ein troll hell.", target.getName(), data.isTrollHell() ? "" : "not "));
+		line.append(FormatUtil.format("&ePlayer &a{0} &eis currently {1}&ein troll hell.", target.getName(), data.isTrollHell() ? "" : "not "));
 		lines.add(line.toString());
 
 		if (data.isTrollMuted()) {
@@ -67,9 +67,11 @@ public class CmdTrollCheck extends SwornGuardCommand {
 		String lastTroller = data.getLastTroller();
 		long lastTrollTime = data.getLastTrollHell();
 		String lastTrollReason = data.getLastTrollReason();
-		line.append(FormatUtil.format("&eLast put in troll hell by {0} on {1} for {2}", lastTroller == null ? "not applicable" : lastTroller,
-				lastTrollTime == 0 ? "not applicable" : TimeUtil.formatTime(lastTrollTime), lastTrollReason == null ? "not specified"
-						: lastTrollReason));
+		line.append(FormatUtil.format("&eLast put in troll hell by {0} on {1} ({2}) for {3}", 
+				lastTroller == null ? "not applicable" : lastTroller,
+				lastTrollTime == 0 ? "not applicable" : TimeUtil.getSimpleDate(lastTrollTime), 
+				lastTrollTime == 0 ? "not applicable" : TimeUtil.formatTimeDifference(lastTrollTime, System.currentTimeMillis()),
+				lastTrollReason == null ? "not specified" : lastTrollReason));
 		lines.add(line.toString());
 
 		for (String s : lines)
