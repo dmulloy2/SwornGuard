@@ -10,7 +10,7 @@ import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.TrollType;
-import net.t7seven7t.swornguard.util.Util;
+import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.OfflinePlayer;
 
@@ -55,7 +55,7 @@ public class CmdTrollBan extends SwornGuardCommand {
 			return;
 		}
 
-		String reason = Util.implode(" ", Arrays.copyOfRange(args, 1, args.length));
+		String reason = FormatUtil.join(" ", Arrays.copyOfRange(args, 1, args.length));
 		plugin.getTrollHandler().putInHell(sender, target, TrollType.BAN, reason);
 	}
 }
