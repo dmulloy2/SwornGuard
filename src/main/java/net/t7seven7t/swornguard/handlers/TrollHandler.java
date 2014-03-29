@@ -117,9 +117,8 @@ public class TrollHandler implements Listener {
 		send = FormatUtil.format(send, troll.getName());
 		sender.sendMessage(send);
 
-		profiler = FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(),
-				FormatUtil.format(profiler, troll.getName(), sender.getName()));
-		data.getProfilerList().add(profiler);
+		profiler = FormatUtil.format(profiler, troll.getName(), sender.getName());
+		data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(), profiler));
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
 	}
 
