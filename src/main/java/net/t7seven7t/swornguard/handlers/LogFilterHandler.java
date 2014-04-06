@@ -5,6 +5,7 @@ package net.t7seven7t.swornguard.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -42,6 +43,11 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 	}
 
 	private final boolean filter(String message) {
+		if (message == null) {
+			plugin.getLogHandler().log(Level.WARNING, "Encountered a null message!");
+			return true; // Probably bukkit's piss-poor way of handling command exceptions
+		}
+
 		// Do internal checks first
 		if (message.contains("moved too quickly!")) {
 			String playerName = message.split(" ")[0];
