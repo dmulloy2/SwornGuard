@@ -61,6 +61,14 @@ public class PlayerListener implements Listener, Reloadable {
 		if (data.getIpAddressList().isEmpty() || ! data.getIpAddressList().contains(ip))
 			data.getIpAddressList().add(ip);
 
+		// UUID Stuff
+		if (! data.getKnownBy().contains(event.getPlayer().getName()))
+			data.getKnownBy().add(event.getPlayer().getName());
+
+		try {
+			data.setUniqueID(event.getPlayer().getUniqueId().toString());
+		} catch (Throwable ex) { }
+
 		// Hide vanished players from newly joined players.
 		if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.VANISH_SPY.permission)) {
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
