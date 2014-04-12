@@ -56,17 +56,17 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 			if (player != null) {
 				if (speedDetectorEnabled) {
 					if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission)) {
-						if (! player.getAllowFlight() && ! player.isInsideVehicle()) {
-							if (! preconditions.isPlayerFallingIntoVoid(player) && ! preconditions.isPlayerInsideCar(player) 
+						if (! player.getAllowFlight() && !player.isInsideVehicle()) {
+							if (! preconditions.isPlayerFallingIntoVoid(player) && ! preconditions.isPlayerInsideCar(player)
 									&& ! preconditions.isNewPlayerJoin(player) && ! preconditions.hasRecentlyTeleported(player)) {
 								PlayerData data = plugin.getPlayerDataCache().getData(player);
 								data.setConsecutivePings(data.getConsecutivePings() + 1);
 								if (data.getConsecutivePings() >= 2) {
 									// Announce the cheat
-									CheatEvent event = new CheatEvent(player.getName(), CheatType.SPEED, 
-											FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving too quickly!"));
+									CheatEvent event = new CheatEvent(player, CheatType.SPEED, FormatUtil.format(
+											plugin.getMessage("cheat_message"), player.getName(), "moving too quickly!"));
 									plugin.getCheatHandler().announceCheat(event);
-									
+
 									// Reset their consecutive pings
 									data.setConsecutivePings(0);
 								}

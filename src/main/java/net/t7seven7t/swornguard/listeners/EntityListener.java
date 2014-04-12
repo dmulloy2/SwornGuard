@@ -126,7 +126,7 @@ public class EntityListener implements Listener, Reloadable {
 			// Monitor recent damage sources
 			if (event.getEntity() instanceof Player) {
 				if (combatLogDetectorEnabled) {
-					PlayerData data = plugin.getPlayerDataCache().getData(((Player) event.getEntity()).getName());
+					PlayerData data = plugin.getPlayerDataCache().getData((Player) event.getEntity());
 					
 					if (event.getDamager() instanceof Monster && plugin.getConfig().getBoolean("combatLogFromMobs")) {
 						data.setLastAttacked(System.currentTimeMillis());

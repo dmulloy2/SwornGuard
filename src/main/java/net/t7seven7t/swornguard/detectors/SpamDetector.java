@@ -16,7 +16,6 @@ import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.util.FormatUtil;
 import net.t7seven7t.swornguard.util.Util;
 
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -76,7 +75,7 @@ public class SpamDetector {
 				
 				@Override
 				public void run() {
-					OfflinePlayer p = Util.matchOfflinePlayer(player);
+					Player p = Util.matchPlayer(player);
 					PlayerData data = plugin.getPlayerDataCache().getData(p);
 					
 					if (data == null)
@@ -84,7 +83,7 @@ public class SpamDetector {
 					
 					if (System.currentTimeMillis() - data.getLastSpamWarn() > 2000L) {
 						data.setLastSpamWarn(System.currentTimeMillis());
-						CheatEvent event = new CheatEvent(p.getName(), CheatType.SPAM, FormatUtil.format("[SPAMMER] {0} is trying to spam {1}!", p.getName(), type.toString()));
+						CheatEvent event = new CheatEvent(p, CheatType.SPAM, FormatUtil.format("[SPAMMER] {0} is trying to spam {1}!", p.getName(), type.toString()));
 						plugin.getCheatHandler().announceCheat(event);
 					}
 					

@@ -4,7 +4,6 @@
 package net.t7seven7t.swornguard.events;
 
 import net.t7seven7t.swornguard.types.CheatType;
-import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -18,11 +17,11 @@ public class CheatEvent extends Event implements Cancellable {
 	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled;
 
-	private final String player;
+	private final Player player;
 	private final CheatType cheat;
 	private final String message;
 	
-	public CheatEvent(final String player, final CheatType cheat, final String message) {
+	public CheatEvent(final Player player, final CheatType cheat, final String message) {
 		this.player = player;
 		this.message = message;
 		this.cheat = cheat;
@@ -32,12 +31,13 @@ public class CheatEvent extends Event implements Cancellable {
 		return message;
 	}
 	
-	public String getPlayerName() {
+	public Player getPlayer() { 
 		return player;
 	}
 
-	public Player getPlayer() {
-		return Util.matchPlayer(player);
+	@Deprecated
+	public String getPlayerName() {
+		return player.getName();
 	}
 	
 	public CheatType getCheat() {

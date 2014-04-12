@@ -38,7 +38,7 @@ public class CommandDetector {
 			
 			PlayerData senderData = null;
 			if (sender instanceof Player)
-				senderData = plugin.getPlayerDataCache().getData(sender.getName());
+				senderData = plugin.getPlayerDataCache().getData((Player) sender);
 			
 			String action;
 

@@ -28,7 +28,7 @@ public class CombatLogDetector {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		
 		if (now - data.getLastAttacked() < combatLogWindow) {
-			CheatEvent event = new CheatEvent(player.getName(), CheatType.COMBAT_LOG, 
+			CheatEvent event = new CheatEvent(player, CheatType.COMBAT_LOG, 
 					FormatUtil.format(plugin.getMessage("cheat_combat_log"), player.getName()));
 			plugin.getCheatHandler().announceCheat(event);
 			player.setHealth(0);
