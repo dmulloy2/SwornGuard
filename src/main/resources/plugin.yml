@@ -1,7 +1,6 @@
 name: SwornGuard
 main: net.t7seven7t.swornguard.SwornGuard
-#version: ${project.version} (Build ${project.build.number})
-version: ${project.version}
+version: ${project.version} (Build ${project.build.number})
 authors: [t7seven7t, dmulloy2]
 softdepend: [SwornNations, Factions]
 description: Comprehensive anti cheat plugin based around catching cheaters rather than preventing their actions.
