@@ -40,9 +40,6 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		this.data = new ConcurrentHashMap<String, PlayerData>(64, 0.75f, 64);
 	}
 
-	/**
-	 * Note: This should only be used with UUIDs
-	 */
 	@Override
 	public PlayerData getData(final String key) {
 		PlayerData value = this.data.get(key);
