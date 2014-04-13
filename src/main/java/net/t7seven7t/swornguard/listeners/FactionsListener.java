@@ -38,8 +38,7 @@ public class FactionsListener implements Listener, Reloadable {
 		}
 
 		String name = event.getFPlayer().getName();
-		String uuid = event.getFPlayer().getUniqueID();
-		PlayerData data = plugin.getPlayerDataCache().getData(uuid);
+		PlayerData data = plugin.getPlayerDataCache().getData(name);
 		if (data == null) {
 			return;
 		}
@@ -71,7 +70,7 @@ public class FactionsListener implements Listener, Reloadable {
 			}
 		}
 
-		PlayerData data = plugin.getPlayerDataCache().getData(event.getFPlayer().getUniqueID());
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getFPlayer().getName());
 		if (data == null) {
 			return;
 		}

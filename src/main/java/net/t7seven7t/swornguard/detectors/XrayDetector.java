@@ -13,7 +13,6 @@ import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -56,26 +55,36 @@ public class XrayDetector implements Listener {
 		}
 	}
 	
-	public void checkRatio(final Player player) {
-		final PlayerData data = plugin.getPlayerDataCache().getData(player);
-		if (data.getStoneMined() > 150
-				&& TimeUtil.getTimeDifference(data.getLastXrayWarn(), System.currentTimeMillis()) > 45000L
-				&& ((warnOnIronRatio > 0 && data.getIronMined() > 0 && getIronRatio(player) > warnOnIronRatio) || (warnOnDiamondRatio > 0
-						&& data.getDiamondMined() > 0 && getDiamondRatio(player) > warnOnDiamondRatio))) {
-			CheatEvent event = new CheatEvent(player, CheatType.XRAY, FormatUtil.format(plugin.getMessage("cheat_message"), 
-					player, "xraying"));
+	public void checkRatio(final OfflinePlayer player) {
+		checkRatio(player.getName());
+	}
+	
+	public void checkRatio(final String name) {
+		final PlayerData data = plugin.getPlayerDataCache().getData(name);
+		if (data.getStoneMined() > 150 && TimeUtil.getTimeDifference(data.getLastXrayWarn(), System.currentTimeMillis()) > 45000L 
+				&& ((warnOnIronRatio > 0 && data.getIronMined() > 0 && getIronRatio(name) > warnOnIronRatio)
+				|| (warnOnDiamondRatio > 0 && data.getDiamondMined() > 0 && getDiamondRatio(name) > warnOnDiamondRatio))) {
+			CheatEvent event = new CheatEvent(name, CheatType.XRAY, FormatUtil.format(plugin.getMessage("cheat_message"), name, "xraying"));
 			plugin.getCheatHandler().announceCheat(event);
 			data.setLastXrayWarn(System.currentTimeMillis());
 		}
 	}
-
+		
 	public double getDiamondRatio(final OfflinePlayer player) {
-		PlayerData data = plugin.getPlayerDataCache().getData(player);
+		return getDiamondRatio(player.getName());
+	}
+	
+	public double getDiamondRatio(final String name) {
+		PlayerData data = plugin.getPlayerDataCache().getData(name);
 		return getRatio(data.getDiamondMined(), data.getDiamondMined() + data.getStoneMined());
 	}
 	
 	public double getIronRatio(final OfflinePlayer player) {
-		PlayerData data = plugin.getPlayerDataCache().getData(player);
+		return getIronRatio(player.getName());
+	}
+	
+	public double getIronRatio(final String name) {
+		PlayerData data = plugin.getPlayerDataCache().getData(name);
 		return getRatio(data.getIronMined(), data.getIronMined() + data.getStoneMined());
 	}
 	

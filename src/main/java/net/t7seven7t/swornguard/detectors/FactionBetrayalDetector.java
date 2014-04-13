@@ -34,7 +34,7 @@ public class FactionBetrayalDetector {
 				
 				// Check if player was kicked from faction within 5mins ago
 				if (kick.getTime() > (System.currentTimeMillis() - 1000L * 60 * 5)) {
-					CheatEvent event = new CheatEvent(damager, CheatType.KICK_AND_KILL,
+					CheatEvent event = new CheatEvent(damager.getName(), CheatType.KICK_AND_KILL,
 								"[CHEATER] Possible faction betrayal. " + player.getName() + " was recently kicked from " 
 								+ kick.getFaction().getTag() + " and now killed by " + damager.getName());
 					plugin.getCheatHandler().announceCheat(event);

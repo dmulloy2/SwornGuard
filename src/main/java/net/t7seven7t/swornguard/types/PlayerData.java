@@ -109,7 +109,7 @@ public class PlayerData implements ConfigurationSerializable {
 	private String lastFaction;
 
 	// UUID Stuff
-	private String lastKnownBy;
+	private String uniqueID;
 	private List<String> knownBy = new ArrayList<String>();
 
 	@Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)

@@ -31,20 +31,20 @@ public class CheatHandler {
 		// "Wing Clipping"
 		if (event.getCheat() == CheatType.FLYING) {
 			if (plugin.getConfig().getBoolean("clipHackersWings", false)) {
-				plugin.getLogHandler().log("Clipping {0}\'s wings", event.getPlayer().getName());
+				plugin.getLogHandler().log("Clipping {0}\'s wings", event.getPlayerName());
 				teleportToGround(event.getPlayer());
 				return;
 			}
 		}
 
 		plugin.getServer().getPluginManager().callEvent(event);
-		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayerName());
 		
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
 			if (plugin.getPermissionHandler().hasPermission(player, PermissionType.SHOW_CHEAT_REPORTS.permission)) {
 				player.sendMessage(ChatColor.RED + event.getMessage());
 				if (data.getJails() >= plugin.getConfig().getInt("jailsBeforeNotice") && plugin.getConfig().getBoolean("jailAmountNoticeEnabled"))
-					player.sendMessage(FormatUtil.format(plugin.getMessage("cheat_jail_notice"), event.getPlayer().getName(), data.getJails()));
+					player.sendMessage(FormatUtil.format(plugin.getMessage("cheat_jail_notice"), event.getPlayerName(), data.getJails()));
 			}
 		}
 		
@@ -59,15 +59,15 @@ public class CheatHandler {
 		
 		if (event.getCheat() == CheatType.FLYING || event.getCheat() == CheatType.XRAY || event.getCheat() == CheatType.SPEED) {
 			// Add cheater to patrol list
-			plugin.getPatrolHandler().addCheater(event.getPlayer().getName());
+			plugin.getPatrolHandler().addCheater(event.getPlayerName());
 			
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
 				if (plugin.getPermissionHandler().hasPermission(player, PermissionType.CMD_CHEAT_TELEPORT.permission))
-					player.sendMessage(ChatColor.RED + "To respond to this cheat alert use /ctp " + event.getPlayer().getName());
+					player.sendMessage(ChatColor.RED + "To respond to this cheat alert use /ctp " + event.getPlayerName());
 			}
 		}
 		
-		plugin.getLogHandler().log("Cheatevent player: {0}", event.getPlayer().getName());
+		plugin.getLogHandler().log("Cheatevent player: {0}", event.getPlayerName());
 		plugin.getLogHandler().log("Cheatevent type: {0}", event.getCheat().toString().replaceAll("_", " "));
 	}
 	

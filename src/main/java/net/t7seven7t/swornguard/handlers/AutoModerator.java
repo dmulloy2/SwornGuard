@@ -24,7 +24,7 @@ public class AutoModerator {
 	}
 	
 	public void manageCheatEvent(CheatEvent event) {
-		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayerName());
 		String reason = null;
 		
 		switch (event.getCheat()) {
@@ -45,16 +45,16 @@ public class AutoModerator {
 		}
 		
 		if (reason != null) {
-			Player player = event.getPlayer();
+			Player player = plugin.getServer().getPlayerExact(event.getPlayerName());
 			if (player == null) return;
 			player.kickPlayer(reason);
 			data.setLastKick(System.currentTimeMillis());
 			data.setLastKicker("AutoModBot");
 			data.setLastKickReason(reason);
-			plugin.getLogHandler().log("Player {0} was kicked by AutoModBot for: {1}", event.getPlayer().getName(), reason);
+			plugin.getLogHandler().log("Player {0} was kicked by AutoModBot for: {1}", event.getPlayerName(), reason);
 			for (Player player1 : plugin.getServer().getOnlinePlayers()) {
 				if (plugin.getPermissionHandler().hasPermission(player1, PermissionType.SHOW_CHEAT_REPORTS.permission))
-					player1.sendMessage(ChatColor.YELLOW + "AutoModBot kicked " + event.getPlayer().getName() + " for " + reason);
+					player1.sendMessage(ChatColor.YELLOW + "AutoModBot kicked " + event.getPlayerName() + " for " + reason);
 			}
 			
 			data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(),

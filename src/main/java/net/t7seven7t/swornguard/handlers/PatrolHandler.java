@@ -226,7 +226,7 @@ public class PatrolHandler {
 	}
 	
 	public void returnFromInspecting(final Player player) {
-		final PlayerData data = plugin.getPlayerDataCache().getData(player);
+		final PlayerData data = plugin.getPlayerDataCache().getData(player.getName());
 		
 		player.teleport(data.getPreviousLocation());
 		applyPatrolBuffs(player, false);

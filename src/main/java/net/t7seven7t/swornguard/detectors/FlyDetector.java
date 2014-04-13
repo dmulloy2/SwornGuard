@@ -81,7 +81,7 @@ public class FlyDetector {
 					Math.abs(player.getLocation().getZ() - previousLocation.getZ()) > suspiciousMoveDist))) {
 			data.setConsecutivePings(data.getConsecutivePings() + 1);
 			if (data.getConsecutivePings() >= 2) {
-				CheatEvent event = new CheatEvent(player, CheatType.FLYING, 
+				CheatEvent event = new CheatEvent(player.getName(), CheatType.FLYING, 
 						FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "flying!"));
 				plugin.getCheatHandler().announceCheat(event);
 				
