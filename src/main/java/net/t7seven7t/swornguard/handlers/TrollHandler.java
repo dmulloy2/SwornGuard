@@ -42,18 +42,21 @@ public class TrollHandler implements Listener {
 
 	public final void putInHell(CommandSender sender, OfflinePlayer troll, TrollType type, String reason) {
 		PlayerData data = plugin.getPlayerDataCache().getData(troll);
-		String send = "&eYou have put &c{0} &ein troll hell for &c{1}&e.";
+		// String send = "&eYou have put &c{0} &ein troll hell for &c{1}&e.";
 		String profiler = "&b{0} was put in troll hell by {1} for {2}.";
+		String broadcast = "&c{0} &eput &c{1} &ein troll hell for &c{2}&e.";
 
 		data.setTrollHell(true);
 
 		if (type == TrollType.MUTE) {
-			send = "&eYou have troll muted &c{0} &efor &c{1}&e.";
+			// send = "&eYou have troll muted &c{0} &efor &c{1}&e.";
 			profiler = "&b{0} was troll muted by {1} for {2}.";
+			broadcast = "&c{0} &etroll muted &c{1} &efor &c{2}&e.";
 			data.setTrollMuted(true);
 		} else if (type == TrollType.BAN) {
-			send = "&eYou have troll banned &c{0} &efor &c{1}&e.";
+			// send = "&eYou have troll banned &c{0} &efor &c{1}&e.";
 			profiler = "&b{0} was troll banned by {1} for {2}.";
+			broadcast = "&c{0} &etroll banned &c{1} &efor &c{2}&e.";
 			data.setTrollBanned(true);
 		}
 
@@ -73,12 +76,15 @@ public class TrollHandler implements Listener {
 			}
 		}
 
-		send = FormatUtil.format(send, troll.getName(), reason);
-		sender.sendMessage(send);
+		// send = FormatUtil.format(send, troll.getName(), reason);
+		// sender.sendMessage(send);
 
 		profiler = FormatUtil.format(profiler, troll.getName(), sender.getName(), reason);
 		data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(), profiler));
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
+
+		broadcast = FormatUtil.format(broadcast, sender.getName(), troll.getName(), reason);
+		plugin.getServer().broadcast(broadcast, plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission));
 
 		data.setTrollHells(data.getTrollHells() + 1);
 		data.setLastTroller(sender.getName());
@@ -88,18 +94,21 @@ public class TrollHandler implements Listener {
 
 	public final void freeFromHell(CommandSender sender, OfflinePlayer troll, TrollType type) {
 		PlayerData data = plugin.getPlayerDataCache().getData(troll);
-		String send = "&eYou have freed &c{0} &efrom troll hell.";
+		// String send = "&eYou have freed &c{0} &efrom troll hell.";
 		String profiler = "&b{0} was freed from troll hell by {1}.";
+		String broadcast = "&c{0} &efreed &c{1} &efrom troll hell.";
 
 		data.setTrollBanned(false);
 		data.setTrollMuted(false);
 
 		if (type == TrollType.BAN) {
-			send = "&eYou have troll unbanned &c{0}&e.";
+			// send = "&eYou have troll unbanned &c{0}&e.";
 			profiler = "&b{0} was troll unbanned by {1}.";
+			broadcast = "&c{0} &etroll unbanned &c{1}&e.";
 		} else if (type == TrollType.MUTE) {
-			send = "&eYou have troll unmuted &c{0}&e.";
+			// send = "&eYou have troll unmuted &c{0}&e.";
 			profiler = "&b{0} was troll unmuted by {1}.";
+			broadcast = "&c{0} &etroll unmuted &c{1}&e.";
 		} else if (type == TrollType.HELL) {
 			data.setTrollHell(false);
 
@@ -114,12 +123,15 @@ public class TrollHandler implements Listener {
 			}
 		}
 
-		send = FormatUtil.format(send, troll.getName());
-		sender.sendMessage(send);
+		// send = FormatUtil.format(send, troll.getName());
+		// sender.sendMessage(send);
 
 		profiler = FormatUtil.format(profiler, troll.getName(), sender.getName());
 		data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(), profiler));
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
+
+		broadcast = FormatUtil.format(broadcast, sender.getName(), troll.getName());
+		plugin.getServer().broadcast(broadcast, plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission));
 	}
 
 	public final void forceIntoPublicChat(Player troll) {
