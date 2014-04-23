@@ -183,6 +183,7 @@ public class SwornGuard extends JavaPlugin implements Reloadable {
 				@Override
 				public void run() {
 					playerDataCache.save();
+					playerDataCache.cleanupData();
 				}
 				
 			}.runTaskTimerAsynchronously(this, interval, interval);

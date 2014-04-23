@@ -42,9 +42,6 @@ public class PlayerListener implements Listener, Reloadable {
 
 		// Try to get the player's data from the cache otherwise create a new data entry
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-		if (data == null) {
-			data = plugin.getPlayerDataCache().newData(event.getPlayer());
-		}
 
 		// Set first login time if the player's first visit to the server
 		if (data.getFirstLogin() == 0)
@@ -60,14 +57,6 @@ public class PlayerListener implements Listener, Reloadable {
 		String ip = event.getPlayer().getAddress().getAddress().getHostAddress();
 		if (data.getIpAddressList().isEmpty() || ! data.getIpAddressList().contains(ip))
 			data.getIpAddressList().add(ip);
-
-		// UUID Stuff
-		if (! data.getKnownBy().contains(event.getPlayer().getName()))
-			data.getKnownBy().add(event.getPlayer().getName());
-
-		try {
-			data.setUniqueID(event.getPlayer().getUniqueId().toString());
-		} catch (Throwable ex) { }
 
 		// Hide vanished players from newly joined players.
 		if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.VANISH_SPY.permission)) {

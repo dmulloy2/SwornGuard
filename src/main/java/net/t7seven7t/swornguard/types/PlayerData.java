@@ -109,8 +109,8 @@ public class PlayerData implements ConfigurationSerializable {
 	private String lastFaction;
 
 	// UUID Stuff
-	private String uniqueID;
-	private List<String> knownBy = new ArrayList<String>();
+	private String lastKnownBy;
+	private String uniqueId;
 
 	@Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)
 	private Map<String, Object> data = new HashMap<String, Object>();
