@@ -21,14 +21,14 @@ public class FileSerialization {
 		try {
 			if (file.exists())
 				file.delete();
-			
+
 			file.createNewFile();
-			
+
 			FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
 			for (Entry<String, Object> entry : instance.serialize().entrySet()) {
 				fc.set(entry.getKey(), entry.getValue());
 			}
-			
+
 			fc.save(file);
 		} catch (Exception ex) {
 			System.err.println("Exception ocurred while attempting to save file: " + file.getName());
@@ -39,20 +39,20 @@ public class FileSerialization {
 	@SuppressWarnings("unchecked")
 	public static <T extends ConfigurationSerializable> T load(File file, Class<T> clazz) {
 		try {
-			if (!file.exists())
+			if (! file.exists())
 				return null;
-			
+
 			FileConfiguration fc = YamlConfiguration.loadConfiguration(file);
 			Map<String, Object> map = fc.getValues(true);
-			
+
 			return (T) ConfigurationSerialization.deserializeObject(map, clazz);
 		} catch (Exception ex) {
 			System.err.println("Exception ocurred while attempting to load file: " + file.getName());
 			if (file.renameTo(new File(file.getParent(), file.getName() + "_bad"))) {
 				System.out.println("Renamed bad file: " + file.getName() + " to: " + file.getName() + "_bad");
 			}
+
 			return null;
 		}
 	}
-	
 }
