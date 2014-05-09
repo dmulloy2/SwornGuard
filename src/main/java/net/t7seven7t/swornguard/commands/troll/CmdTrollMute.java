@@ -36,7 +36,7 @@ public class CmdTrollMute extends SwornGuardCommand {
 		if (target == null)
 			return;
 
-		PlayerData data = getPlayerData(target);
+		PlayerData data = getPlayerData(target, true);
 		if (data == null)
 			return;
 

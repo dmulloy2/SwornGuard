@@ -4,6 +4,7 @@
 package net.t7seven7t.swornguard.listeners;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import org.bukkit.entity.Bat;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -48,6 +50,9 @@ public class ChatListener implements Listener, Reloadable {
 	private List<String> blockedCommands;
 	private List<String> blockedCommandsInHell;
 	private List<String> trollOverrideCommands;
+	private boolean simulateMessages;
+	private List<String> messageCommands;
+	private String fakeMessageFormat;
 
 	public ChatListener(final SwornGuard plugin) {
 		this.plugin = plugin;
@@ -95,12 +100,13 @@ public class ChatListener implements Listener, Reloadable {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (! event.isCancelled()) {
-			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+			Player player = event.getPlayer();
+			PlayerData data = plugin.getPlayerDataCache().getData(player);
 
 			if (spamDetectorEnabled) {
-				if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_SPAM.permission)) {
+				if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_SPAM.permission)) {
 					if (data.getSpamManager() == null)
-						data.setSpamManager(new SpamDetector(plugin, event.getPlayer()));
+						data.setSpamManager(new SpamDetector(plugin, player));
 
 					if (data.getSpamManager().checkSpam(event.getMessage(), ChatType.COMMAND)) {
 						event.setCancelled(true);
@@ -109,10 +115,15 @@ public class ChatListener implements Listener, Reloadable {
 				}
 			}
 
-			if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_BLOCKED_COMMANDS.permission)) {
+			// Lowercase without the slash
+			String message = event.getMessage().toLowerCase().substring(1);
+			String[] args = event.getMessage().split(" ");
+			String label = args[0];
+
+			if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_BLOCKED_COMMANDS.permission)) {
 				for (String command : blockedCommands) {
-					if (! command.startsWith("/")) command = "/" + command;
-					if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*")) {
+					if (command.startsWith("/")) command = command.substring(1);
+					if (message.matches(command.toLowerCase() + ".*")) {
 						event.setCancelled(true);
 						return;
 					}
@@ -120,7 +131,21 @@ public class ChatListener implements Listener, Reloadable {
 			}
 
 			if (data.isTrollHell()) {
-				if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
+				if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
+					if (simulateMessages) {
+						for (String command : messageCommands) {
+							if (command.startsWith("/")) command = command.substring(1);
+							if (message.matches(command.toLowerCase() + ".*")) {
+								int beginIndex = label.contains("r") ? 1 : 2;
+								String content = FormatUtil.join(" ", Arrays.copyOfRange(args, beginIndex, args.length));
+								String fakeMsg = FormatUtil.format(fakeMessageFormat, player.getDisplayName(), content);
+								player.sendMessage(fakeMsg);
+								event.setCancelled(true);
+								return;
+							}
+						}
+					}
+
 					for (String command : blockedCommandsInHell) {
 						if (! command.startsWith("/")) command = "/" + command;
 						if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*")) {
@@ -133,15 +158,13 @@ public class ChatListener implements Listener, Reloadable {
 
 			if (trollOverrideCommands != null && ! trollOverrideCommands.isEmpty()) {
 				for (String command : trollOverrideCommands) {
-					if (! command.startsWith("/")) command = "/" + command;
+					if (command.startsWith("/")) command = command.substring(1);
 					if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*")) {
 						try {
-							String[] args = event.getMessage().split(" ");
-							StringBuilder message = new StringBuilder();
-							message.append("/troll ");
-							message.append(args[1]);
-							event.getPlayer().chat(message.toString());
+							String[] newArgs = Arrays.copyOf(args, args.length);
+							newArgs[0] = "/troll";
 
+							player.chat(FormatUtil.join(" ", newArgs));
 							event.setCancelled(true);
 						} catch (Exception e) {
 							// Filter failed, completely optional and not really necessary
@@ -151,16 +174,16 @@ public class ChatListener implements Listener, Reloadable {
 			}
 
 			if (data.isJailed()) {
-				if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_USE_COMMANDS_JAILED.permission)) {
+				if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_USE_COMMANDS_JAILED.permission)) {
 					if (! event.getMessage().equalsIgnoreCase("/jailstatus")) {
 						for (String command : allowedCommandsInJail) {
-							if (! command.startsWith("/")) command = "/" + command;
+							if (command.startsWith("/")) command = command.substring(1);
 							if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*"))
 								return;
 						}
 
 						event.setCancelled(true);
-						event.getPlayer().sendMessage(FormatUtil.format(plugin.getMessage("jail_cannot_use_command")));
+						player.sendMessage(FormatUtil.format(plugin.getMessage("jail_cannot_use_command")));
 					}
 				}
 			}
@@ -330,6 +353,9 @@ public class ChatListener implements Listener, Reloadable {
 		this.blockedCommands = plugin.getConfig().getStringList("blockedCommands");
 		this.blockedCommandsInHell = plugin.getConfig().getStringList("trollHell.blockedCommands");
 		this.trollOverrideCommands = plugin.getConfig().getStringList("trollHell.overrideCommands");
+		this.simulateMessages = plugin.getConfig().getBoolean("trollHell.simulateMessages");
+		this.messageCommands = plugin.getConfig().getStringList("trollHell.messageCommands");
+		this.fakeMessageFormat = plugin.getConfig().getString("trollHell.fakeMessageFormat");
 	}
 
 }

@@ -115,6 +115,10 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		return newData(getKey(player));
 	}
 
+	public final PlayerData newData(OfflinePlayer player) {
+		return newData(getKey(player));
+	}
+
 	private final PlayerData loadData(String key) {
 		File file = new File(folder, getFileName(key));
 

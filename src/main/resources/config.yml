@@ -74,20 +74,6 @@ allowedCommandsInJail:
 # Troll Hell Settings
 trollHell:
   blockedCommands:
-  - "msg"
-  - "m"
-  - "w"
-  - "t"
-  - "emsg"
-  - "tell"
-  - "etell"
-  - "whisper"
-  - "ewhisper"
-  - "r"
-  - "reply"
-  - "er"
-  - "ereply"
-  - "message"
   - "t"
   - "f c"
   - "f chat"
@@ -104,6 +90,23 @@ trollHell:
   # - "tempban"
   # - "etempban"
   # - "jailmute"
+  simulateMessages: true
+  fakeMessageFormat: "&6[&cme &6-> &c{0}&6] &f{1}"
+  messageCommands:
+  - "msg"
+  - "m"
+  - "w"
+  - "t"
+  - "emsg"
+  - "tell"
+  - "etell"
+  - "whisper"
+  - "ewhisper"
+  - "r"
+  - "reply"
+  - "er"
+  - "ereply"
+  - "message"
 
 # AutoSave Task
 autosave:
