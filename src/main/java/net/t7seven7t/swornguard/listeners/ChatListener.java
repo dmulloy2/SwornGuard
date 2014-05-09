@@ -136,7 +136,8 @@ public class ChatListener implements Listener, Reloadable {
 						for (String command : messageCommands) {
 							if (command.startsWith("/")) command = command.substring(1);
 							if (message.matches(command.toLowerCase() + ".*")) {
-								int beginIndex = label.contains("r") ? 1 : 2;
+								// This accounts for /r and /reply, but doesn't count whispe[r]
+								int beginIndex = label.contains("r") && ! label.contains("w") ? 1 : 2;
 								String content = FormatUtil.join(" ", Arrays.copyOfRange(args, beginIndex, args.length));
 								String fakeMsg = FormatUtil.format(fakeMessageFormat, player.getDisplayName(), content);
 								player.sendMessage(fakeMsg);
