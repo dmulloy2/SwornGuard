@@ -16,10 +16,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
 
-import net.dmulloy2.swornnations.types.UUIDFetcher;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
+import net.t7seven7t.swornguard.types.UUIDFetcher;
 import net.t7seven7t.swornguard.util.FormatUtil;
+import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -46,12 +47,13 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 
 		this.cache = new ConcurrentHashMap<String, PlayerData>(64, 0.75F, 64);
 		this.plugin = plugin;
-		this.key = Key.NAME;
+		this.convertToUUID();
 	}
 
 	// ---- Data Getters
 
 	@Override
+	@Deprecated
 	public final PlayerData getData(String key) {
 		// Check cache first
 		PlayerData data = cache.get(key);
@@ -149,7 +151,8 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 	@Deprecated
 	public final void save(boolean cleanup) {
 		save();
-		if (cleanup) cleanupData();
+		if (cleanup)
+			cleanupData();
 	}
 
 	public final void cleanupData() {
@@ -198,20 +201,19 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		return Collections.unmodifiableMap(data);
 	}
 
-	// --- UUID Stuff
+	// ---- UUID Conversion
 
-	@SuppressWarnings("unused")
 	private final void convertToUUID() {
 		long start = System.currentTimeMillis();
-		plugin.getLogHandler().log("Converting to UUID-based lookups!");
+		plugin.getLogHandler().log("Checking for unconverted files");
+
+		Map<String, PlayerData> data = getUnconvertedData();
+		if (data.isEmpty())
+			return;
+
+		plugin.getLogHandler().log("Converting {0} files!", data.size());
 
 		try {
-			Map<String, PlayerData> data = getAllPlayerData();
-			if (data.isEmpty()) {
-				plugin.getLogHandler().log("Did not find any data to convert!");
-				return;
-			}
-
 			List<String> names = new ArrayList<String>(data.keySet());
 			ImmutableList.Builder<List<String>> builder = ImmutableList.builder();
 			int namesCopied = 0;
@@ -240,7 +242,6 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 						String name = entry.getKey();
 						String uniqueId = entry.getValue().toString();
 						PlayerData dat = data.get(name);
-						dat.setUniqueId(uniqueId);
 						dat.setLastKnownBy(name);
 
 						// Archive the old file
@@ -256,15 +257,39 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 				}
 			}
 		} catch (Throwable ex) {
-			plugin.getLogHandler().log(Level.WARNING, "Failed to convert to UUIDs! Using name-based lookups!");
-			this.key = Key.NAME;
+			plugin.getLogHandler().log(Level.WARNING, Util.getUsefulStack(ex, "converting to UUID-based lookups!"));
 			return;
 		}
 
 		plugin.getLogHandler().log("Successfully converted to UUID-based lookups! Took {0} ms!", System.currentTimeMillis() - start);
 	}
 
+	private final Map<String, PlayerData> getUnconvertedData() {
+		Map<String, PlayerData> data = new HashMap<String, PlayerData>();
+
+		File[] files = folder.listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File file) {
+				String name = file.getName();
+				return name.contains(extension) && name.length() != 40;
+			}
+		});
+
+		for (File file : files) {
+			String fileName = FormatUtil.trimFileExtension(file, extension);
+			PlayerData loaded = loadData(fileName);
+			loaded.setLastKnownBy(fileName);
+			data.put(fileName, loaded);
+		}
+
+		return Collections.unmodifiableMap(data);
+	}
+
 	// ---- Util
+
+	private final String getKey(OfflinePlayer player) {
+		return player.getUniqueId().toString();
+	}
 
 	private final String getFileName(String key) {
 		return key + extension;
@@ -280,27 +305,5 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 
 	public int getCacheSize() {
 		return cache.size();
-	}
-
-	// ---- Key
-
-	private Key key;
-	
-	public static enum Key {
-		NAME, UUID;
-	}
-
-	public Key getKey() {
-		return key;
-	}
-
-	private final String getKey(OfflinePlayer player) {
-		if (key == Key.NAME) {
-			return player.getName();
-		} else if (key == Key.UUID) {
-			return player.getUniqueId().toString();
-		} else {
-			throw new IllegalArgumentException("Invalid key type " + key);
-		}
 	}
 }

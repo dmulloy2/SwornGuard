@@ -3,6 +3,7 @@
  */
 package net.t7seven7t.swornguard.listeners;
 
+import net.dmulloy2.swornnations.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.FactionKick;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -10,6 +11,7 @@ import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.swornguard.util.FormatUtil;
 import net.t7seven7t.swornguard.util.TimeUtil;
 
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -38,7 +40,12 @@ public class FactionsListener implements Listener, Reloadable {
 		}
 
 		String name = event.getFPlayer().getName();
-		PlayerData data = plugin.getPlayerDataCache().getData(name);
+		OfflinePlayer player = Util.matchOfflinePlayer(name);
+		if (player == null) {
+			return;
+		}
+
+		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		if (data == null) {
 			return;
 		}
@@ -63,14 +70,21 @@ public class FactionsListener implements Listener, Reloadable {
 		if (event.isCancelled() || fplayer == null)
 			return;
 
+		String name = fplayer.getName();
+
 		if (factionBetrayalDetectorEnabled) {
 			if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED) {
-				plugin.getFactionBetrayalDetector().addPossibleBetrayedPlayer(fplayer.getName(),
+				plugin.getFactionBetrayalDetector().addPossibleBetrayedPlayer(name,
 						new FactionKick(event.getFaction().getTag(), System.currentTimeMillis()));
 			}
 		}
 
-		PlayerData data = plugin.getPlayerDataCache().getData(event.getFPlayer().getName());
+		OfflinePlayer player = Util.matchOfflinePlayer(name);
+		if (player == null) {
+			return;
+		}
+
+		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		if (data == null) {
 			return;
 		}
@@ -89,8 +103,7 @@ public class FactionsListener implements Listener, Reloadable {
 		}
 
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}", TimeUtil.getLongDateCurr(), fplayer.getName(), action, 
-				event.getFaction() .getTag()));
+		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}", TimeUtil.getLongDateCurr(), name, action, event.getFaction().getTag()));
 
 		data.getFactionLog().add(line.toString());
 	}
@@ -99,5 +112,4 @@ public class FactionsListener implements Listener, Reloadable {
 	public void reload() {
 		this.factionBetrayalDetectorEnabled = plugin.getConfig().getBoolean("factionBetrayalDetectorEnabled");
 	}
-
 }

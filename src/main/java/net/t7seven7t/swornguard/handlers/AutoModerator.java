@@ -24,7 +24,7 @@ public class AutoModerator {
 	}
 	
 	public void manageCheatEvent(CheatEvent event) {
-		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayerName());
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 		String reason = null;
 		
 		switch (event.getCheat()) {

@@ -35,18 +35,6 @@ public class SpamDetector {
 		this.messages = new HashMap<String, Long>(16, 0.75f);
 		this.commands = new HashMap<String, Long>(16, 0.75f);
 		this.player = player.getName();
-				
-//		// Cleanup map every 5 mins
-//		new BukkitRunnable() {
-//			
-//			public void run() {
-//				for (String playerName : Collections.unmodifiableMap(recentMessages).keySet()) {
-//					if (!Util.matchOfflinePlayer(playerName).isOnline())
-//						recentMessages.remove(playerName);
-//				}
-//			}
-//			
-//		}.runTaskTimer(plugin, 6000L, 6000L);
 	}
 	
 	public Map<String, Long> getMessages(final ChatType type) {
@@ -71,27 +59,28 @@ public class SpamDetector {
 		
 		if (messages.size() >= SpamOptions.SPAM_THRESHOLD * SpamOptions.MESSAGE_DECAY_TIME) {
 			cancelled = true;
-			
+
 			new BukkitRunnable() {
-				
+
 				@Override
 				public void run() {
 					OfflinePlayer p = Util.matchOfflinePlayer(player);
 					PlayerData data = plugin.getPlayerDataCache().getData(p);
-					
+
 					if (data == null)
 						return;
-					
+
 					if (System.currentTimeMillis() - data.getLastSpamWarn() > 2000L) {
 						data.setLastSpamWarn(System.currentTimeMillis());
-						CheatEvent event = new CheatEvent(p.getName(), CheatType.SPAM, FormatUtil.format("[SPAMMER] {0} is trying to spam {1}!", p.getName(), type.toString()));
+						CheatEvent event = new CheatEvent(p, CheatType.SPAM, FormatUtil.format("[SPAMMER] {0} is trying to spam {1}!",
+								p.getName(), type.toString()));
 						plugin.getCheatHandler().announceCheat(event);
 					}
-					
+
 				}
-				
+
 			}.runTask(plugin);
-			
+
 			messages.clear();
 		}
 		

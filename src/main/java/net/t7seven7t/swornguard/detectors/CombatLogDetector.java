@@ -17,22 +17,21 @@ import org.bukkit.entity.Player;
 public class CombatLogDetector {
 	private final SwornGuard plugin;
 	private final long combatLogWindow;
-	
+
 	public CombatLogDetector(SwornGuard plugin) {
 		this.plugin = plugin;
 		this.combatLogWindow = plugin.getConfig().getInt("combatLogWindowInSeconds") * 1000L;
 	}
-	
+
 	public void check(Player player) {
 		long now = System.currentTimeMillis();
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
-		
+
 		if (now - data.getLastAttacked() < combatLogWindow) {
-			CheatEvent event = new CheatEvent(player.getName(), CheatType.COMBAT_LOG, 
-					FormatUtil.format(plugin.getMessage("cheat_combat_log"), player.getName()));
+			CheatEvent event = new CheatEvent(player, CheatType.COMBAT_LOG, FormatUtil.format(plugin.getMessage("cheat_combat_log"),
+					player.getName()));
 			plugin.getCheatHandler().announceCheat(event);
 			player.setHealth(0);
 		}
 	}
-	
 }

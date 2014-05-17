@@ -63,7 +63,7 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 								data.setConsecutivePings(data.getConsecutivePings() + 1);
 								if (data.getConsecutivePings() >= 2) {
 									// Announce the cheat
-									CheatEvent event = new CheatEvent(player.getName(), CheatType.SPEED, 
+									CheatEvent event = new CheatEvent(player, CheatType.SPEED, 
 											FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving too quickly!"));
 									plugin.getCheatHandler().announceCheat(event);
 									

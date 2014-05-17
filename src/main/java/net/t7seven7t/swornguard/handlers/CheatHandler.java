@@ -38,7 +38,7 @@ public class CheatHandler {
 		}
 
 		plugin.getServer().getPluginManager().callEvent(event);
-		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayerName());
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 		
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
 			if (plugin.getPermissionHandler().hasPermission(player, PermissionType.SHOW_CHEAT_REPORTS.permission)) {
