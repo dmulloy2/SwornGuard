@@ -110,7 +110,6 @@ public class PlayerData implements ConfigurationSerializable {
 
 	// UUID Stuff
 	private String lastKnownBy;
-	private String uniqueId;
 
 	@Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)
 	private Map<String, Object> data = new HashMap<String, Object>();

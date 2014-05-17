@@ -84,9 +84,8 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		if (data == null)
 			data = newData(player);
 
-		// Update variables
+		// Update last known by
 		data.setLastKnownBy(player.getName());
-		data.setUniqueId(player.getUniqueId().toString());
 
 		// Return
 		return data;
