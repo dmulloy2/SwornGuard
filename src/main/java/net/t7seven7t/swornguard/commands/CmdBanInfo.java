@@ -41,9 +41,8 @@ public class CmdBanInfo extends SwornGuardCommand {
 		List<String> lines = new ArrayList<String>();
 		
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format(	plugin.getMessage("baninfo_header"), 
-										target.getName(), 
-										(Util.isBanned(target)) ? plugin.getMessage("baninfo_banned") : plugin.getMessage("baninfo_notbanned")));
+		line.append(FormatUtil.format(plugin.getMessage("baninfo_header"), target.getName(),
+				(Util.isBanned(target.getName())) ? plugin.getMessage("baninfo_banned") : plugin.getMessage("baninfo_notbanned")));
 		lines.add(line.toString());
 		
 		if (data.getBans() != 0) {
