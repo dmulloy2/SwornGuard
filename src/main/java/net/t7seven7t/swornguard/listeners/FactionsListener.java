@@ -3,7 +3,8 @@
  */
 package net.t7seven7t.swornguard.listeners;
 
-import net.dmulloy2.swornnations.util.Util;
+import java.util.UUID;
+
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.FactionKick;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -39,8 +40,12 @@ public class FactionsListener implements Listener, Reloadable {
 			return;
 		}
 
-		String name = event.getFPlayer().getName();
-		OfflinePlayer player = Util.matchOfflinePlayer(name);
+		UUID uniqueId = event.getFPlayer().getUUID();
+		if (uniqueId == null) {
+			return;
+		}
+
+		OfflinePlayer player = plugin.getServer().getOfflinePlayer(uniqueId);
 		if (player == null) {
 			return;
 		}
@@ -59,7 +64,8 @@ public class FactionsListener implements Listener, Reloadable {
 		}
 
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}", TimeUtil.getLongDateCurr(), name, action, event.getFaction().getTag()));
+		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}", TimeUtil.getLongDateCurr(), data.getLastKnownBy(), action,
+				event.getFaction().getTag()));
 
 		data.getFactionLog().add(line.toString());
 	}
@@ -67,19 +73,16 @@ public class FactionsListener implements Listener, Reloadable {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerLeaveFaction(FPlayerLeaveEvent event) {
 		FPlayer fplayer = event.getFPlayer();
-		if (event.isCancelled() || fplayer == null)
+		if (event.isCancelled() || fplayer == null) {
 			return;
-
-		String name = fplayer.getName();
-
-		if (factionBetrayalDetectorEnabled) {
-			if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED) {
-				plugin.getFactionBetrayalDetector().addPossibleBetrayedPlayer(name,
-						new FactionKick(event.getFaction().getTag(), System.currentTimeMillis()));
-			}
 		}
 
-		OfflinePlayer player = Util.matchOfflinePlayer(name);
+		UUID uniqueId = fplayer.getUUID();
+		if (uniqueId == null) {
+			return;
+		}
+
+		OfflinePlayer player = plugin.getServer().getOfflinePlayer(uniqueId);
 		if (player == null) {
 			return;
 		}
@@ -87,6 +90,13 @@ public class FactionsListener implements Listener, Reloadable {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		if (data == null) {
 			return;
+		}
+
+		if (factionBetrayalDetectorEnabled) {
+			if (event.getReason() == FPlayerLeaveEvent.PlayerLeaveReason.KICKED) {
+				plugin.getFactionBetrayalDetector().addPossibleBetrayedPlayer(data.getLastKnownBy(),
+						new FactionKick(event.getFaction().getTag(), System.currentTimeMillis()));
+			}
 		}
 
 		String action = "left";
@@ -103,7 +113,8 @@ public class FactionsListener implements Listener, Reloadable {
 		}
 
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}", TimeUtil.getLongDateCurr(), name, action, event.getFaction().getTag()));
+		line.append(FormatUtil.format("&e[{0}] &b{1} {2} &e{3}", TimeUtil.getLongDateCurr(), data.getLastKnownBy(), action,
+				event.getFaction().getTag()));
 
 		data.getFactionLog().add(line.toString());
 	}
