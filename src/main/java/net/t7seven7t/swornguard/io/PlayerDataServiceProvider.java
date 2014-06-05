@@ -4,6 +4,7 @@
 package net.t7seven7t.swornguard.io;
 
 import java.util.Map;
+import java.util.UUID;
 
 import net.t7seven7t.swornguard.types.PlayerData;
 
@@ -15,8 +16,7 @@ import org.bukkit.entity.Player;
  */
 public interface PlayerDataServiceProvider {
 
-	@Deprecated
-	public PlayerData getData(final String string);
+	public PlayerData getData(final UUID uniqueId);
 
 	public PlayerData getData(final Player player);
 

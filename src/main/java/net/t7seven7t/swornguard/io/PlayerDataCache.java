@@ -52,9 +52,7 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 
 	// ---- Data Getters
 
-	@Override
-	@Deprecated
-	public final PlayerData getData(String key) {
+	private final PlayerData getData(String key) {
 		// Check cache first
 		PlayerData data = cache.get(key);
 		if (data == null) {
@@ -74,6 +72,11 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		}
 
 		return data;
+	}
+
+	@Override
+	public final PlayerData getData(UUID uniqueId) {
+		return getData(uniqueId.toString());
 	}
 
 	@Override

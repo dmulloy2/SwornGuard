@@ -3,14 +3,13 @@
  */
 package net.t7seven7t.swornguard.listeners;
 
-import java.util.UUID;
-
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.FactionKick;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.swornguard.util.FormatUtil;
 import net.t7seven7t.swornguard.util.TimeUtil;
+import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.EventHandler;
@@ -40,12 +39,12 @@ public class FactionsListener implements Listener, Reloadable {
 			return;
 		}
 
-		UUID uniqueId = event.getFPlayer().getUUID();
-		if (uniqueId == null) {
+		String name = fplayer.getName();
+		if (name == null || name.isEmpty()) {
 			return;
 		}
 
-		OfflinePlayer player = plugin.getServer().getOfflinePlayer(uniqueId);
+		OfflinePlayer player = Util.matchOfflinePlayer(name);
 		if (player == null) {
 			return;
 		}
@@ -77,12 +76,12 @@ public class FactionsListener implements Listener, Reloadable {
 			return;
 		}
 
-		UUID uniqueId = fplayer.getUUID();
-		if (uniqueId == null) {
+		String name = fplayer.getName();
+		if (name == null || name.isEmpty()) {
 			return;
 		}
 
-		OfflinePlayer player = plugin.getServer().getOfflinePlayer(uniqueId);
+		OfflinePlayer player = Util.matchOfflinePlayer(name);
 		if (player == null) {
 			return;
 		}
