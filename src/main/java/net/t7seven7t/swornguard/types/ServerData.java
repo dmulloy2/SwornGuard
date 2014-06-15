@@ -5,8 +5,8 @@ package net.t7seven7t.swornguard.types;
 
 import java.lang.management.ManagementFactory;
 
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 /**
  * @author t7seven7t

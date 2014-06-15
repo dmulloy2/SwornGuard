@@ -11,14 +11,14 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 
+import net.dmulloy2.types.Reloadable;
+import net.dmulloy2.util.FormatUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.detectors.SpamDetector;
 import net.t7seven7t.swornguard.detectors.SpamDetector.ChatType;
-import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.tasks.FireworkRunnable;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.types.Reloadable;
-import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -64,7 +64,7 @@ public class ChatListener implements Listener, Reloadable {
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 
 		if (spamDetectorEnabled) {
-			if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.ALLOW_SPAM.permission)) {
+			if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), Permission.ALLOW_SPAM)) {
 				if (data.getSpamManager() == null)
 					data.setSpamManager(new SpamDetector(plugin, event.getPlayer()));
 
@@ -104,7 +104,7 @@ public class ChatListener implements Listener, Reloadable {
 			PlayerData data = plugin.getPlayerDataCache().getData(player);
 
 			if (spamDetectorEnabled) {
-				if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_SPAM.permission)) {
+				if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_SPAM)) {
 					if (data.getSpamManager() == null)
 						data.setSpamManager(new SpamDetector(plugin, player));
 
@@ -120,7 +120,7 @@ public class ChatListener implements Listener, Reloadable {
 			String[] args = event.getMessage().split(" ");
 			String label = args[0];
 
-			if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_BLOCKED_COMMANDS.permission)) {
+			if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_BLOCKED_COMMANDS)) {
 				for (String command : blockedCommands) {
 					if (command.startsWith("/")) command = command.substring(1);
 					if (message.matches(command.toLowerCase() + ".*")) {
@@ -131,7 +131,7 @@ public class ChatListener implements Listener, Reloadable {
 			}
 
 			if (data.isTrollHell()) {
-				if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_USE_COMMANDS_HELL.permission)) {
+				if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_USE_COMMANDS_HELL)) {
 					if (simulateMessages) {
 						for (String command : messageCommands) {
 							if (command.startsWith("/")) command = command.substring(1);
@@ -175,7 +175,7 @@ public class ChatListener implements Listener, Reloadable {
 			}
 
 			if (data.isJailed()) {
-				if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_USE_COMMANDS_JAILED.permission)) {
+				if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_USE_COMMANDS_JAILED)) {
 					if (! event.getMessage().equalsIgnoreCase("/jailstatus")) {
 						for (String command : allowedCommandsInJail) {
 							if (command.startsWith("/")) command = command.substring(1);
@@ -211,7 +211,7 @@ public class ChatListener implements Listener, Reloadable {
 			
 			// Just some fun here on... ignore this :)
 			if (command.equals("firework")) {
-				if (plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.FIREWORK.permission)) {
+				if (plugin.getPermissionHandler().hasPermission(event.getPlayer(), Permission.FIREWORK)) {
 					if (data.isFireworking()) {
 						data.setFireworking(false);
 					} else {
@@ -224,7 +224,7 @@ public class ChatListener implements Listener, Reloadable {
 
 				event.setCancelled(true);
 			} else if (command.equals("creepfun")) {
-				if (plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.CREEPFUN.permission)) {
+				if (plugin.getPermissionHandler().hasPermission(event.getPlayer(), Permission.CREEPFUN)) {
 					if (! creepFunMap.containsKey(event.getPlayer().getName())) {
 						final Random random = new Random();
 						List<UUID> entityIds = new ArrayList<UUID>(25);

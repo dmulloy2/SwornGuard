@@ -3,11 +3,11 @@
  */
 package net.t7seven7t.swornguard.commands.jail;
 
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 import org.bukkit.OfflinePlayer;
 
@@ -20,7 +20,7 @@ public class CmdCheck extends SwornGuardCommand {
 		super(plugin);
 		this.name = "jailcheck";
 		this.description = plugin.getMessage("desc_jailcheck");
-		this.permission = PermissionType.CMD_JAIL_CHECK.permission;
+		this.permission = Permission.CMD_JAIL_CHECK;
 		this.requiredArgs.add("player");
 	}
 

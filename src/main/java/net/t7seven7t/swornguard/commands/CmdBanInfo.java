@@ -6,12 +6,12 @@ package net.t7seven7t.swornguard.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
-import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.OfflinePlayer;
 
@@ -25,7 +25,7 @@ public class CmdBanInfo extends SwornGuardCommand {
 		this.name = "baninfo";
 		this.aliases.add("bi");
 		this.description = plugin.getMessage("desc_baninfo");
-		this.permission = PermissionType.CMD_BAN_INFO.permission;
+		this.permission = Permission.CMD_BAN_INFO;
 		this.optionalArgs.add("player");
 		this.usesPrefix = true;
 	}

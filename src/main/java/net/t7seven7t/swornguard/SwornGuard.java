@@ -23,6 +23,12 @@ import java.util.MissingResourceException;
 import java.util.logging.Level;
 
 import lombok.Getter;
+import net.dmulloy2.SwornPlugin;
+import net.dmulloy2.handlers.CommandHandler;
+import net.dmulloy2.handlers.LogHandler;
+import net.dmulloy2.handlers.PermissionHandler;
+import net.dmulloy2.handlers.ResourceHandler;
+import net.dmulloy2.types.Reloadable;
 import net.t7seven7t.swornguard.commands.CmdBanInfo;
 import net.t7seven7t.swornguard.commands.CmdFHistory;
 import net.t7seven7t.swornguard.commands.CmdHelp;
@@ -61,13 +67,9 @@ import net.t7seven7t.swornguard.detectors.SpamDetector;
 import net.t7seven7t.swornguard.detectors.XrayDetector;
 import net.t7seven7t.swornguard.handlers.AutoModerator;
 import net.t7seven7t.swornguard.handlers.CheatHandler;
-import net.t7seven7t.swornguard.handlers.CommandHandler;
 import net.t7seven7t.swornguard.handlers.JailHandler;
 import net.t7seven7t.swornguard.handlers.LogFilterHandler;
-import net.t7seven7t.swornguard.handlers.LogHandler;
 import net.t7seven7t.swornguard.handlers.PatrolHandler;
-import net.t7seven7t.swornguard.handlers.PermissionHandler;
-import net.t7seven7t.swornguard.handlers.ResourceHandler;
 import net.t7seven7t.swornguard.handlers.TrollHandler;
 import net.t7seven7t.swornguard.io.PlayerDataCache;
 import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
@@ -78,7 +80,6 @@ import net.t7seven7t.swornguard.listeners.FactionsListener;
 import net.t7seven7t.swornguard.listeners.PlayerListener;
 import net.t7seven7t.swornguard.listeners.ServerListener;
 import net.t7seven7t.swornguard.types.Preconditions;
-import net.t7seven7t.swornguard.types.Reloadable;
 import net.t7seven7t.swornguard.types.ServerData;
 import net.t7seven7t.swornguard.types.SimpleVector;
 
@@ -86,16 +87,12 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
  * @author t7seven7t
  */
-public class SwornGuard extends JavaPlugin implements Reloadable {
-	private @Getter LogHandler logHandler;
-	private @Getter CommandHandler commandHandler;
-	private @Getter PermissionHandler permissionHandler;
+public class SwornGuard extends SwornPlugin implements Reloadable {
 	private @Getter ResourceHandler resourceHandler;
 	private @Getter PlayerDataCache playerDataCache;
 	private @Getter Preconditions preconditions;

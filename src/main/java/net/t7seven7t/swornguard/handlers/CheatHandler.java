@@ -3,13 +3,13 @@
  */
 package net.t7seven7t.swornguard.handlers;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
-import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.CheatType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.ChatColor;
@@ -41,7 +41,7 @@ public class CheatHandler {
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 		
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			if (plugin.getPermissionHandler().hasPermission(player, PermissionType.SHOW_CHEAT_REPORTS.permission)) {
+			if (plugin.getPermissionHandler().hasPermission(player, Permission.SHOW_CHEAT_REPORTS)) {
 				player.sendMessage(ChatColor.RED + event.getMessage());
 				if (data.getJails() >= plugin.getConfig().getInt("jailsBeforeNotice") && plugin.getConfig().getBoolean("jailAmountNoticeEnabled"))
 					player.sendMessage(FormatUtil.format(plugin.getMessage("cheat_jail_notice"), event.getPlayerName(), data.getJails()));
@@ -62,7 +62,7 @@ public class CheatHandler {
 			plugin.getPatrolHandler().addCheater(event.getPlayerName());
 			
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
-				if (plugin.getPermissionHandler().hasPermission(player, PermissionType.CMD_CHEAT_TELEPORT.permission))
+				if (plugin.getPermissionHandler().hasPermission(player, Permission.CMD_CHEAT_TELEPORT))
 					player.sendMessage(ChatColor.RED + "To respond to this cheat alert use /ctp " + event.getPlayerName());
 			}
 		}

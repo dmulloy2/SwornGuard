@@ -6,11 +6,11 @@ package net.t7seven7t.swornguard.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 import org.bukkit.OfflinePlayer;
 
@@ -25,14 +25,14 @@ public class CmdInfo extends SwornGuardCommand {
 		this.aliases.add("i");
 		this.aliases.add("stats");
 		this.description = plugin.getMessage("desc_info");
-		this.permission = PermissionType.CMD_INFO.permission;
+		this.permission = Permission.CMD_INFO;
 		this.optionalArgs.add("player");
 		this.usesPrefix = true;
 	}
 
 	@Override
 	public void perform() {
-		OfflinePlayer target = getTarget(0, hasPermission(sender, PermissionType.CMD_INFO_OTHERS.permission));
+		OfflinePlayer target = getTarget(0, hasPermission(sender, Permission.CMD_INFO_OTHERS));
 		if (target == null)
 			return;
 
@@ -50,7 +50,7 @@ public class CmdInfo extends SwornGuardCommand {
 			
 		String ip = target.isOnline() ? target.getPlayer().getAddress().getAddress().getHostAddress() :
 			data.getIpAddressList().get(data.getIpAddressList().size() - 1);
-		if (plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_IP.permission))
+		if (plugin.getPermissionHandler().hasPermission(sender, Permission.CMD_IP))
 			line.append(" from " + ip);
 
 		lines.add(line.toString());

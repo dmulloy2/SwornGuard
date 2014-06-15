@@ -3,10 +3,10 @@
  */
 package net.t7seven7t.swornguard.commands.patrol;
 
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
-import net.t7seven7t.swornguard.util.Util;
+import net.t7seven7t.swornguard.types.Permission;
 
 import org.bukkit.entity.Player;
 
@@ -21,7 +21,7 @@ public class CmdPatrol extends SwornGuardCommand {
 		this.aliases.add("pat");
 		this.optionalArgs.add("player");
 		this.description = "Teleports you to a player on the server.";
-		this.permission = PermissionType.CMD_PATROL.permission;
+		this.permission = Permission.CMD_PATROL;
 		this.mustBePlayer = true;
 	}
 	

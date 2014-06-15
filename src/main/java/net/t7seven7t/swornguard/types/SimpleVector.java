@@ -1,6 +1,6 @@
 /**
-Copyright (C) 2012 t7seven7t
-**/
+ * Copyright (C) 2012 t7seven7t
+ **/
 package net.t7seven7t.swornguard.types;
 
 import java.util.LinkedHashMap;

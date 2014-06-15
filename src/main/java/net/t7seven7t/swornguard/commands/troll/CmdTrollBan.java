@@ -5,12 +5,12 @@ package net.t7seven7t.swornguard.commands.troll;
 
 import java.util.Arrays;
 
+import net.dmulloy2.util.FormatUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.TrollType;
-import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.OfflinePlayer;
 
@@ -26,7 +26,7 @@ public class CmdTrollBan extends SwornGuardCommand {
 		this.requiredArgs.add("player");
 		this.optionalArgs.add("reason");
 		this.description = "Permanently silence a troll";
-		this.permission = PermissionType.CMD_TROLL_BAN.permission;
+		this.permission = Permission.CMD_TROLL_BAN;
 		this.usesPrefix = false;
 	}
 
@@ -45,7 +45,7 @@ public class CmdTrollBan extends SwornGuardCommand {
 			return;
 		}
 
-		if (target.isOnline() && plugin.getPermissionHandler().hasPermission(target.getPlayer(), PermissionType.TROLL_EXEMPT.permission)) {
+		if (target.isOnline() && plugin.getPermissionHandler().hasPermission(target.getPlayer(), Permission.TROLL_EXEMPT)) {
 			err("You may not troll ban &c{0}&4!", target.getName());
 			return;
 		}

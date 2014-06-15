@@ -3,11 +3,11 @@
  */
 package net.t7seven7t.swornguard.commands;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -22,7 +22,7 @@ public class CmdNote extends SwornGuardCommand {
 		this.name = "note";
 		this.aliases.add("n");
 		this.description = plugin.getMessage("desc_note");
-		this.permission = PermissionType.CMD_NOTE.permission;
+		this.permission = Permission.CMD_NOTE;
 		this.requiredArgs.add("player");
 		this.requiredArgs.add("note");	
 		this.usesPrefix = true;

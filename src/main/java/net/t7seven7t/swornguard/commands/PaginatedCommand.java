@@ -3,103 +3,84 @@
  */
 package net.t7seven7t.swornguard.commands;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.swornguard.types.PlayerData;
+
+import org.bukkit.OfflinePlayer;
 
 /**
  * Represents a command that can have pages
  * 
  * @author t7seven7t
  */
-public abstract class PaginatedCommand extends SwornGuardCommand {
-	protected int linesPerPage = 10;
-	protected int pageArgIndex = 0;
+public abstract class PaginatedCommand extends net.dmulloy2.commands.PaginatedCommand {
+	protected final SwornGuard plugin;
 
 	public PaginatedCommand(SwornGuard plugin) {
 		super(plugin);
+		this.plugin = plugin;
 	}
 
-	@Override
-	public void perform() {
-		int index = 1;
-		if (args.length > pageArgIndex) {
-			try {
-				index = Integer.parseInt(args[pageArgIndex]);
-				if (index < 1 || index > getPageCount())
-					throw new IndexOutOfBoundsException();
-			} catch (NumberFormatException ex) {
-				err(plugin.getMessage("error_invalid_number"), args[0]);
-				return;
-			} catch (IndexOutOfBoundsException ex) {
-				err(plugin.getMessage("error_no_page_with_index"), args[0]);
-				return;
+	protected OfflinePlayer getTarget(int argIndex) {
+		return getTarget(argIndex, true);
+	}
+
+	protected OfflinePlayer getTarget(int argIndex, boolean others) {
+		OfflinePlayer target = null;
+
+		if (! isPlayer()) {
+			if (args.length == 1) {
+				target = getTarget(args[argIndex], false);
+			}
+		} else {
+			if (args.length == 0) {
+				target = player;
+			} else if (others) {
+				target = getTarget(args[argIndex], false);
 			}
 		}
-		
-		for (String s : getPage(index))
-			sendMessage(s);
+
+		if (target == null) {
+			err(plugin.getMessage("error_player_not_found"));
+			return null;
+		}
+
+		if (getPlayerData(target) == null) {
+			err(plugin.getMessage("error_player_not_found"));
+			return null; // Return null if they don't have any data
+		}
+
+		return target;
 	}
-	
-	/**
-	 * Gets the number of pages in the list associated with this command
-	 * 
-	 * @return The number of pages
-	 */
-	public int getPageCount() {
-		return (getListSize() + linesPerPage - 1) / linesPerPage;
+
+	protected OfflinePlayer getTarget(String name, boolean msg) {
+		OfflinePlayer target = Util.matchOfflinePlayer(name);
+		if (target == null && msg)
+			err(plugin.getMessage("error_player_not_found"), name);
+		return target;
 	}
-	
-	/**
-	 * Gets the size of the list associated with this command
-	 * 
-	 * @return The size of the list
-	 */
-	public abstract int getListSize();
-	
-	/**
-	 * Gets all of the page lines for the specified page index
-	 * 
-	 * @param index The page index
-	 * @return List of page lines
-	 */
-	public List<String> getPage(int index) {
-		List<String> lines = new ArrayList<String>();
-		lines.add(getHeader(index));
-		lines.addAll(getLines((index - 1) * linesPerPage, index * linesPerPage));
-		return lines;
+
+	protected PlayerData getPlayerData(OfflinePlayer target) {
+		return plugin.getPlayerDataCache().getData(target);
 	}
-	
-	/**
-	 * Gets the header {@link String} for this command
-	 * 
-	 * @param index The page index
-	 * @return String header for this page
-	 */
-	public abstract String getHeader(int index);
-	
-	/**
-	 * Gets all lines from startIndex up to but not including endIndex
-	 * 
-	 * @param startIndex The starting index in the list
-	 * @param endIndex The end index in the list
-	 * @return All lines between start and end indexes
-	 */
-	public List<String> getLines(int startIndex, int endIndex) {
-		List<String> lines = new ArrayList<String>();
-		for (int i = startIndex; i < endIndex && i < getListSize(); i++)
-			lines.add(getLine(i));
-		return lines;
+
+	protected PlayerData getPlayerData(OfflinePlayer target, boolean create) {
+		PlayerData data = getPlayerData(target);
+		if (data == null && create) {
+			data = plugin.getPlayerDataCache().newData(target);
+		}
+
+		return data;
 	}
-	
-	/**
-	 * Gets a {@link String} representation of the line at the
-	 * specified index in the list
-	 * 
-	 * @param index The index of the entry in the list
-	 * @return A string representation of the line
-	 */
-	public abstract String getLine(int index);
-	
+
+	protected boolean argAsBoolean(int arg, boolean def) {
+		if (arg > args.length) {
+			return def;
+		}
+
+		String string = args[arg].toLowerCase();
+		return string.startsWith("y") || string.startsWith("t") || string.equals("on");
+	}
+
 }

@@ -4,7 +4,7 @@
 package net.t7seven7t.swornguard.listeners;
 
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 import org.bukkit.block.Block;
@@ -67,7 +67,7 @@ public class BlockListener implements Listener {
 		if (!plugin.getJailHandler().getJail().isInside(block.getLocation()))
 			return true;
 		
-		if (!plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_JAIL_BUILD.permission))
+		if (!plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_JAIL_BUILD))
 			return false;
 		return true;
 	}

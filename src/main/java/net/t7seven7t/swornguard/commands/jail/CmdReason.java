@@ -3,12 +3,12 @@
  */
 package net.t7seven7t.swornguard.commands.jail;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 import org.bukkit.OfflinePlayer;
 
@@ -21,7 +21,7 @@ public class CmdReason extends SwornGuardCommand {
 		super(plugin);
 		this.name = "jailreason";
 		this.description = plugin.getMessage("desc_jailreason");
-		this.permission = PermissionType.CMD_JAIL_REASON.permission;
+		this.permission = Permission.CMD_JAIL_REASON;
 		this.requiredArgs.add("player");
 		this.requiredArgs.add("reason");
 	}

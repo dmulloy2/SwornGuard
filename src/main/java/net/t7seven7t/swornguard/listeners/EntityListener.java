@@ -3,9 +3,9 @@
  */
 package net.t7seven7t.swornguard.listeners;
 
+import net.dmulloy2.types.Reloadable;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.types.Reloadable;
 
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;

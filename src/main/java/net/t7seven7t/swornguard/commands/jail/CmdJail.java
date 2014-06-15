@@ -3,12 +3,12 @@
  */
 package net.t7seven7t.swornguard.commands.jail;
 
+import net.dmulloy2.util.TimeUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.TimeUtil;
-import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.OfflinePlayer;
 
@@ -21,7 +21,7 @@ public class CmdJail extends SwornGuardCommand {
 		super(plugin);
 		this.name = "jail";
 		this.description = plugin.getMessage("desc_jail");
-		this.permission = PermissionType.CMD_JAIL.permission;
+		this.permission = Permission.CMD_JAIL;
 		this.requiredArgs.add("player");
 		this.requiredArgs.add("time");
 		this.requiredArgs.add("reason");

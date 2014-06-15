@@ -6,11 +6,11 @@ package net.t7seven7t.swornguard.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.ServerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 /**
  * @author t7seven7t
@@ -22,7 +22,7 @@ public class CmdSInfo extends SwornGuardCommand {
 		this.name = "sinfo";
 		this.aliases.add("si");
 		this.description = plugin.getMessage("desc_sinfo");
-		this.permission = PermissionType.CMD_SERVER_INFO.permission;
+		this.permission = Permission.CMD_SERVER_INFO;
 		this.usesPrefix = true;
 	}
 	

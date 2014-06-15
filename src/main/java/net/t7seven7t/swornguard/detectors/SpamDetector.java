@@ -9,12 +9,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.types.CheatType;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;

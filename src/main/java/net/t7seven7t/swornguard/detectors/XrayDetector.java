@@ -3,13 +3,13 @@
  */
 package net.t7seven7t.swornguard.detectors;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.NumberUtil;
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.types.CheatType;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
-import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -77,7 +77,7 @@ public class XrayDetector implements Listener {
 	}
 	
 	public double getRatio(final int top, final int bottom) {
-		return Util.roundNumDecimals((double) top / bottom * 100, 2);
+		return NumberUtil.roundNumDecimals((double) top / bottom * 100, 2);
 	}
 	
 	public void legit(final OfflinePlayer player) {

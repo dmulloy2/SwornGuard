@@ -3,11 +3,11 @@
  */
 package net.t7seven7t.swornguard.commands.patrol;
 
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.entity.Player;
 
@@ -22,7 +22,7 @@ public class CmdCheatTeleport extends SwornGuardCommand {
 		this.mustBePlayer = true;
 		this.description = "Teleport to hackers.";
 		this.optionalArgs.add("player");
-		this.permission = PermissionType.CMD_CHEAT_TELEPORT.permission;
+		this.permission = Permission.CMD_CHEAT_TELEPORT;
 	}
 
 	@Override

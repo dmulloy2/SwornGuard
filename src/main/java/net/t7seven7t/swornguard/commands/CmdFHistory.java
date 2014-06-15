@@ -6,10 +6,10 @@ package net.t7seven7t.swornguard.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dmulloy2.util.FormatUtil;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.OfflinePlayer;
 
@@ -26,7 +26,7 @@ public class CmdFHistory extends PaginatedCommand {
 		this.name = "fhistory";
 		this.aliases.add("fh");
 		this.description = "show a player's faction history";
-		this.permission = PermissionType.CMD_SHOW.permission;
+		this.permission = Permission.CMD_SHOW;
 		this.optionalArgs.add("player");
 		this.optionalArgs.add("page");
 		this.pageArgIndex = 1;

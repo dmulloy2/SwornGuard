@@ -3,8 +3,8 @@
  */
 package net.t7seven7t.swornguard.events;
 
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.types.CheatType;
-import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;

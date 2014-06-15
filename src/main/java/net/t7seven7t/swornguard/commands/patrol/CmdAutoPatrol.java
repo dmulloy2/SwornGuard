@@ -5,7 +5,7 @@ package net.t7seven7t.swornguard.commands.patrol;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 /**
@@ -20,7 +20,7 @@ public class CmdAutoPatrol extends SwornGuardCommand {
 		this.mustBePlayer = true;
 		this.description = "Teleports you to a player on the server continuously.";
 		this.optionalArgs.add("interval");
-		this.permission = PermissionType.CMD_AUTO_PATROL.permission;
+		this.permission = Permission.CMD_AUTO_PATROL;
 	}
 
 	@Override

@@ -5,7 +5,7 @@ package net.t7seven7t.swornguard.commands.jail;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 import org.bukkit.OfflinePlayer;
@@ -19,7 +19,7 @@ public class CmdMute extends SwornGuardCommand {
 		super(plugin);
 		this.name = "jailmute";
 		this.description = plugin.getMessage("desc_jailmute");
-		this.permission = PermissionType.CMD_JAIL_MUTE.permission;
+		this.permission = Permission.CMD_JAIL_MUTE;
 		this.requiredArgs.add("player");
 	}
 

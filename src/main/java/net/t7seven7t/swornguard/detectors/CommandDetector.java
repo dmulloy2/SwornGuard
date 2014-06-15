@@ -3,12 +3,12 @@
  */
 package net.t7seven7t.swornguard.detectors;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
-import net.t7seven7t.swornguard.util.Util;
 
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -51,7 +51,7 @@ public class CommandDetector {
 			}
 			
 			if ((command.equals("ban") || command.equals("eban") || command.equals("tempban") || command.equals("etempban")) 
-					&& plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_BAN.permission)) {
+					&& plugin.getPermissionHandler().hasPermission(sender, Permission.CMD_BAN)) {
 				action = plugin.getMessage("profiler_ban");
 				data.setBans(data.getBans() + 1);
 				data.setLastBan(System.currentTimeMillis());
@@ -60,13 +60,13 @@ public class CommandDetector {
 				if (senderData != null)
 					senderData.setPlayersBanned(senderData.getPlayersBanned() + 1);
 			} else if ((command.equals("unban") || command.equals("eunban") || command.equals("pardon") || command.equals("epardon"))
-					&& plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_UNBAN.permission)) {
+					&& plugin.getPermissionHandler().hasPermission(sender, Permission.CMD_UNBAN)) {
 				action = plugin.getMessage("profiler_unban");
 				data.setLastUnban(System.currentTimeMillis());
 				data.setLastUnbanner(sender.getName());
 				data.setLastUnbanReason(reason == null ? "" : reason.toString());
 			} else if ((command.equals("kick") || command.equals("ekick"))
-					&& plugin.getPermissionHandler().hasPermission(sender, PermissionType.CMD_KICK.permission)) {
+					&& plugin.getPermissionHandler().hasPermission(sender, Permission.CMD_KICK)) {
 				action = plugin.getMessage("profiler_kick");
 				data.setKicks(data.getKicks() + 1);
 				data.setLastKick(System.currentTimeMillis());

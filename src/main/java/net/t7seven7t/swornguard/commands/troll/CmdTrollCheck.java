@@ -6,12 +6,12 @@ package net.t7seven7t.swornguard.commands.troll;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 import org.bukkit.OfflinePlayer;
 
@@ -26,7 +26,7 @@ public class CmdTrollCheck extends SwornGuardCommand {
 		this.aliases.add("trollstatus");
 		this.optionalArgs.add("player");
 		this.description = "Check a player''s troll status";
-		this.permission = PermissionType.TROLL_CHECK.permission;
+		this.permission = Permission.TROLL_CHECK;
 		this.usesPrefix = false;
 	}
 

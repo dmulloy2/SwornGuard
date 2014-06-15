@@ -10,15 +10,15 @@ import java.util.logging.LogRecord;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import net.dmulloy2.types.Reloadable;
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
-import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.CheatType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.Preconditions;
-import net.t7seven7t.swornguard.types.Reloadable;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.Util;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Marker;
@@ -55,7 +55,7 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 			Player player = Util.matchPlayer(playerName);
 			if (player != null) {
 				if (speedDetectorEnabled) {
-					if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission)) {
+					if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_FLY)) {
 						if (! player.getAllowFlight() && ! player.isInsideVehicle()) {
 							if (! preconditions.isPlayerFallingIntoVoid(player) && ! preconditions.isPlayerInsideCar(player) 
 									&& ! preconditions.isNewPlayerJoin(player) && ! preconditions.hasRecentlyTeleported(player)) {

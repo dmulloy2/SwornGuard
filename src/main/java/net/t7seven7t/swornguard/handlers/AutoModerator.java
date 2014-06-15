@@ -3,12 +3,12 @@
  */
 package net.t7seven7t.swornguard.handlers;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -53,7 +53,7 @@ public class AutoModerator {
 			data.setLastKickReason(reason);
 			plugin.getLogHandler().log("Player {0} was kicked by AutoModBot for: {1}", event.getPlayerName(), reason);
 			for (Player player1 : plugin.getServer().getOnlinePlayers()) {
-				if (plugin.getPermissionHandler().hasPermission(player1, PermissionType.SHOW_CHEAT_REPORTS.permission))
+				if (plugin.getPermissionHandler().hasPermission(player1, Permission.SHOW_CHEAT_REPORTS))
 					player1.sendMessage(ChatColor.YELLOW + "AutoModBot kicked " + event.getPlayerName() + " for " + reason);
 			}
 			
@@ -64,7 +64,7 @@ public class AutoModerator {
 	
 	public boolean isOnlyModOnline() {
 		for (Player player : plugin.getServer().getOnlinePlayers()) {
-			if (plugin.getPermissionHandler().hasPermission(player, PermissionType.SHOW_CHEAT_REPORTS.permission))
+			if (plugin.getPermissionHandler().hasPermission(player, Permission.SHOW_CHEAT_REPORTS))
 				return plugin.getConfig().getBoolean("autoModAlwaysEnabled");
 		}
 		

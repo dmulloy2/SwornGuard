@@ -5,7 +5,7 @@ package net.t7seven7t.swornguard.commands.patrol;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ public class CmdVanishList extends SwornGuardCommand {
 		super(plugin);
 		this.name = "vanishlist";
 		this.description = "Shows a list of all vanished players on the server.";
-		this.permission = PermissionType.CMD_VANISH_LIST.permission;
+		this.permission = Permission.CMD_VANISH_LIST;
 	}
 	
 	@Override

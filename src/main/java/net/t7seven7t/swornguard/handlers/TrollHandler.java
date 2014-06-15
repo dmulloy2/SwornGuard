@@ -3,12 +3,12 @@
  */
 package net.t7seven7t.swornguard.handlers;
 
+import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.TrollType;
-import net.t7seven7t.swornguard.util.FormatUtil;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -84,7 +84,7 @@ public class TrollHandler implements Listener {
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
 
 		broadcast = FormatUtil.format(broadcast, sender.getName(), troll.getName(), reason);
-		plugin.getServer().broadcast(broadcast, plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission));
+		plugin.getServer().broadcast(broadcast, plugin.getPermissionHandler().getPermissionString(Permission.TROLL_SPY));
 
 		data.setTrollHells(data.getTrollHells() + 1);
 		data.setLastTroller(sender.getName());
@@ -131,7 +131,7 @@ public class TrollHandler implements Listener {
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
 
 		broadcast = FormatUtil.format(broadcast, sender.getName(), troll.getName());
-		plugin.getServer().broadcast(broadcast, plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission));
+		plugin.getServer().broadcast(broadcast, plugin.getPermissionHandler().getPermissionString(Permission.TROLL_SPY));
 	}
 
 	public final void forceIntoPublicChat(Player troll) {
@@ -171,7 +171,7 @@ public class TrollHandler implements Listener {
 			}
 
 			String admMsg = FormatUtil.format(plugin.getMessage("troll_format"), event.getPlayer().getName(), event.getMessage());
-			String node = plugin.getPermissionHandler().getPermissionString(PermissionType.TROLL_SPY.permission);
+			String node = plugin.getPermissionHandler().getPermissionString(Permission.TROLL_SPY);
 
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				PlayerData data1 = plugin.getPlayerDataCache().getData(p);
@@ -203,7 +203,7 @@ public class TrollHandler implements Listener {
 					troll.hidePlayer(online);
 				}
 
-				if (plugin.getPermissionHandler().hasPermission(online, PermissionType.TROLL_SPY.permission)) {
+				if (plugin.getPermissionHandler().hasPermission(online, Permission.TROLL_SPY)) {
 					String lastReason = trollData.getLastTrollReason();
 					online.sendMessage(FormatUtil.format(plugin.getMessage("troll_join"), event.getPlayer().getName(),
 							lastReason != null ? lastReason : "not applicable"));
@@ -238,7 +238,7 @@ public class TrollHandler implements Listener {
 				}
 			}
 
-			if (plugin.getPermissionHandler().hasPermission(online, PermissionType.TROLL_SPY.permission)) {
+			if (plugin.getPermissionHandler().hasPermission(online, Permission.TROLL_SPY)) {
 				online.sendMessage(FormatUtil.format(plugin.getMessage("troll_leave"), event.getPlayer().getName()));
 			}
 		}

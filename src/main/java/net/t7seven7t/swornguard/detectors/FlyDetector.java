@@ -3,13 +3,13 @@
  */
 package net.t7seven7t.swornguard.detectors;
 
+import net.dmulloy2.util.FormatUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
-import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.types.CheatType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 import net.t7seven7t.swornguard.types.Preconditions;
-import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -49,7 +49,7 @@ public class FlyDetector {
 	
 	private void step() {
 		for (final Player player : plugin.getServer().getOnlinePlayers()) {
-			if (! plugin.getPermissionHandler().hasPermission(player, PermissionType.ALLOW_FLY.permission)) {
+			if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_FLY)) {
 				if (! player.getAllowFlight() && (player.getVelocity().getY() < suspiciousVelocity || (! isInWater(player) && getDistanceToGround(player) >= suspiciousDistFromGround))) {
 					if (! preconditions.isPlayerFallingIntoVoid(player) && ! preconditions.isPlayerInsideCar(player) && ! player.isInsideVehicle() && ! preconditions.isNewPlayerJoin(player) && ! preconditions.hasRecentlyTeleported(player)) {
 						final PlayerData data = plugin.getPlayerDataCache().getData(player);

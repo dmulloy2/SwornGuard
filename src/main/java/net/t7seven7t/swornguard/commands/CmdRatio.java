@@ -4,7 +4,7 @@
 package net.t7seven7t.swornguard.commands;
 
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 import org.bukkit.OfflinePlayer;
@@ -18,7 +18,7 @@ public class CmdRatio extends SwornGuardCommand {
 		super(plugin);
 		this.name = "ratio";
 		this.description = plugin.getMessage("desc_ratio");
-		this.permission = PermissionType.CMD_RATIO.permission; 
+		this.permission = Permission.CMD_RATIO; 
 		this.optionalArgs.add("player");
 		this.usesPrefix = true;
 	}

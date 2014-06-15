@@ -3,11 +3,11 @@
  */
 package net.t7seven7t.swornguard.listeners;
 
+import net.dmulloy2.types.Reloadable;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
 import net.t7seven7t.swornguard.tasks.InmateTimerTask;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.types.Reloadable;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -59,7 +59,7 @@ public class PlayerListener implements Listener, Reloadable {
 			data.getIpAddressList().add(ip);
 
 		// Hide vanished players from newly joined players.
-		if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), PermissionType.VANISH_SPY.permission)) {
+		if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), Permission.VANISH_SPY)) {
 			for (Player player : plugin.getServer().getOnlinePlayers()) {
 				if (plugin.getPlayerDataCache().getData(player).isVanished()) {
 					event.getPlayer().hidePlayer(player);

@@ -3,11 +3,11 @@
  */
 package net.t7seven7t.swornguard.commands.jail;
 
+import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.TimeUtil;
 
 /**
  * @author t7seven7t
@@ -19,7 +19,7 @@ public class CmdStatus extends SwornGuardCommand {
 		this.name = "jailstatus";
 		this.description = plugin.getMessage("desc_jailstatus");
 		this.mustBePlayer = true;
-		this.permission = PermissionType.CMD_JAIL_STATUS.permission;
+		this.permission = Permission.CMD_JAIL_STATUS;
 	}
 	
 	@Override

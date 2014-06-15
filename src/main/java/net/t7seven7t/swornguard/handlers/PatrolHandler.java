@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.dmulloy2.util.FormatUtil;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
-import net.t7seven7t.swornguard.util.FormatUtil;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -50,7 +50,7 @@ public class PatrolHandler {
 		if (target == null) {
 			int iteration = 0;
 			target = plugin.getServer().getOnlinePlayers()[index];
-			while (plugin.getPermissionHandler().hasPermission(target, PermissionType.CMD_AUTO_PATROL.permission)) {
+			while (plugin.getPermissionHandler().hasPermission(target, Permission.CMD_AUTO_PATROL)) {
 				index++;
 				if (index >= n) {
 					index = 0;
@@ -164,7 +164,7 @@ public class PatrolHandler {
 		
 		if (vanish) {
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
-				if (!plugin.getPermissionHandler().hasPermission(p, PermissionType.VANISH_SPY.permission)) {
+				if (!plugin.getPermissionHandler().hasPermission(p, Permission.VANISH_SPY)) {
 					p.hidePlayer(player);
 					String msg = plugin.getConfig().getString("quitMessage");
 					msg = FormatUtil.format(msg, player.getName());
@@ -180,7 +180,7 @@ public class PatrolHandler {
 			for (Player p : plugin.getServer().getOnlinePlayers()) {
 				p.showPlayer(player);
 				
-				if (plugin.getPermissionHandler().hasPermission(p, PermissionType.VANISH_SPY.permission)) {
+				if (plugin.getPermissionHandler().hasPermission(p, Permission.VANISH_SPY)) {
 					p.sendMessage(ChatColor.DARK_GRAY + player.getName() + " is no longer vanished.");
 				} else {
 					String msg = plugin.getConfig().getString("joinMessage");

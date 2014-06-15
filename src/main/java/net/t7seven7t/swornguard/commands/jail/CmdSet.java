@@ -5,7 +5,7 @@ package net.t7seven7t.swornguard.commands.jail;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 
 /**
  * @author t7seven7t
@@ -15,7 +15,7 @@ public class CmdSet extends SwornGuardCommand {
 	public CmdSet(SwornGuard plugin) {
 		super(plugin);
 		this.name = "jailset";
-		this.permission = PermissionType.CMD_JAIL_SET.permission;
+		this.permission = Permission.CMD_JAIL_SET;
 		this.description = plugin.getMessage("desc_jailset");
 		this.optionalArgs.add("cancel");
 	}

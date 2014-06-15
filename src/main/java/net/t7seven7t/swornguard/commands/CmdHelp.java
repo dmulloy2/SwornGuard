@@ -6,8 +6,9 @@ package net.t7seven7t.swornguard.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dmulloy2.commands.Command;
+import net.dmulloy2.util.FormatUtil;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.util.FormatUtil;
 
 /**
  * Help command that shows descriptions of other commands.
@@ -38,8 +39,7 @@ public class CmdHelp extends PaginatedCommand {
 	public List<String> getLines(int startIndex, int endIndex) {
 		List<String> lines = new ArrayList<String>();
 		for (int i = startIndex; i < endIndex && i < getListSize(); i++) {
-			SwornGuardCommand command;
-			command = plugin.getCommandHandler().getRegisteredPrefixedCommands().get(i);
+			Command command = plugin.getCommandHandler().getRegisteredPrefixedCommands().get(i);
 			
 			if (plugin.getPermissionHandler().hasPermission(sender, permission))
 				lines.add(command.getUsageTemplate(true));

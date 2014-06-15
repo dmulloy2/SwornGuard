@@ -5,7 +5,7 @@ package net.t7seven7t.swornguard.commands.jail;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 import org.bukkit.OfflinePlayer;
@@ -19,7 +19,7 @@ public class CmdUnjail extends SwornGuardCommand {
 		super(plugin);
 		this.name = "unjail";
 		this.description = plugin.getMessage("desc_unjail");
-		this.permission = PermissionType.CMD_UNJAIL.permission;
+		this.permission = Permission.CMD_UNJAIL;
 		this.requiredArgs.add("player");
 	}
 	

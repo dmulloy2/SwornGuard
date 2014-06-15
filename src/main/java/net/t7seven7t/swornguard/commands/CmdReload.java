@@ -3,9 +3,9 @@
  */
 package net.t7seven7t.swornguard.commands;
 
+import net.dmulloy2.types.Reloadable;
 import net.t7seven7t.swornguard.SwornGuard;
-import net.t7seven7t.swornguard.permissions.PermissionType;
-import net.t7seven7t.swornguard.types.Reloadable;
+import net.t7seven7t.swornguard.types.Permission;
 
 /**
  * @author t7seven7t
@@ -16,7 +16,7 @@ public class CmdReload extends SwornGuardCommand implements Reloadable {
 		super(plugin);
 		this.name = "reload";
 		this.description = plugin.getMessage("desc_reload");
-		this.permission = PermissionType.CMD_RELOAD.permission;
+		this.permission = Permission.CMD_RELOAD;
 		this.usesPrefix = true;
 	}
 	

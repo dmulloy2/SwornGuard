@@ -5,7 +5,7 @@ package net.t7seven7t.swornguard.commands.patrol;
 
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
-import net.t7seven7t.swornguard.permissions.PermissionType;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 /**
@@ -22,7 +22,7 @@ public class CmdVanish extends SwornGuardCommand {
 		this.mustBePlayer = true;
 		this.description = "Vanishes you from other players.";
 		this.optionalArgs.add("on/off");
-		this.permission = PermissionType.CMD_VANISH.permission;
+		this.permission = Permission.CMD_VANISH;
 	}
 
 	@Override
