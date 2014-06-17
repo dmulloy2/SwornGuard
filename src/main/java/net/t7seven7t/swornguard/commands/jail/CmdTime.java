@@ -3,9 +3,9 @@
  */
 package net.t7seven7t.swornguard.commands.jail;
 
+import net.dmulloy2.exception.BadTimeException;
 import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.TimeUtil;
-import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 import net.t7seven7t.swornguard.types.Permission;
@@ -38,14 +38,8 @@ public class CmdTime extends SwornGuardCommand {
 		long time;
 		try {
 			time = TimeUtil.parseTime(args[1]);
-		} catch (Exception e) {
-			if (e.getMessage().equals("badtime")) {
-				err(plugin.getMessage("jail_error_time_format"), args[1]);
-			} else {
-				err("Error getting jail time: {0}", e.getMessage());
-				plugin.getLogHandler().debug(Util.getUsefulStack(e, "getting jail time"));
-			}
-
+		} catch (BadTimeException e) {
+			err(plugin.getMessage("jail_error_time_format"), args[1]);
 			return;
 		}
 
