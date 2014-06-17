@@ -24,6 +24,7 @@ import java.util.logging.Level;
 
 import lombok.Getter;
 import net.dmulloy2.SwornPlugin;
+import net.dmulloy2.commands.CmdHelp;
 import net.dmulloy2.handlers.CommandHandler;
 import net.dmulloy2.handlers.LogHandler;
 import net.dmulloy2.handlers.PermissionHandler;
@@ -31,7 +32,6 @@ import net.dmulloy2.handlers.ResourceHandler;
 import net.dmulloy2.types.Reloadable;
 import net.t7seven7t.swornguard.commands.CmdBanInfo;
 import net.t7seven7t.swornguard.commands.CmdFHistory;
-import net.t7seven7t.swornguard.commands.CmdHelp;
 import net.t7seven7t.swornguard.commands.CmdIP;
 import net.t7seven7t.swornguard.commands.CmdInfo;
 import net.t7seven7t.swornguard.commands.CmdLegit;
