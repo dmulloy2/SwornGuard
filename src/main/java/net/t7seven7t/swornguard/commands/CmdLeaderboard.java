@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
+import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
 
 import org.bukkit.entity.Player;
@@ -33,8 +34,10 @@ public class CmdLeaderboard extends SwornGuardCommand {
 	public CmdLeaderboard(SwornGuard plugin) {
 		super(plugin);
 		this.name = "lb";
+		this.aliases.add("leaderboard");
 		this.description = "Display kills leaderboard";
-		this.usesPrefix = true;
+		this.permission = Permission.CMD_LEADERBOARD;
+		this.mustBePlayer = true;
 	}
 
 	@Override

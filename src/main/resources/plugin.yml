@@ -95,6 +95,10 @@ commands:
     creepfun:
         description: Creepers riding bats with fireworks
         usage: /<command>
+   lb:
+        description: Displays kills leaderboard
+        usage: /<command>
+        aliases: [leaderboard]
 permissions:
     swornguard.admin:
         description: Gives access to all SwornGuard features.
@@ -162,6 +166,7 @@ permissions:
             swornguard.cmd.jailhelp: true
             swornguard.cmd.serverinfo: true
             swornguard.cmd.info: true
+            swornguard.cmd.leaderboard: true
     swornguard.canfly:
         default: false
     swornguard.allow.spam:
@@ -252,3 +257,5 @@ permissions:
         default: false
     swornguard.troll.check:
         default: false
+    swornguard.cmd.leaderboard:
+        default: true

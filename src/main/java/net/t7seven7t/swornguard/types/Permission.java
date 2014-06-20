@@ -36,6 +36,7 @@ public enum Permission implements IPermission {
 	CMD_JAIL_STATUS("cmd.jailstatus"),
 	CMD_JAIL_TIME("cmd.jailtime"),
 	CMD_KICK("cmd.kick"),
+	CMD_LEADERBOARD("cmd.leaderboard"),
 	CMD_LEGIT("cmd.legit"),
 	CMD_NOTE("cmd.note"),
 	CMD_PATROL("cmd.patrol"),
