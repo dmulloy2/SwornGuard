@@ -95,7 +95,7 @@ commands:
     creepfun:
         description: Creepers riding bats with fireworks
         usage: /<command>
-   lb:
+    lb:
         description: Displays kills leaderboard
         usage: /<command>
         aliases: [leaderboard]
