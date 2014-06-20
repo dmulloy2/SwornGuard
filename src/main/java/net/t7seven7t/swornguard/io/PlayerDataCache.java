@@ -283,10 +283,12 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		});
 
 		for (File file : files) {
-			String fileName = FormatUtil.trimFileExtension(file, extension);
-			PlayerData loaded = loadData(fileName);
-			loaded.setLastKnownBy(fileName);
-			data.put(fileName, loaded);
+			PlayerData loaded = FileSerialization.load(file, PlayerData.class);
+			if (loaded != null) {
+				String fileName = FormatUtil.trimFileExtension(file, extension);
+				loaded.setLastKnownBy(fileName);
+				data.put(fileName, loaded);
+			}
 		}
 
 		return Collections.unmodifiableMap(data);
