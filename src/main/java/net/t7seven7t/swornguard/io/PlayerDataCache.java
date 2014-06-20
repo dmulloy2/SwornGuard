@@ -88,8 +88,9 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		if (data == null)
 			data = newData(player);
 
-		// Update last known by
+		// Update last known by and UUID
 		data.setLastKnownBy(player.getName());
+		data.setUniqueId(player.getUniqueId().toString());
 
 		// Return
 		return data;
@@ -129,7 +130,8 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 
 		try {
 			PlayerData data = FileSerialization.load(file, PlayerData.class);
-			data.setLastKnownBy(key);
+			data.setUniqueId(key);
+			data.getLastKnownBy();
 			return data;
 		} catch (Throwable ex) {
 			plugin.getLogHandler().log(Level.WARNING, "Failed to load player data for {0}!", key);
@@ -271,11 +273,13 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		Map<String, PlayerData> data = new HashMap<String, PlayerData>();
 
 		File[] files = folder.listFiles(new FileFilter() {
+
 			@Override
 			public boolean accept(File file) {
 				String name = file.getName();
 				return name.contains(extension) && name.length() != 40;
 			}
+
 		});
 
 		for (File file : files) {

@@ -74,7 +74,7 @@ public class CmdLeaderboard extends SwornGuardCommand {
 		}
 
 		// Footer
-		sendMessage(player, "&eTo see your most recent stats, type &b/p &einfo");
+		sendMessage(player, "&eTo see your most recent stats, type &b/p &3info");
 		sendMessage(player, "&eLeaderboard is updated every 10 minutes.");
 	}
 
@@ -128,18 +128,16 @@ public class CmdLeaderboard extends SwornGuardCommand {
 				try {
 					PlayerData data = sortedEntries.get(i).getKey();
 
-					String name = data.getLastKnownBy();
-
 					String space = "";
-					for (int ii = name.length(); ii < 20; ii++) {
-						space += " ";
-					}
+					String name = data.getLastKnownBy();
+					for (int ii = name.length(); ii < 19; ii++)
+						space = space + " ";
+					name = name + space;
 
 					int kills = data.getPlayerKills();
 					int deaths = data.getDeaths();
 
-					leaderboard.add(FormatUtil.format(format, i + 1, data.getLastKnownBy(), space, kills, deaths,
-							formatKDR(kills, deaths)));
+					leaderboard.add(FormatUtil.format(format, i + 1, name, kills, deaths, formatKDR(kills, deaths)));
 				} catch (Throwable ex) {
 					continue;
 				}

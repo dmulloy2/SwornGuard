@@ -16,9 +16,11 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.detectors.SpamDetector;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
@@ -110,6 +112,7 @@ public class PlayerData implements ConfigurationSerializable {
 
 	// UUID Stuff
 	private String lastKnownBy;
+	private String uniqueId;
 
 	@Getter(AccessLevel.PRIVATE) @Setter(AccessLevel.PRIVATE)
 	private Map<String, Object> data = new HashMap<String, Object>();
@@ -216,6 +219,25 @@ public class PlayerData implements ConfigurationSerializable {
 		}
 
 		return data;
+	}
+
+	public String getLastKnownBy() {
+		if (lastKnownBy != null) {
+			if (lastKnownBy.length() <= 16) {
+				return lastKnownBy;
+			} else {
+				OfflinePlayer player = Util.matchOfflinePlayer(lastKnownBy);
+				uniqueId = lastKnownBy;
+				lastKnownBy = player.getName();
+				return lastKnownBy;
+			}
+		} else if (uniqueId != null) {
+			OfflinePlayer player = Util.matchOfflinePlayer(uniqueId);
+			lastKnownBy = player.getName();
+			return lastKnownBy;
+		}
+
+		return ""; // No identifier
 	}
 
 }
