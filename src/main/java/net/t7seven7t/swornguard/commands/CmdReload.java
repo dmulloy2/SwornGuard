@@ -15,6 +15,7 @@ public class CmdReload extends SwornGuardCommand implements Reloadable {
 	public CmdReload(SwornGuard plugin) {
 		super(plugin);
 		this.name = "reload";
+		this.aliases.add("rl");
 		this.description = plugin.getMessage("desc_reload");
 		this.permission = Permission.CMD_RELOAD;
 		this.usesPrefix = true;
