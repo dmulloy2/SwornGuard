@@ -96,7 +96,7 @@ public class CmdLeaderboard extends SwornGuardCommand {
 
 			for (Entry<String, PlayerData> entry : allData.entrySet()) {
 				PlayerData value = entry.getValue();
-				if (value.getPlayerKills() > 0) {
+				if (value != null && value.getPlayerKills() > 0) {
 					experienceMap.put(value, value.getPlayerKills());
 				}
 			}
