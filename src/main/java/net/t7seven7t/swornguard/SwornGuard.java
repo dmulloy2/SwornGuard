@@ -112,14 +112,19 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 	private @Getter FactionBetrayalDetector factionBetrayalDetector;
 	private @Getter FlyDetector flyDetector;
 	private @Getter XrayDetector xrayDetector;
-
+	
 	private List<Listener> listeners;
+	
+	@Override
+	public void onLoad() {
+		SwornPlugin.checkRegistrations();
+		ConfigurationSerialization.registerClass(SimpleVector.class);
+	}
 	
 	@Override
 	public void onEnable() {
 		long start = System.currentTimeMillis();
 		
-		ConfigurationSerialization.registerClass(SimpleVector.class);
 		logHandler = new LogHandler(this);
 		commandHandler = new CommandHandler(this);
 		permissionHandler = new PermissionHandler(this);
