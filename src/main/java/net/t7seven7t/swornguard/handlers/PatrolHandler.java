@@ -38,18 +38,19 @@ public class PatrolHandler {
 	}
 	
 	public void patrol(Player player, Player target) {
-		int n = plugin.getServer().getOnlinePlayers().length;
+		int n = plugin.getServer().getOnlinePlayers().size();
 		if (index >= n)
 			index = 0;
 		
-		if (! recentCheaters.isEmpty()) {
+		if (! recentCheaters.isEmpty() && target == null) {
 			target = plugin.getServer().getPlayerExact(recentCheaters.get(0));
 			recentCheaters.remove(0);
 		}
 		
+		List<Player> online = new ArrayList<>(plugin.getServer().getOnlinePlayers());
 		if (target == null) {
 			int iteration = 0;
-			target = plugin.getServer().getOnlinePlayers()[index];
+			target = online.get(index);
 			while (plugin.getPermissionHandler().hasPermission(target, Permission.CMD_AUTO_PATROL)) {
 				index++;
 				if (index >= n) {
@@ -58,7 +59,7 @@ public class PatrolHandler {
 					if (iteration > 1)
 						break;
 				}
-				target = plugin.getServer().getOnlinePlayers()[index];
+				target = online.get(index);
 			}
 			
 			if (iteration > 1) {

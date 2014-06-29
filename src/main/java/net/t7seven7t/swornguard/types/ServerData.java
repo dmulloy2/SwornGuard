@@ -31,7 +31,7 @@ public class ServerData {
 	}
 	
 	public int getOnlinePlayerCount() {
-		return plugin.getServer().getOnlinePlayers().length;
+		return plugin.getServer().getOnlinePlayers().size();
 	}
 	
 	public int getPlayerCount() {
