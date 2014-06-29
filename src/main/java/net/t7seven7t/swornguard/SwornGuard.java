@@ -23,6 +23,7 @@ import java.util.MissingResourceException;
 import java.util.logging.Level;
 
 import lombok.Getter;
+import net.dmulloy2.SwornAPI;
 import net.dmulloy2.SwornPlugin;
 import net.dmulloy2.commands.CmdHelp;
 import net.dmulloy2.handlers.CommandHandler;
@@ -117,7 +118,7 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 	
 	@Override
 	public void onLoad() {
-		SwornPlugin.checkRegistrations();
+		SwornAPI.checkRegistrations();
 		ConfigurationSerialization.registerClass(SimpleVector.class);
 	}
 	
