@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -38,7 +39,8 @@ public class PatrolHandler {
 	}
 	
 	public void patrol(Player player, Player target) {
-		int n = plugin.getServer().getOnlinePlayers().size();
+		List<Player> online = Util.getOnlinePlayers();
+		int n = online.size();
 		if (index >= n)
 			index = 0;
 		
@@ -46,8 +48,7 @@ public class PatrolHandler {
 			target = plugin.getServer().getPlayerExact(recentCheaters.get(0));
 			recentCheaters.remove(0);
 		}
-		
-		List<Player> online = new ArrayList<>(plugin.getServer().getOnlinePlayers());
+
 		if (target == null) {
 			int iteration = 0;
 			target = online.get(index);

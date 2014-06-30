@@ -6,6 +6,7 @@ package net.t7seven7t.swornguard.types;
 import java.lang.management.ManagementFactory;
 
 import net.dmulloy2.util.TimeUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 
 /**
@@ -31,7 +32,7 @@ public class ServerData {
 	}
 	
 	public int getOnlinePlayerCount() {
-		return plugin.getServer().getOnlinePlayers().size();
+		return Util.getOnlinePlayers().size();
 	}
 	
 	public int getPlayerCount() {
