@@ -54,19 +54,20 @@ public class ChatListener implements Listener, Reloadable {
 	private List<String> messageCommands;
 	private String fakeMessageFormat;
 
-	public ChatListener(final SwornGuard plugin) {
+	public ChatListener(SwornGuard plugin) {
 		this.plugin = plugin;
 		this.reload();
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
-	public void onAsyncPlayerChat(final AsyncPlayerChatEvent event) {
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 
 		if (spamDetectorEnabled) {
 			if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), Permission.ALLOW_SPAM)) {
-				if (data.getSpamManager() == null)
+				if (data.getSpamManager() == null) {
 					data.setSpamManager(new SpamDetector(plugin, event.getPlayer()));
+				}
 
 				if (data.getSpamManager().checkSpam(event.getMessage(), ChatType.CHAT)) {
 					event.setCancelled(true);
@@ -81,22 +82,24 @@ public class ChatListener implements Listener, Reloadable {
 			return;
 		}
 	}
-	
+
 	// Needs to be at high because factions cancels event for its colour tags :(
 	@EventHandler(priority = EventPriority.HIGH)
-	public void onAsyncPlayerChatMonitor(final AsyncPlayerChatEvent event) {
-		if (!event.isCancelled()) {
-			final PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-			if (data.getMessages() == 0)
+	public void onAsyncPlayerChatMonitor(AsyncPlayerChatEvent event) {
+		if (! event.isCancelled()) {
+			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+			if (data.getMessages() == 0) {
 				data.setMessages(1);
-			else
+			} else {
 				data.setMessages(data.getMessages() + 1);
-			
-			if (data.isJailed())
+			}
+
+			if (data.isJailed()) {
 				data.setLastActivity(System.currentTimeMillis());
+			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 		if (! event.isCancelled()) {
@@ -105,8 +108,9 @@ public class ChatListener implements Listener, Reloadable {
 
 			if (spamDetectorEnabled) {
 				if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_SPAM)) {
-					if (data.getSpamManager() == null)
+					if (data.getSpamManager() == null) {
 						data.setSpamManager(new SpamDetector(plugin, player));
+					}
 
 					if (data.getSpamManager().checkSpam(event.getMessage(), ChatType.COMMAND)) {
 						event.setCancelled(true);
@@ -122,7 +126,6 @@ public class ChatListener implements Listener, Reloadable {
 
 			if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_BLOCKED_COMMANDS)) {
 				for (String command : blockedCommands) {
-					if (command.startsWith("/")) command = command.substring(1);
 					if (message.matches(command.toLowerCase() + ".*")) {
 						event.setCancelled(true);
 						return;
@@ -134,13 +137,17 @@ public class ChatListener implements Listener, Reloadable {
 				if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_USE_COMMANDS_HELL)) {
 					if (simulateMessages) {
 						for (String command : messageCommands) {
-							if (command.startsWith("/")) command = command.substring(1);
-							if (message.matches(command.toLowerCase() + ".*")) {
-								// This accounts for /r and /reply, but doesn't count whispe[r]
-								int beginIndex = label.contains("r") && ! label.contains("w") ? 1 : 2;
-								String content = FormatUtil.join(" ", Arrays.copyOfRange(args, beginIndex, args.length));
-								String fakeMsg = FormatUtil.format(fakeMessageFormat, player.getDisplayName(), content);
-								player.sendMessage(fakeMsg);
+							if (message.matches(command + ".*")) {
+								try {
+									// This accounts for /r and /reply, but doesn't count whispe[r]
+									int beginIndex = label.contains("r") && ! label.contains("w") ? 1 : 2;
+									String content = FormatUtil.join(" ", Arrays.copyOfRange(args, beginIndex, args.length));
+									String fakeMsg = FormatUtil.format(fakeMessageFormat, player.getDisplayName(), content);
+									player.sendMessage(fakeMsg);
+								} catch (Throwable ex) {
+									// Doesn't matter...
+								}
+
 								event.setCancelled(true);
 								return;
 							}
@@ -148,8 +155,7 @@ public class ChatListener implements Listener, Reloadable {
 					}
 
 					for (String command : blockedCommandsInHell) {
-						if (! command.startsWith("/")) command = "/" + command;
-						if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*")) {
+						if (message.matches(command + ".*")) {
 							event.setCancelled(true);
 							return;
 						}
@@ -159,16 +165,15 @@ public class ChatListener implements Listener, Reloadable {
 
 			if (trollOverrideCommands != null && ! trollOverrideCommands.isEmpty()) {
 				for (String command : trollOverrideCommands) {
-					if (command.startsWith("/")) command = command.substring(1);
-					if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*")) {
+					if (message.matches(command + ".*")) {
 						try {
 							String[] newArgs = Arrays.copyOf(args, args.length);
 							newArgs[0] = "/troll";
 
 							player.chat(FormatUtil.join(" ", newArgs));
 							event.setCancelled(true);
-						} catch (Exception e) {
-							// Filter failed, completely optional and not really necessary
+						} catch (Throwable ex) {
+							// Doesn't matter...
 						}
 					}
 				}
@@ -178,9 +183,9 @@ public class ChatListener implements Listener, Reloadable {
 				if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_USE_COMMANDS_JAILED)) {
 					if (! event.getMessage().equalsIgnoreCase("/jailstatus")) {
 						for (String command : allowedCommandsInJail) {
-							if (command.startsWith("/")) command = command.substring(1);
-							if (event.getMessage().toLowerCase().matches(command.toLowerCase() + ".*"))
+							if (message.matches(command + ".*")) {
 								return;
+							}
 						}
 
 						event.setCancelled(true);
@@ -190,7 +195,7 @@ public class ChatListener implements Listener, Reloadable {
 			}
 		}
 	}
-	
+
 	// Factions why you use such low command preprocess priority? T_T
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerCommandPreprocessMonitor(final PlayerCommandPreprocessEvent event) {
@@ -198,17 +203,14 @@ public class ChatListener implements Listener, Reloadable {
 			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 			if (data.isJailed())
 				data.setLastActivity(System.currentTimeMillis());
-			
+
 			// Check if command needs to be profiled.
 			String command = event.getMessage().toLowerCase().split(" ")[0].replace("/", "");
 			String[] args = event.getMessage().split(" ");
 			if (args.length > 0) {
-				List<String> Args = new ArrayList<String>();
-				for (int i = 1; i < args.length; i++)
-					Args.add(args[i]);
-				plugin.getCommandDetector().checkCommand(event.getPlayer(), command, Args.toArray(new String[0]));
+				plugin.getCommandDetector().checkCommand(event.getPlayer(), command, Arrays.copyOfRange(args, 1, args.length));
 			}
-			
+
 			// Just some fun here on... ignore this :)
 			if (command.equals("firework")) {
 				if (plugin.getPermissionHandler().hasPermission(event.getPlayer(), Permission.FIREWORK)) {
@@ -229,17 +231,19 @@ public class ChatListener implements Listener, Reloadable {
 						final Random random = new Random();
 						List<UUID> entityIds = new ArrayList<UUID>(25);
 						for (int i = 0; i < 5; i++) {
-							final int xOffset = random.nextInt(10 * 2) - 10;
-							final int zOffset = random.nextInt(10 * 2) - 10;
-							final Location spawnLocation = event.getPlayer().getLocation().add(xOffset, 0, zOffset);
-					
-							// Make sure entity doesn't spawn inside of blocks or floating in the air
-							while (	spawnLocation.add(0, 1, 0).getBlockY() < 250 
-									&& spawnLocation.getWorld().getBlockAt(spawnLocation).getType().isSolid() 
-									&& spawnLocation.getWorld().getBlockAt(spawnLocation.clone().add(0, 1, 0)).getType().isSolid());
-							while ( spawnLocation.subtract(0, 1, 0).getBlockY() > 2
-									&& spawnLocation.getWorld().getBlockAt(spawnLocation).getType() == Material.AIR);
-							
+							int xOffset = random.nextInt(10 * 2) - 10;
+							int zOffset = random.nextInt(10 * 2) - 10;
+							Location spawnLocation = event.getPlayer().getLocation().add(xOffset, 0, zOffset);
+
+							// Make sure entity doesn't spawn inside of blocks r floating in the air
+							while (spawnLocation.add(0, 1, 0).getBlockY() < 250
+									&& spawnLocation.getWorld().getBlockAt(spawnLocation).getType().isSolid()
+									&& spawnLocation.getWorld().getBlockAt(spawnLocation.clone().add(0, 1, 0)).getType().isSolid())
+								;
+							while (spawnLocation.subtract(0, 1, 0).getBlockY() > 2
+									&& spawnLocation.getWorld().getBlockAt(spawnLocation).getType() == Material.AIR)
+								;
+
 							final Bat bat = spawnLocation.getWorld().spawn(spawnLocation, Bat.class);
 							entityIds.add(bat.getUniqueId());
 							Creeper prevCreeper = null;
@@ -253,32 +257,33 @@ public class ChatListener implements Listener, Reloadable {
 								prevCreeper = creeper;
 								entityIds.add(creeper.getUniqueId());
 							}
-					
+
 							new BukkitRunnable() {
-								private final Color[] colors = new Color[] {Color.RED, Color.YELLOW, Color.ORANGE, Color.BLUE, Color.NAVY, Color.PURPLE};
+								private Color[] colors = new Color[] {
+										Color.RED, Color.YELLOW, Color.ORANGE, Color.BLUE, Color.NAVY, Color.PURPLE
+								};
 								private int color = 0;
 
 								@Override
 								public void run() {
 									if (bat.isValid() && creepFunMap.containsKey(event.getPlayer().getName())) {
 										FireworkEffect.Type type = FireworkEffect.Type.values()[random.nextInt(FireworkEffect.Type.values().length)];
-								
+
 										FireworkEffect effect = FireworkEffect.builder()
 												.with(type)
 												.withColor(colors[color])
 												.withFade(colors[(color + 1 >= colors.length) ? 0 : color + 1])
 												.flicker(random.nextBoolean())
-												.trail(random.nextBoolean())
-												.build();
-			
+												.trail(random.nextBoolean()).build();
+
 										Firework firework = bat.getWorld().spawn(bat.getLocation(), Firework.class);
-								
+
 										FireworkMeta meta = firework.getFireworkMeta();
 										meta.addEffect(effect);
 										meta.setPower(2);
-								
+
 										firework.setFireworkMeta(meta);
-								
+
 										color++;
 										if (color >= colors.length)
 											color = 0;
@@ -286,13 +291,13 @@ public class ChatListener implements Listener, Reloadable {
 										this.cancel();
 									}
 								}
-						
+
 							}.runTaskTimer(plugin, 5L, 5L);
 						}
 						creepFunMap.put(event.getPlayer().getName(), entityIds);
-				
+
 						new BukkitRunnable() {
-					
+
 							@Override
 							public void run() {
 								for (UUID uuid : creepFunMap.get(event.getPlayer().getName())) {
@@ -302,46 +307,46 @@ public class ChatListener implements Listener, Reloadable {
 										}
 									}
 								}
-						
+
 								creepFunMap.remove(event.getPlayer().getName());
 							}
-					
+
 						}.runTaskLater(plugin, 600L);
 					}
 				} else {
 					event.getPlayer().sendMessage(ChatColor.RED + "You do not have permission to do this!");
 				}
-				
+
 				event.setCancelled(true);
 			}
 		}
 	}
-	
-	private final Map<String, List<UUID>> creepFunMap = new HashMap<String, List<UUID>>();
-	
+
+	private Map<String, List<UUID>> creepFunMap = new HashMap<String, List<UUID>>();
+
 	@EventHandler
 	public void onCreepFunDamagedEvent(EntityDamageEvent event) {
-		if (!creepFunMap.isEmpty()) {
+		if (! creepFunMap.isEmpty()) {
 			for (List<UUID> value : creepFunMap.values()) {
 				for (UUID uuid : value) {
 					if (event.getEntity().getUniqueId().equals(uuid)) {
 						event.setCancelled(true);
 						return;
-					}	
+					}
 				}
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onCreepFunPrimeEvent(ExplosionPrimeEvent event) {
-		if (!creepFunMap.isEmpty()) {
+		if (! creepFunMap.isEmpty()) {
 			for (List<UUID> value : creepFunMap.values()) {
 				for (UUID uuid : value) {
 					if (event.getEntity().getUniqueId().equals(uuid)) {
 						event.setCancelled(true);
 						return;
-					}	
+					}
 				}
 			}
 		}
@@ -349,14 +354,23 @@ public class ChatListener implements Listener, Reloadable {
 
 	@Override
 	public void reload() {
-		this.allowedCommandsInJail = plugin.getConfig().getStringList("allowedCommandsInJail");
+		this.allowedCommandsInJail = formatCommandList("allowedCommandsInJail");
 		this.spamDetectorEnabled = plugin.getConfig().getBoolean("spamDetectorEnabled");
 		this.blockedCommands = plugin.getConfig().getStringList("blockedCommands");
-		this.blockedCommandsInHell = plugin.getConfig().getStringList("trollHell.blockedCommands");
-		this.trollOverrideCommands = plugin.getConfig().getStringList("trollHell.overrideCommands");
+		this.blockedCommandsInHell = formatCommandList("trollHell.blockedCommands");
+		this.trollOverrideCommands = formatCommandList("trollHell.overrideCommands");
 		this.simulateMessages = plugin.getConfig().getBoolean("trollHell.simulateMessages");
-		this.messageCommands = plugin.getConfig().getStringList("trollHell.messageCommands");
+		this.messageCommands = formatCommandList("trollHell.messageCommands");
 		this.fakeMessageFormat = plugin.getConfig().getString("trollHell.fakeMessageFormat");
 	}
 
+	private List<String> formatCommandList(String key) {
+		List<String> ret = new ArrayList<>();
+		for (String command : plugin.getConfig().getStringList(key)) {
+			command = command.toLowerCase();
+			ret.add(command.startsWith("/") ? command.substring(1) : command);
+		}
+
+		return ret;
+	}
 }
