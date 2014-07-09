@@ -70,9 +70,6 @@ commands:
         description: Shows jail help.
         permission: swornguard.cmd.jailhelp
         usage: /<command>
-    jailmute:
-        description: Mute a jailed player.
-        permission: swornguard.cmd.jailmute
     trollhell:
         description: Put a player in troll hell ;)
         usage: /<command> <player> [reason]
@@ -147,7 +144,6 @@ permissions:
             swornguard.cmd.unjail: true
             swornguard.cmd.cheatteleport: true
             swornguard.showcheatreports: true
-            swornguard.cmd.jailmute: true
             swornguard.trollhell: true
     swornguard.trollhell:
         description: Troll Hell commands

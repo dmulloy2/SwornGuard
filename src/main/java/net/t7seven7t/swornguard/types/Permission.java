@@ -30,7 +30,6 @@ public enum Permission implements IPermission {
 	CMD_JAIL("cmd.jail"),
 	CMD_JAIL_CHECK("cmd.jailcheck"),
 	CMD_JAIL_HELP("cmd.jailhelp"),
-	CMD_JAIL_MUTE("cmd.jailmute"),
 	CMD_JAIL_REASON("cmd.jailreason"),
 	CMD_JAIL_SET("cmd.jailset"),
 	CMD_JAIL_STATUS("cmd.jailstatus"),
@@ -61,6 +60,6 @@ public enum Permission implements IPermission {
 	TROLL_SPY("troll.spy"),
 	TROLL_CHECK("troll.status")
 	;
-	
+
 	private final String node;
 }
