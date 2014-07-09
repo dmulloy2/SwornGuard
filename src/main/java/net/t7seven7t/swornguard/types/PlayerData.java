@@ -83,7 +83,6 @@ public class PlayerData implements ConfigurationSerializable {
 	private transient boolean vanished;
 	private transient boolean fireworking; // hehe
 	private boolean jailed;
-	private boolean jailMuted;
 	private boolean unjailNextLogin;
 
 	// Troll Hell
@@ -154,7 +153,7 @@ public class PlayerData implements ConfigurationSerializable {
 	/**
 	 * Any data put into this map needs to be inherently serializable, either
 	 * using ConfigurationSerializable or being a java primitive.
-	 * 
+	 *
 	 * @param key
 	 *        Key to store the object under
 	 * @param object

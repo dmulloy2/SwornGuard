@@ -75,12 +75,6 @@ public class ChatListener implements Listener, Reloadable {
 				}
 			}
 		}
-
-		if (data.isJailMuted()) {
-			event.setCancelled(true);
-			event.getPlayer().sendMessage(ChatColor.RED + "You have been muted.");
-			return;
-		}
 	}
 
 	// Needs to be at high because factions cancels event for its colour tags :(

@@ -154,13 +154,15 @@ public class PlayerListener implements Listener, Reloadable {
 					event.getPlayer().setFlying(true);
 				}
 			}
-		}	
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerMove(final PlayerMoveEvent event) {
-		if (plugin.getPlayerDataCache().getData(event.getPlayer()).isJailed())
-			plugin.getPlayerDataCache().getData(event.getPlayer()).setLastActivity(System.currentTimeMillis());
+		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
+		if (data.isJailed()) {
+			data.setLastActivity(System.currentTimeMillis());
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

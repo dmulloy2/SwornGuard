@@ -4,6 +4,7 @@
 package net.t7seven7t.swornguard.handlers;
 
 import java.io.File;
+import java.util.logging.Level;
 
 import net.dmulloy2.io.FileSerialization;
 import net.dmulloy2.util.FormatUtil;
@@ -24,78 +25,73 @@ import org.bukkit.entity.Player;
 public class JailHandler {
 	private final SwornGuard plugin;
 	private final JailData jail;
-	
+
 	public JailHandler(final SwornGuard plugin) {
 		this.plugin = plugin;
-		
-		// Load jail settings
-		final File file = new File(plugin.getDataFolder(), "jail.yml");
-		if (file.exists()) {
-			jail = FileSerialization.load(file, JailData.class);
-		} else {
-			jail = new JailData();
-		}
+		this.jail = loadJail();
 	}
-	
+
+	private final JailData loadJail() {
+		File file = new File(plugin.getDataFolder(), "jail.yml");
+		if (file.exists()) {
+			try {
+				return FileSerialization.load(file, JailData.class);
+			} catch (Throwable ex) {
+				plugin.getLogHandler().log(Level.WARNING, "Failed to load jail data, creating new save.");
+			}
+		}
+
+		return new JailData();
+	}
+
 	public void saveJail() {
 		FileSerialization.save(jail, new File(plugin.getDataFolder(), "jail.yml"));
 	}
-	
+
 	public void unjail(final OfflinePlayer offlinePlayer, String unjailer) {
 		PlayerData data = plugin.getPlayerDataCache().getData(offlinePlayer);
-		
+
 		// Player isn't jailed
 		if (!data.isJailed())
 			return;
-		
+
 		UnjailEvent event = new UnjailEvent(offlinePlayer);
 		plugin.getServer().getPluginManager().callEvent(event);
-				
+
 		data.setJailed(false);
 		data.setJailTime(0);
 		if (unjailer != null)
-			data.getProfilerList().add(FormatUtil.format(	plugin.getMessage("profiler_event"), 
-															TimeUtil.getLongDateCurr(), 
+			data.getProfilerList().add(FormatUtil.format(	plugin.getMessage("profiler_event"),
+															TimeUtil.getLongDateCurr(),
 															FormatUtil.format(plugin.getMessage("profiler_unjail"), unjailer)));
-		
+
 		if (offlinePlayer.isOnline()) {
 			release(offlinePlayer.getPlayer());
 		} else {
 			data.setUnjailNextLogin(true);
 		}
-		
-		if (data.isJailMuted())
-			data.setJailMuted(false);
 	}
-	
+
 	public void release(final Player player) {
 		PlayerData data = plugin.getPlayerDataCache().getData(player);
 		data.setUnjailNextLogin(false);
 		player.teleport(jail.getExit());
 		player.sendMessage(FormatUtil.format(plugin.getMessage("jail_unjail")));
-		if (data.isJailMuted())
-			data.setJailMuted(false);
 	}
-	
+
 	public void jail(final OfflinePlayer offlinePlayer, final long time, final String reason, final String jailer) {
 		PlayerData data = plugin.getPlayerDataCache().getData(offlinePlayer);
-		
+
 		// Player is already jailed.
 		if (data.isJailed())
 			return;
-		
+
 		JailEvent event = new JailEvent(offlinePlayer);
 		plugin.getServer().getPluginManager().callEvent(event);
-		
+
 		if (event.isCancelled())
 			return;
-		
-		// Leave vehicle / eject
-		if (offlinePlayer.isOnline()) {
-			((Player)offlinePlayer).leaveVehicle();
-			((Player)offlinePlayer).eject();
-		}
-		
+
 		data.setJailed(true);
 		data.setLastJail(System.currentTimeMillis());
 		data.setLastJailer(jailer);
@@ -105,38 +101,37 @@ public class JailHandler {
 		else
 			data.setJails(data.getJails() + 1);
 		data.setJailTime(time);
-		data.getProfilerList().add(FormatUtil.format(	plugin.getMessage("profiler_event"), 
-														TimeUtil.getLongDateCurr(), 
+		data.getProfilerList().add(FormatUtil.format(	plugin.getMessage("profiler_event"),
+														TimeUtil.getLongDateCurr(),
 														FormatUtil.format(plugin.getMessage("profiler_jail"), time, reason, jailer)));
-		
+
 		if (offlinePlayer.isOnline()) {
 			Player player = offlinePlayer.getPlayer();
-			
-			// Check if player is riding other entities
-			if (player.isInsideVehicle())
-				player.getVehicle().eject();
-			
+
+			// Check if player is riding or being ridden
+			player.leaveVehicle();
+			player.eject();
+
 			// Teleport player to jail
 			player.teleport(jail.getSpawn());
 			player.sendMessage(FormatUtil.format(plugin.getMessage("jail_jail"), TimeUtil.formatTime(time), reason, jailer));
-			
+
 			// Begin count down of player's time
 			new InmateTimerTask(plugin, player, data).runTaskTimer(plugin, 20L, 20L);
 		}
 	}
-	
+
 	public void checkPlayerInJail(final Player player) {
-		if (!jail.isInside(player.getLocation())) {
-			
-			// Check if player is riding other entities
-			if (player.isInsideVehicle())
-				player.getVehicle().eject();
-			
+		if (! jail.isInside(player.getLocation())) {
+			// Check if player is riding or being ridden
+			player.leaveVehicle();
+			player.eject();
+
 			player.teleport(jail.getSpawn());
 			player.sendMessage(FormatUtil.format(plugin.getMessage("jail_escape")));
 		}
 	}
-	
+
 	public JailData getJail() {
 		return jail;
 	}
