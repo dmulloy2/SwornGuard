@@ -42,6 +42,7 @@ import net.t7seven7t.swornguard.commands.CmdRatio;
 import net.t7seven7t.swornguard.commands.CmdReload;
 import net.t7seven7t.swornguard.commands.CmdSInfo;
 import net.t7seven7t.swornguard.commands.CmdShow;
+import net.t7seven7t.swornguard.commands.CmdVersion;
 import net.t7seven7t.swornguard.commands.jail.CmdCheck;
 import net.t7seven7t.swornguard.commands.jail.CmdJail;
 import net.t7seven7t.swornguard.commands.jail.CmdJailHelp;
@@ -204,6 +205,7 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 		commandHandler.registerPrefixedCommand(new CmdShow(this));
 		commandHandler.registerPrefixedCommand(new CmdFHistory(this));
 		commandHandler.registerPrefixedCommand(new CmdSInfo(this));
+		commandHandler.registerPrefixedCommand(new CmdVersion(this));
 
 		commandHandler.registerCommand(new CmdAutoPatrol(this));
 		commandHandler.registerCommand(new CmdCheatTeleport(this));
