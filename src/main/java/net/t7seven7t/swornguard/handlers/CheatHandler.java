@@ -5,6 +5,7 @@ package net.t7seven7t.swornguard.handlers;
 
 import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.TimeUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.types.CheatType;
@@ -22,11 +23,11 @@ import org.bukkit.entity.Player;
  */
 public class CheatHandler {
 	private final SwornGuard plugin;
-	
+
 	public CheatHandler(SwornGuard plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	public void announceCheat(CheatEvent event) {
 		// "Wing Clipping"
 		if (event.getCheat() == CheatType.FLYING) {
@@ -39,38 +40,38 @@ public class CheatHandler {
 
 		plugin.getServer().getPluginManager().callEvent(event);
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
-		
-		for (Player player : plugin.getServer().getOnlinePlayers()) {
+
+		for (Player player : Util.getOnlinePlayers()) {
 			if (plugin.getPermissionHandler().hasPermission(player, Permission.SHOW_CHEAT_REPORTS)) {
 				player.sendMessage(ChatColor.RED + event.getMessage());
 				if (data.getJails() >= plugin.getConfig().getInt("jailsBeforeNotice") && plugin.getConfig().getBoolean("jailAmountNoticeEnabled"))
 					player.sendMessage(FormatUtil.format(plugin.getMessage("cheat_jail_notice"), event.getPlayerName(), data.getJails()));
 			}
 		}
-		
+
 		if ((plugin.getAutoModerator().isOnlyModOnline() && plugin.getConfig().getBoolean("autoModEnabled")) || event.getCheat() == CheatType.SPAM) {
 			plugin.getAutoModerator().manageCheatEvent(event);
 		}
-		
+
 		if (event.getCheat() != CheatType.XRAY || System.currentTimeMillis() - data.getLastXrayWarn() > 432000000L) {
-			data.getProfilerList().add(FormatUtil.format("[{0} GMT] &cpinged the cheat detector for: &6{1}", 
+			data.getProfilerList().add(FormatUtil.format("[{0} GMT] &cpinged the cheat detector for: &6{1}",
 					TimeUtil.getLongDateCurr(), WordUtils.capitalize(event.getCheat().toString().replaceAll("_", " "))));
 		}
-		
+
 		if (event.getCheat() == CheatType.FLYING || event.getCheat() == CheatType.XRAY || event.getCheat() == CheatType.SPEED) {
 			// Add cheater to patrol list
 			plugin.getPatrolHandler().addCheater(event.getPlayerName());
-			
-			for (Player player : plugin.getServer().getOnlinePlayers()) {
+
+			for (Player player : Util.getOnlinePlayers()) {
 				if (plugin.getPermissionHandler().hasPermission(player, Permission.CMD_CHEAT_TELEPORT))
 					player.sendMessage(ChatColor.RED + "To respond to this cheat alert use /ctp " + event.getPlayerName());
 			}
 		}
-		
+
 		plugin.getLogHandler().log("Cheatevent player: {0}", event.getPlayerName());
 		plugin.getLogHandler().log("Cheatevent type: {0}", event.getCheat().toString().replaceAll("_", " "));
 	}
-	
+
 	public void teleportToGround(Player player) {
 		if (! isPlayerFallingIntoVoid(player)) {
 			Location loc = player.getLocation().clone();
@@ -78,20 +79,20 @@ public class CheatHandler {
 			player.teleport(loc);
 		}
 	}
-	
+
 	public final boolean isPlayerFallingIntoVoid(Player player) {
 		Location loc = player.getLocation();
 		if (loc.getBlockY() < 0) {
 			return true;
 		}
-		
+
 		for (int y = loc.getBlockY(); y >= 0; y--) {
 			if (loc.getWorld().getBlockAt(loc.getBlockX(), y, loc.getBlockZ()).getType() != Material.AIR) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-	
+
 }

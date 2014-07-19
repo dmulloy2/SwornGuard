@@ -5,6 +5,7 @@ package net.t7seven7t.swornguard.handlers;
 
 import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.TimeUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -64,7 +65,7 @@ public class TrollHandler implements Listener {
 			forceIntoPublicChat(troll.getPlayer());
 
 			// Hide players
-			for (Player online : plugin.getServer().getOnlinePlayers()) {
+			for (Player online : Util.getOnlinePlayers()) {
 				PlayerData data1 = plugin.getPlayerDataCache().getData(online);
 				if (data1.isTrollHell()) {
 					if (data.isTrollMuted() || data.isTrollBanned()) {
@@ -114,7 +115,7 @@ public class TrollHandler implements Listener {
 
 			// Show players
 			if (troll.isOnline()) {
-				for (Player online : plugin.getServer().getOnlinePlayers()) {
+				for (Player online : Util.getOnlinePlayers()) {
 					PlayerData data1 = plugin.getPlayerDataCache().getData(online);
 					if (! data1.isVanished()) {
 						troll.getPlayer().showPlayer(online);
@@ -173,7 +174,7 @@ public class TrollHandler implements Listener {
 			String admMsg = FormatUtil.format(plugin.getMessage("troll_format"), event.getPlayer().getName(), event.getMessage());
 			String node = plugin.getPermissionHandler().getPermissionString(Permission.TROLL_SPY);
 
-			for (Player p : plugin.getServer().getOnlinePlayers()) {
+			for (Player p : Util.getOnlinePlayers()) {
 				PlayerData data1 = plugin.getPlayerDataCache().getData(p);
 				if (data1.isTrollHell()) {
 					event.getRecipients().add(p);
@@ -191,7 +192,7 @@ public class TrollHandler implements Listener {
 		Player troll = event.getPlayer();
 		PlayerData trollData = plugin.getPlayerDataCache().getData(troll);
 		if (trollData != null && trollData.isTrollHell()) {
-			for (Player online : plugin.getServer().getOnlinePlayers()) {
+			for (Player online : Util.getOnlinePlayers()) {
 				PlayerData data = plugin.getPlayerDataCache().getData(online);
 				if (data.isTrollHell()) {
 					if (! trollData.isTrollMuted() && ! trollData.isTrollBanned()) {
@@ -213,7 +214,7 @@ public class TrollHandler implements Listener {
 			forceIntoPublicChat(troll);
 			event.setJoinMessage(null);
 		} else {
-			for (Player online : plugin.getServer().getOnlinePlayers()) {
+			for (Player online : Util.getOnlinePlayers()) {
 				PlayerData data = plugin.getPlayerDataCache().getData(online);
 				if (data != null && data.isTrollHell()) {
 					troll.hidePlayer(online);
@@ -230,7 +231,7 @@ public class TrollHandler implements Listener {
 			return;
 		}
 
-		for (Player online : plugin.getServer().getOnlinePlayers()) {
+		for (Player online : Util.getOnlinePlayers()) {
 			PlayerData data = plugin.getPlayerDataCache().getData(online);
 			if (data.isTrollHell()) {
 				if (! trollData.isTrollMuted() && ! trollData.isTrollBanned()) {

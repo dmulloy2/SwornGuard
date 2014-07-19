@@ -4,6 +4,7 @@
 package net.t7seven7t.swornguard.listeners;
 
 import net.dmulloy2.types.Reloadable;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.tasks.InmateTimerTask;
 import net.t7seven7t.swornguard.types.Permission;
@@ -60,7 +61,7 @@ public class PlayerListener implements Listener, Reloadable {
 
 		// Hide vanished players from newly joined players.
 		if (! plugin.getPermissionHandler().hasPermission(event.getPlayer(), Permission.VANISH_SPY)) {
-			for (Player player : plugin.getServer().getOnlinePlayers()) {
+			for (Player player : Util.getOnlinePlayers()) {
 				if (plugin.getPlayerDataCache().getData(player).isVanished()) {
 					event.getPlayer().hidePlayer(player);
 				}

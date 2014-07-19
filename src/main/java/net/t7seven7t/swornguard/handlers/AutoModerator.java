@@ -5,6 +5,7 @@ package net.t7seven7t.swornguard.handlers;
 
 import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.TimeUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.CheatEvent;
 import net.t7seven7t.swornguard.types.Permission;
@@ -18,15 +19,15 @@ import org.bukkit.entity.Player;
  */
 public class AutoModerator {
 	private final SwornGuard plugin;
-	
+
 	public AutoModerator(final SwornGuard plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	public void manageCheatEvent(CheatEvent event) {
 		PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 		String reason = null;
-		
+
 		switch (event.getCheat()) {
 		case FLYING:
 			reason = plugin.getConfig().getString("autoModKickReasonFly");
@@ -43,7 +44,7 @@ public class AutoModerator {
 		default:
 			break;
 		}
-		
+
 		if (reason != null) {
 			Player player = plugin.getServer().getPlayerExact(event.getPlayerName());
 			if (player == null) return;
@@ -52,23 +53,23 @@ public class AutoModerator {
 			data.setLastKicker("AutoModBot");
 			data.setLastKickReason(reason);
 			plugin.getLogHandler().log("Player {0} was kicked by AutoModBot for: {1}", event.getPlayerName(), reason);
-			for (Player player1 : plugin.getServer().getOnlinePlayers()) {
+			for (Player player1 : Util.getOnlinePlayers()) {
 				if (plugin.getPermissionHandler().hasPermission(player1, Permission.SHOW_CHEAT_REPORTS))
 					player1.sendMessage(ChatColor.YELLOW + "AutoModBot kicked " + event.getPlayerName() + " for " + reason);
 			}
-			
+
 			data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(),
 					FormatUtil.format(plugin.getMessage("profiler_automodbot"), player.getName(), reason)));
 		}
 	}
-	
+
 	public boolean isOnlyModOnline() {
-		for (Player player : plugin.getServer().getOnlinePlayers()) {
+		for (Player player : Util.getOnlinePlayers()) {
 			if (plugin.getPermissionHandler().hasPermission(player, Permission.SHOW_CHEAT_REPORTS))
 				return plugin.getConfig().getBoolean("autoModAlwaysEnabled");
 		}
-		
+
 		return true;
 	}
-	
+
 }

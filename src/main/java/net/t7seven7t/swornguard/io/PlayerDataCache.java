@@ -163,7 +163,7 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 	public final void cleanupData() {
 		// Get all online players into an array list
 		List<String> online = new ArrayList<String>();
-		for (Player player : plugin.getServer().getOnlinePlayers())
+		for (Player player : Util.getOnlinePlayers())
 			online.add(player.getName());
 
 		// Actually cleanup the data
