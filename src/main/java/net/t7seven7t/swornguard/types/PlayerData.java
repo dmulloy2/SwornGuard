@@ -84,6 +84,7 @@ public class PlayerData implements ConfigurationSerializable {
 	private transient boolean fireworking; // hehe
 	private boolean jailed;
 	private boolean unjailNextLogin;
+	private boolean killNextLogin; // Combat logging
 
 	// Troll Hell
 	private boolean trollHell;
@@ -96,7 +97,6 @@ public class PlayerData implements ConfigurationSerializable {
 	private String lastTrollReason;
 
 	private transient Location previousLocation;
-
 	private transient SpamDetector spamManager;
 
 	private String lastJailer;

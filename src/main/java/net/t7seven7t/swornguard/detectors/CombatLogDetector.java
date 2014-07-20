@@ -31,7 +31,8 @@ public class CombatLogDetector {
 			CheatEvent event = new CheatEvent(player, CheatType.COMBAT_LOG, FormatUtil.format(plugin.getMessage("cheat_combat_log"),
 					player.getName()));
 			plugin.getCheatHandler().announceCheat(event);
-			player.setHealth(0);
+			data.setKillNextLogin(true);
+			// player.setHealth(0);
 		}
 	}
 }

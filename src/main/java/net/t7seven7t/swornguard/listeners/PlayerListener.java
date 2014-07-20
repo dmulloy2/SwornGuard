@@ -73,6 +73,11 @@ public class PlayerListener implements Listener, Reloadable {
 		} else if (data.isJailed()) {
 			new InmateTimerTask(plugin, event.getPlayer(), data).runTaskTimer(plugin, 20L, 20L);
 		}
+
+		if (data.isKillNextLogin()) {
+			event.getPlayer().setHealth(0.0D);
+			data.setKillNextLogin(false);
+		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
