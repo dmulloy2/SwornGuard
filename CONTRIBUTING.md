@@ -12,7 +12,7 @@ Provide a DETAILED description of your problem and how it came about, as well as
 Provide any RELEVANT stack traces or error logs (use pastebin or I will delete your ticket)
 
 
-What version of UltimateArena and Bukkit/Spigot are you using? (Please provide the full version string, found with /sg version and /version)
+What version of SwornGuard and Bukkit/Spigot are you using? (Please provide the full version string, found with /sg version and /version)
 
 
 Provide any additional information below.
