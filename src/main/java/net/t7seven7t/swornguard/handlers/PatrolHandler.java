@@ -93,7 +93,7 @@ public class PatrolHandler {
 		applyPatrolBuffs(player, true);
 		plugin.getLogHandler().log(player.getName() + " has started auto patrolling.");
 
-		int id = plugin.getServer().getScheduler().runTaskTimer(plugin, new BukkitRunnable() {
+		class AutoPatrolTask extends BukkitRunnable {
 
 			@Override
 			public void run() {
@@ -103,8 +103,9 @@ public class PatrolHandler {
 					this.cancel();
 			}
 
-		}, 0L, interval * 20L).getTaskId();
+		}
 
+		int id = new AutoPatrolTask().runTaskTimer(plugin, 0L, interval * 20L).getTaskId();
 		cancelTasks(player);
 
 		taskIDs.put(player.getName(), id);
@@ -115,7 +116,8 @@ public class PatrolHandler {
 		data.setCooldownPatrolling(true);
 		int interval = data.getPatrolInterval();
 		player.sendMessage(ChatColor.YELLOW + "Patrol mode will wear off in " + interval + " seconds.");
-		int id = plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
+
+		class UnAutoPatrolTask extends BukkitRunnable {
 
 			@Override
 			public void run() {
@@ -128,8 +130,9 @@ public class PatrolHandler {
 				}
 			}
 
-		}, interval * 20L).getTaskId();
+		}
 
+		int id = new UnAutoPatrolTask().runTaskLater(plugin, interval * 20L).getTaskId();
 		cancelTasks(player);
 
 		taskIDs.put(player.getName(), id);
@@ -212,7 +215,7 @@ public class PatrolHandler {
 		player.teleport(target);
 		plugin.getLogHandler().log("{0} is now inspecting {1} for cheat report.", player.getName(), target.getName());
 
-		int id = plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
+		class CheaterTeleportTask extends BukkitRunnable {
 
 			@Override
 			public void run() {
@@ -220,8 +223,9 @@ public class PatrolHandler {
 					returnFromInspecting(player);
 			}
 
-		}, 60 * 20L).getTaskId();
+		}
 
+		int id = new CheaterTeleportTask().runTaskLater(plugin, 60 * 20L).getTaskId();
 		cancelTasks(player);
 
 		taskIDs.put(player.getName(), id);
@@ -234,15 +238,16 @@ public class PatrolHandler {
 		applyPatrolBuffs(player, false);
 		data.setPreviousLocation(null);
 
-		int id = plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
+		class ReturnFromInspectingTask extends BukkitRunnable {
 
 			@Override
 			public void run() {
 				data.setInspecting(false);
 			}
 
-		}, 20L).getTaskId();
+		}
 
+		int id = new ReturnFromInspectingTask().runTaskLater(plugin, 20L).getTaskId();
 		cancelTasks(player);
 
 		taskIDs.put(player.getName(), id);
@@ -256,14 +261,17 @@ public class PatrolHandler {
 
 	public void addCheater(final String player) {
 		recentCheaters.add(player);
-		plugin.getServer().getScheduler().runTaskLater(plugin, new BukkitRunnable() {
+
+		class AddCheaterTask extends BukkitRunnable {
 
 			@Override
 			public void run() {
 				recentCheaters.remove(player);
 			}
 
-		}, 120 * 20L);
+		}
+
+		new AddCheaterTask().runTaskLater(plugin, 120 * 20L);
 	}
 
 	public List<String> getRecentCheaters() {
