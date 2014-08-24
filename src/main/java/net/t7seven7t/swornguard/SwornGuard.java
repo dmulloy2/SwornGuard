@@ -17,10 +17,9 @@
  */
 package net.t7seven7t.swornguard;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.MissingResourceException;
-import java.util.logging.Level;
 
 import lombok.Getter;
 import net.dmulloy2.SwornAPI;
@@ -127,17 +126,18 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 		long start = System.currentTimeMillis();
 
 		logHandler = new LogHandler(this);
-		commandHandler = new CommandHandler(this);
-		permissionHandler = new PermissionHandler(this);
-
-		if (! getDataFolder().exists())
-			getDataFolder().mkdir();
-
-		saveResource("messages.properties", true);
-		resourceHandler = new ResourceHandler(this, this.getClassLoader());
 
 		saveDefaultConfig();
 		reloadConfig();
+
+		commandHandler = new CommandHandler(this);
+		permissionHandler = new PermissionHandler(this);
+
+		File messages = new File(getDataFolder(), "messages.properties");
+		if (messages.exists())
+			messages.delete();
+
+		resourceHandler = new ResourceHandler(this, this.getClassLoader());
 
 		playerDataCache = new PlayerDataCache(this);
 		getServer().getServicesManager().register(PlayerDataServiceProvider.class, playerDataCache, this, ServicePriority.Normal);
@@ -267,11 +267,6 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 	}
 
 	public String getMessage(String string) {
-		try {
-			return resourceHandler.getMessages().getString(string);
-		} catch (MissingResourceException ex) {
-			logHandler.log(Level.WARNING, "Messages locale is missing key for: {0}", string);
-			return null;
-		}
+		return resourceHandler.getMessage(string);
 	}
 }
