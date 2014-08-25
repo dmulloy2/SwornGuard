@@ -21,56 +21,54 @@ import org.bukkit.event.block.BlockPlaceEvent;
  */
 public class BlockListener implements Listener {
 	private final SwornGuard plugin;
-	
+
 	public BlockListener(final SwornGuard plugin) {
 		this.plugin = plugin;
-	}	
-	
+	}
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockPlaceMonitor(final BlockPlaceEvent event) {
-		if (!event.isCancelled()) {
+		if (! event.isCancelled()) {
 			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 			data.setBlocksBuilt(data.getBlocksBuilt() + 1);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onBlockBreakMonitor(final BlockBreakEvent event) {
-		if (!event.isCancelled()) {
+		if (! event.isCancelled()) {
 			PlayerData data = plugin.getPlayerDataCache().getData(event.getPlayer());
 			data.setBlocksDeleted(data.getBlocksDeleted() + 1);
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (!event.isCancelled())
-			if (!canPlayerBuildHere(event.getBlock(), event.getPlayer()))
+		if (! event.isCancelled())
+			if (! canPlayerBuildHere(event.getBlock(), event.getPlayer()))
 				event.setCancelled(true);
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (!event.isCancelled())
-			if (!canPlayerBuildHere(event.getBlock(), event.getPlayer()))
+		if (! event.isCancelled())
+			if (! canPlayerBuildHere(event.getBlock(), event.getPlayer()))
 				event.setCancelled(true);
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onBlockDamage(BlockDamageEvent event) {
-		if (!event.isCancelled())
-			if (!canPlayerBuildHere(event.getBlock(), event.getPlayer()))
+		if (! event.isCancelled())
+			if (! canPlayerBuildHere(event.getBlock(), event.getPlayer()))
 				event.setCancelled(true);
 	}
-	
+
 	public boolean canPlayerBuildHere(Block block, Player player) {
-		if (!plugin.getJailHandler().getJail().isInside(block.getLocation()))
+		if (! plugin.getJailHandler().isInsideJail(block.getLocation()))
 			return true;
-		
-		if (!plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_JAIL_BUILD))
+
+		if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_JAIL_BUILD))
 			return false;
 		return true;
 	}
-	
 }
- 

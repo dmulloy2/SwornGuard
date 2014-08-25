@@ -3,116 +3,103 @@
  */
 package net.t7seven7t.swornguard.types;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import lombok.Getter;
-import lombok.Setter;
+import net.dmulloy2.types.LazyLocation;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.util.Vector;
 
 /**
  * @author t7seven7t
  */
 public class JailData implements ConfigurationSerializable {
+	private LazyLocation max, min, spawn, exit;
 	private @Getter int jailStage;
-	private SimpleVector max, min, spawn, exit;
-	private int spawnyaw, exityaw;
-	private @Getter @Setter World world;
-	
+
 	public JailData() {
-		world = Bukkit.getWorlds().get(0);
 	}
-	
+
 	public JailData(Map<String, Object> args) {
 		this();
 		if (args.containsKey("min"))
-			min = (SimpleVector) args.get("min");
+			min = (LazyLocation) args.get("min");
 		if (args.containsKey("max"))
-			max = (SimpleVector) args.get("max");
+			max = (LazyLocation) args.get("max");
 		if (args.containsKey("spawn"))
-			spawn = (SimpleVector) args.get("spawn");
+			spawn = (LazyLocation) args.get("spawn");
 		if (args.containsKey("exit"))
-			exit = (SimpleVector) args.get("exit");
-		if (args.containsKey("spawnyaw"))
-			spawnyaw = (int) args.get("spawnyaw");
-		if (args.containsKey("exityaw"))
-			exityaw = (int) args.get("exityaw");
-		if (args.containsKey("world"))
-			world = Bukkit.getWorld((String) args.get("world"));
+			exit = (LazyLocation) args.get("exit");
 	}
-	
+
 	public void nextJailStage() {
 		jailStage++;
-		
 		if (jailStage > 4)
 			resetJailStage();
 	}
-	
+
 	public void resetJailStage() {
 		jailStage = 0;
 	}
-	
-	public void setMin(Vector min) {
-		this.min  = new SimpleVector(min); 
+
+	public void setMin(Location location) {
+		this.min = new LazyLocation(location);
 		this.max = null;
 	}
-	
-	public void setMax(Vector v1) {
-		Vector v2 = this.min.toVector();
-		
-		this.min = new SimpleVector(Vector.getMinimum(v1, v2));
-		this.max = new SimpleVector(Vector.getMaximum(v1, v2));
+
+	public void setMax(Location location) {
+		LazyLocation max = new LazyLocation(location);
+		this.max = LazyLocation.getMaximum(max, min);
+		this.min = LazyLocation.getMinimum(max, min);
 	}
-	
+
 	public Location getSpawn() {
-		return simpleVectorToLocation(spawn, spawnyaw);
+		return spawn.getLocation();
 	}
-	
-	public void setSpawn(Location l) {
-		spawn = new SimpleVector(l);
-		spawnyaw = (int) l.getYaw();
+
+	public void setSpawn(Location loc) {
+		spawn = new LazyLocation(loc);
 	}
-	
+
 	public Location getExit() {
-		return simpleVectorToLocation(exit, exityaw);
+		return exit.getLocation();
 	}
-	
-	public void setExit(Location l) {
-		exit = new SimpleVector(l);
-		exityaw = (int) l.getYaw();
+
+	public void setExit(Location loc) {
+		exit = new LazyLocation(loc);
 	}
-	
-	private Location simpleVectorToLocation(SimpleVector v, int yaw) {
-		return new Location(world, v.x, v.y, v.z, yaw, 0F);
-	}
-	
+
 	public boolean isSetup() {
-		return !(max == null || min == null || spawn == null || exit == null || world == null || max.equals(min));
+		return ! (max == null || min == null || spawn == null || exit == null || max.equals(min));
 	}
-	
-	public boolean isInside(Location l) {
-		if (!isSetup())
+
+	public boolean isInside(Location loc) {
+		if (! isSetup())
 			return false;
-		SimpleVector v = new SimpleVector(l);
-		return !(min.x > v.x || min.y > v.y || min.z > v.z || max.x < v.x || max.y < v.y || max.z < v.z);
+
+		if (loc.getWorld().getUID().equals(max.getWorld().getUID())) {
+			int locX = loc.getBlockX();
+			if (locX <= max.getX() && locX >= min.getX()) {
+				int locY = loc.getBlockY();
+				if (locY <= max.getY() && locY >= min.getY()) {
+					int locZ = loc.getBlockZ();
+					return locZ <= max.getZ() && locZ >= min.getZ();
+				}
+			}
+		}
+
+		return false;
 	}
-	
+
 	@Override
 	public Map<String, Object> serialize() {
-		Map<String, Object> args = new HashMap<String, Object>();
+		Map<String, Object> args = new LinkedHashMap<>();
 		args.put("max", max);
 		args.put("min", min);
 		args.put("spawn", spawn);
 		args.put("exit", exit);
-		args.put("spawnyaw", spawnyaw);
-		args.put("exityaw", exityaw);
-		args.put("world", world.getName());
 		return args;
 	}
-
 }

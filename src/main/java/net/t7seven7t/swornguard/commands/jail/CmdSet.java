@@ -27,18 +27,17 @@ public class CmdSet extends SwornGuardCommand {
 			sendMessage(plugin.getMessage("jail_cancel_set"));
 			return;
 		}
-		
+
 		switch (plugin.getJailHandler().getJail().getJailStage()) {
 		case 0:
 			sendMessage(plugin.getMessage("jail_set_1"));
 			break;
 		case 1:
-			plugin.getJailHandler().getJail().setWorld(player.getWorld());
-			plugin.getJailHandler().getJail().setMin(player.getLocation().toVector().toBlockVector());
+			plugin.getJailHandler().getJail().setMin(player.getLocation());
 			sendMessage(plugin.getMessage("jail_set_2"));
 			break;
 		case 2:
-			plugin.getJailHandler().getJail().setMax(player.getLocation().toVector().toBlockVector());
+			plugin.getJailHandler().getJail().setMax(player.getLocation());
 			sendMessage(plugin.getMessage("jail_set_3"));
 			break;
 		case 3:
@@ -52,8 +51,8 @@ public class CmdSet extends SwornGuardCommand {
 		default:
 			break;
 		}
-		
+
 		plugin.getJailHandler().getJail().nextJailStage();
 	}
-	
+
 }

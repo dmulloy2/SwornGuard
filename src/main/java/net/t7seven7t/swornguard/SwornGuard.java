@@ -82,9 +82,7 @@ import net.t7seven7t.swornguard.listeners.PlayerListener;
 import net.t7seven7t.swornguard.listeners.ServerListener;
 import net.t7seven7t.swornguard.types.Preconditions;
 import net.t7seven7t.swornguard.types.ServerData;
-import net.t7seven7t.swornguard.types.SimpleVector;
 
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.ServicePriority;
@@ -118,7 +116,6 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 	@Override
 	public void onLoad() {
 		SwornAPI.checkRegistrations();
-		ConfigurationSerialization.registerClass(SimpleVector.class);
 	}
 
 	@Override

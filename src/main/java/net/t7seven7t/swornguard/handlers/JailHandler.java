@@ -16,6 +16,7 @@ import net.t7seven7t.swornguard.tasks.InmateTimerTask;
 import net.t7seven7t.swornguard.types.JailData;
 import net.t7seven7t.swornguard.types.PlayerData;
 
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
@@ -35,7 +36,9 @@ public class JailHandler {
 		File file = new File(plugin.getDataFolder(), "jail.yml");
 		if (file.exists()) {
 			try {
-				return FileSerialization.load(file, JailData.class);
+				JailData data = FileSerialization.load(file, JailData.class);
+				if (data != null)
+					return data;
 			} catch (Throwable ex) {
 				plugin.getLogHandler().log(Level.WARNING, "Failed to load jail data, creating new save.");
 			}
@@ -130,6 +133,10 @@ public class JailHandler {
 			player.teleport(jail.getSpawn());
 			player.sendMessage(FormatUtil.format(plugin.getMessage("jail_escape")));
 		}
+	}
+
+	public final boolean isInsideJail(final Location location) {
+		return jail != null && jail.isInside(location);
 	}
 
 	public JailData getJail() {
