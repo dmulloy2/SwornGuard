@@ -17,10 +17,10 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 
 import net.dmulloy2.io.FileSerialization;
+import net.dmulloy2.io.IOUtil;
 import net.dmulloy2.io.UUIDFetcher;
 import net.dmulloy2.types.Versioning;
 import net.dmulloy2.types.Versioning.Version;
-import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -203,7 +203,7 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		});
 
 		for (File file : files) {
-			String fileName = FormatUtil.trimFileExtension(file, extension);
+			String fileName = IOUtil.trimFileExtension(file, extension);
 			if (! isFileLoaded(fileName))
 				data.put(fileName, loadData(fileName));
 		}
@@ -303,7 +303,7 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		for (File file : files) {
 			PlayerData loaded = FileSerialization.load(file, PlayerData.class);
 			if (loaded != null) {
-				String fileName = FormatUtil.trimFileExtension(file, extension);
+				String fileName = IOUtil.trimFileExtension(file, extension);
 				loaded.setLastKnownBy(fileName);
 				data.put(fileName, loaded);
 			}
