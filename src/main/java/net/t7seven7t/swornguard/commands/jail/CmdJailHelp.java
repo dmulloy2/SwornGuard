@@ -3,6 +3,7 @@
  */
 package net.t7seven7t.swornguard.commands.jail;
 
+import net.dmulloy2.commands.Command;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.commands.SwornGuardCommand;
 
@@ -19,7 +20,13 @@ public class CmdJailHelp extends SwornGuardCommand {
 
 	@Override
 	public void perform() {
-		plugin.getHelpCommand().execute(sender, args);
+		Command help = plugin.getCommandHandler().getCommand("help");
+		if (help == null) {
+			err("Help command does not exist!");
+			return;
+		}
+
+		help.execute(sender, args);
 	}
 
 }
