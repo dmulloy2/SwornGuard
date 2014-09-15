@@ -24,7 +24,7 @@ public class CmdTrollCheck extends SwornGuardCommand {
 		super(plugin);
 		this.name = "trollcheck";
 		this.aliases.add("trollstatus");
-		this.optionalArgs.add("player");
+		this.addOptionalArg("player");
 		this.description = "Check a player''s troll status";
 		this.permission = Permission.TROLL_CHECK;
 		this.usesPrefix = false;

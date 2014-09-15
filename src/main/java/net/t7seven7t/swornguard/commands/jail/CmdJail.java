@@ -22,9 +22,9 @@ public class CmdJail extends SwornGuardCommand {
 		this.name = "jail";
 		this.description = plugin.getMessage("desc_jail");
 		this.permission = Permission.CMD_JAIL;
-		this.requiredArgs.add("player");
-		this.requiredArgs.add("time");
-		this.requiredArgs.add("reason");
+		this.addRequiredArg("player");
+		this.addRequiredArg("time");
+		this.addRequiredArg("reason");
 	}
 
 	@Override

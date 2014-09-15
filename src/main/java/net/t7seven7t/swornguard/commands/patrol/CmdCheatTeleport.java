@@ -21,7 +21,7 @@ public class CmdCheatTeleport extends SwornGuardCommand {
 		this.name = "ctp";
 		this.mustBePlayer = true;
 		this.description = "Teleport to hackers.";
-		this.optionalArgs.add("player");
+		this.addOptionalArg("player");
 		this.permission = Permission.CMD_CHEAT_TELEPORT;
 	}
 

@@ -19,7 +19,7 @@ public class CmdPatrol extends SwornGuardCommand {
 		super(plugin);
 		this.name = "patrol";
 		this.aliases.add("pat");
-		this.optionalArgs.add("player");
+		this.addOptionalArg("player");
 		this.description = "Teleports you to a player on the server.";
 		this.permission = Permission.CMD_PATROL;
 		this.mustBePlayer = true;

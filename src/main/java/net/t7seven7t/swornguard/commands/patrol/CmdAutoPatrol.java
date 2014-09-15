@@ -19,7 +19,7 @@ public class CmdAutoPatrol extends SwornGuardCommand {
 		this.aliases.add("apat");
 		this.mustBePlayer = true;
 		this.description = "Teleports you to a player on the server continuously.";
-		this.optionalArgs.add("interval");
+		this.addOptionalArg("interval");
 		this.permission = Permission.CMD_AUTO_PATROL;
 	}
 

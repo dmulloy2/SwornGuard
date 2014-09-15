@@ -17,7 +17,7 @@ public class CmdSet extends SwornGuardCommand {
 		this.name = "jailset";
 		this.permission = Permission.CMD_JAIL_SET;
 		this.description = plugin.getMessage("desc_jailset");
-		this.optionalArgs.add("cancel");
+		this.addOptionalArg("cancel");
 	}
 
 	@Override

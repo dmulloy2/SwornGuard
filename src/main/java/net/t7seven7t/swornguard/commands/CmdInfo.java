@@ -26,7 +26,7 @@ public class CmdInfo extends SwornGuardCommand {
 		this.aliases.add("stats");
 		this.description = plugin.getMessage("desc_info");
 		this.permission = Permission.CMD_INFO;
-		this.optionalArgs.add("player");
+		this.addOptionalArg("player");
 		this.usesPrefix = true;
 	}
 

@@ -23,8 +23,8 @@ public class CmdTime extends SwornGuardCommand {
 		this.name = "jailtime";
 		this.description = plugin.getMessage("desc_jailtime");
 		this.permission = Permission.CMD_JAIL_TIME;
-		this.requiredArgs.add("player");
-		this.requiredArgs.add("time");
+		this.addRequiredArg("player");
+		this.addRequiredArg("time");
 	}
 	
 	@Override

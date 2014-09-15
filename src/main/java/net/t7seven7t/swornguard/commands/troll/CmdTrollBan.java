@@ -23,8 +23,8 @@ public class CmdTrollBan extends SwornGuardCommand {
 		super(plugin);
 		this.name = "trollban";
 		this.aliases.add("hellban");
-		this.requiredArgs.add("player");
-		this.optionalArgs.add("reason");
+		this.addRequiredArg("player");
+		this.addOptionalArg("reason");
 		this.description = "Permanently silence a troll";
 		this.permission = Permission.CMD_TROLL_BAN;
 		this.usesPrefix = false;

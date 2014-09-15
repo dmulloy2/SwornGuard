@@ -20,7 +20,7 @@ public class CmdUnjail extends SwornGuardCommand {
 		this.name = "unjail";
 		this.description = plugin.getMessage("desc_unjail");
 		this.permission = Permission.CMD_UNJAIL;
-		this.requiredArgs.add("player");
+		this.addRequiredArg("player");
 	}
 	
 	@Override

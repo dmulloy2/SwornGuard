@@ -21,7 +21,7 @@ public class CmdVanish extends SwornGuardCommand {
 		this.aliases.add("unhide");
 		this.mustBePlayer = true;
 		this.description = "Vanishes you from other players.";
-		this.optionalArgs.add("on/off");
+		this.addOptionalArg("on/off");
 		this.permission = Permission.CMD_VANISH;
 	}
 

@@ -22,8 +22,8 @@ public class CmdReason extends SwornGuardCommand {
 		this.name = "jailreason";
 		this.description = plugin.getMessage("desc_jailreason");
 		this.permission = Permission.CMD_JAIL_REASON;
-		this.requiredArgs.add("player");
-		this.requiredArgs.add("reason");
+		this.addRequiredArg("player");
+		this.addRequiredArg("reason");
 	}
 	
 	@Override

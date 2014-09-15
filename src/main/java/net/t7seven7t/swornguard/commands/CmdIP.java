@@ -25,8 +25,8 @@ public class CmdIP extends PaginatedCommand {
 		this.name = "ip";
 		this.description = plugin.getMessage("desc_ip");
 		this.permission = Permission.CMD_IP;
-		this.optionalArgs.add("player");
-		this.optionalArgs.add("page");
+		this.addOptionalArg("player");
+		this.addOptionalArg("page");
 		this.pageArgIndex = 1;
 		this.usesPrefix = true;
 	}

@@ -23,8 +23,8 @@ public class CmdTrollMute extends SwornGuardCommand {
 		super(plugin);
 		this.name = "trollmute";
 		this.aliases.add("hellmute");
-		this.requiredArgs.add("player");
-		this.optionalArgs.add("reason");
+		this.addRequiredArg("player");
+		this.addOptionalArg("reason");
 		this.description = "Temporarily silence a troll";
 		this.permission = Permission.CMD_TROLL_MUTE;
 		this.usesPrefix = false;

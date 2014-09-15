@@ -27,8 +27,8 @@ public class CmdFHistory extends PaginatedCommand {
 		this.aliases.add("fh");
 		this.description = "show a player's faction history";
 		this.permission = Permission.CMD_SHOW;
-		this.optionalArgs.add("player");
-		this.optionalArgs.add("page");
+		this.addOptionalArg("player");
+		this.addOptionalArg("page");
 		this.pageArgIndex = 1;
 		this.usesPrefix = true;
 	}

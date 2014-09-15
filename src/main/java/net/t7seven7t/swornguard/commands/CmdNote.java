@@ -23,8 +23,8 @@ public class CmdNote extends SwornGuardCommand {
 		this.aliases.add("n");
 		this.description = plugin.getMessage("desc_note");
 		this.permission = Permission.CMD_NOTE;
-		this.requiredArgs.add("player");
-		this.requiredArgs.add("note");	
+		this.addRequiredArg("player");
+		this.addRequiredArg("note");	
 		this.usesPrefix = true;
 	}
 	

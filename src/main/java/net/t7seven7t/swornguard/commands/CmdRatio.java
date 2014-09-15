@@ -19,7 +19,7 @@ public class CmdRatio extends SwornGuardCommand {
 		this.name = "ratio";
 		this.description = plugin.getMessage("desc_ratio");
 		this.permission = Permission.CMD_RATIO; 
-		this.optionalArgs.add("player");
+		this.addOptionalArg("player");
 		this.usesPrefix = true;
 	}
 	

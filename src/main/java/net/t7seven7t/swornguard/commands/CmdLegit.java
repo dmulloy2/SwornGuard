@@ -18,7 +18,7 @@ public class CmdLegit extends SwornGuardCommand {
 		this.name = "legit";
 		this.description = plugin.getMessage("desc_legit");
 		this.permission = Permission.CMD_LEGIT;
-		this.optionalArgs.add("player");
+		this.addOptionalArg("player");
 		this.usesPrefix = true;
 	}
 	

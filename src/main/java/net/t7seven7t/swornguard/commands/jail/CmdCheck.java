@@ -21,7 +21,7 @@ public class CmdCheck extends SwornGuardCommand {
 		this.name = "jailcheck";
 		this.description = plugin.getMessage("desc_jailcheck");
 		this.permission = Permission.CMD_JAIL_CHECK;
-		this.requiredArgs.add("player");
+		this.addRequiredArg("player");
 	}
 
 	@Override

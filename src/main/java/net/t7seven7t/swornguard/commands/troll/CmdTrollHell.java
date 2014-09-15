@@ -24,8 +24,8 @@ public class CmdTrollHell extends SwornGuardCommand {
 		this.name = "trollhell";
 		this.aliases.add("troll");
 		this.aliases.add("hell");
-		this.requiredArgs.add("player");
-		this.optionalArgs.add("reason");
+		this.addRequiredArg("player");
+		this.addOptionalArg("reason");
 		this.description = "Put someone in troll hell ;)";
 		this.permission = Permission.CMD_TROLL_HELL;
 		this.usesPrefix = false;
