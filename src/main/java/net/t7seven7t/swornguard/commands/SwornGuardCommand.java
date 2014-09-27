@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2012 t7seven7t
- */
 package net.t7seven7t.swornguard.commands;
 
 import net.dmulloy2.commands.Command;
@@ -11,7 +8,7 @@ import net.t7seven7t.swornguard.types.PlayerData;
 import org.bukkit.OfflinePlayer;
 
 /**
- * @author t7seven7t
+ * @author dmulloy2
  */
 public abstract class SwornGuardCommand extends Command {
 	protected final SwornGuard plugin;
@@ -29,14 +26,14 @@ public abstract class SwornGuardCommand extends Command {
 		OfflinePlayer target = null;
 
 		if (! isPlayer()) {
-			if (args.length == 1) {
+			if (args.length > argIndex) {
 				target = getTarget(args[argIndex], false);
 			}
 		} else {
-			if (args.length == 0) {
-				target = player;
-			} else if (others) {
+			if (args.length > argIndex && others) {
 				target = getTarget(args[argIndex], false);
+			} else {
+				target = player;
 			}
 		}
 
@@ -45,41 +42,25 @@ public abstract class SwornGuardCommand extends Command {
 			return null;
 		}
 
-		if (getPlayerData(target) == null) {
-			err(plugin.getMessage("error_player_not_found"));
-			return null; // Return null if they don't have any data
-		}
-
 		return target;
 	}
 
-	protected OfflinePlayer getTarget(String name, boolean msg) {
-		OfflinePlayer target = Util.matchOfflinePlayer(name);
+	protected OfflinePlayer getTarget(String identifier, boolean msg) {
+		OfflinePlayer target = Util.matchOfflinePlayer(identifier);
 		if (target == null && msg)
-			err(plugin.getMessage("error_player_not_found"), name);
+			err(plugin.getMessage("error_player_not_found"), identifier);
 		return target;
 	}
-	
+
 	protected PlayerData getPlayerData(OfflinePlayer target) {
 		return plugin.getPlayerDataCache().getData(target);
 	}
-	
+
 	protected PlayerData getPlayerData(OfflinePlayer target, boolean create) {
 		PlayerData data = getPlayerData(target);
-		if (data == null && create) {
+		if (data == null && create)
 			data = plugin.getPlayerDataCache().newData(target);
-		}
-
 		return data;
-	}
-
-	protected boolean argAsBoolean(int arg, boolean def) {
-		if (arg > args.length) {
-			return def;
-		}
-
-		String string = args[arg].toLowerCase();
-		return string.startsWith("y") || string.startsWith("t") || string.equals("on");
 	}
 
 }

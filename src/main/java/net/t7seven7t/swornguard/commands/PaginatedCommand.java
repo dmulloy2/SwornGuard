@@ -1,6 +1,3 @@
-/**
- * Copyright (C) 2012 t7seven7t
- */
 package net.t7seven7t.swornguard.commands;
 
 import net.dmulloy2.util.Util;
@@ -11,8 +8,8 @@ import org.bukkit.OfflinePlayer;
 
 /**
  * Represents a command that can have pages
- * 
- * @author t7seven7t
+ *
+ * @author dmulloy2
  */
 public abstract class PaginatedCommand extends net.dmulloy2.commands.PaginatedCommand {
 	protected final SwornGuard plugin;
@@ -30,14 +27,14 @@ public abstract class PaginatedCommand extends net.dmulloy2.commands.PaginatedCo
 		OfflinePlayer target = null;
 
 		if (! isPlayer()) {
-			if (args.length == 1) {
+			if (args.length > argIndex) {
 				target = getTarget(args[argIndex], false);
 			}
 		} else {
-			if (args.length == 0) {
-				target = player;
-			} else if (others) {
+			if (args.length > argIndex && others) {
 				target = getTarget(args[argIndex], false);
+			} else {
+				target = player;
 			}
 		}
 
@@ -46,18 +43,19 @@ public abstract class PaginatedCommand extends net.dmulloy2.commands.PaginatedCo
 			return null;
 		}
 
+		// Make sure they have data
 		if (getPlayerData(target) == null) {
 			err(plugin.getMessage("error_player_not_found"));
-			return null; // Return null if they don't have any data
+			return null;
 		}
 
 		return target;
 	}
 
-	protected OfflinePlayer getTarget(String name, boolean msg) {
-		OfflinePlayer target = Util.matchOfflinePlayer(name);
+	protected OfflinePlayer getTarget(String identifier, boolean msg) {
+		OfflinePlayer target = Util.matchOfflinePlayer(identifier);
 		if (target == null && msg)
-			err(plugin.getMessage("error_player_not_found"), name);
+			err(plugin.getMessage("error_player_not_found"), identifier);
 		return target;
 	}
 
@@ -67,20 +65,9 @@ public abstract class PaginatedCommand extends net.dmulloy2.commands.PaginatedCo
 
 	protected PlayerData getPlayerData(OfflinePlayer target, boolean create) {
 		PlayerData data = getPlayerData(target);
-		if (data == null && create) {
+		if (data == null && create)
 			data = plugin.getPlayerDataCache().newData(target);
-		}
-
 		return data;
-	}
-
-	protected boolean argAsBoolean(int arg, boolean def) {
-		if (arg > args.length) {
-			return def;
-		}
-
-		String string = args[arg].toLowerCase();
-		return string.startsWith("y") || string.startsWith("t") || string.equals("on");
 	}
 
 }

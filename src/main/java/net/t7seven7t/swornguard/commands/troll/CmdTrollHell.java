@@ -42,7 +42,7 @@ public class CmdTrollHell extends SwornGuardCommand {
 			return;
 
 		if (data.isTrollHell()) {
-			plugin.getTrollHandler().freeFromHell(sender, target, TrollType.HELL);
+			plugin.getTrollHandler().freeFromHell(sender, data, target, TrollType.HELL);
 			return;
 		}
 
@@ -56,7 +56,7 @@ public class CmdTrollHell extends SwornGuardCommand {
 			return;
 		}
 
-		String reason = FormatUtil.join(" ", Arrays.copyOfRange(args, 1, args.length));
-		plugin.getTrollHandler().putInHell(sender, target, TrollType.HELL, reason);
+		String reason = FormatUtil.join(Arrays.copyOfRange(args, 1, args.length));
+		plugin.getTrollHandler().putInHell(sender, data, target, TrollType.HELL, reason);
 	}
 }

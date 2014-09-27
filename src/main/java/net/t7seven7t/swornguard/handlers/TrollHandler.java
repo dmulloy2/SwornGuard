@@ -41,28 +41,24 @@ public class TrollHandler implements Listener {
 		this.registerEvents();
 	}
 
-	public final void putInHell(CommandSender sender, OfflinePlayer troll, TrollType type, String reason) {
-		PlayerData data = plugin.getPlayerDataCache().getData(troll);
-		// String send = "&eYou have put &c{0} &ein troll hell for &c{1}&e.";
+	public final void putInHell(CommandSender sender, PlayerData data, OfflinePlayer troll, TrollType type, String reason) {
 		String profiler = "&b{0} was put in troll hell by {1} for {2}.";
 		String broadcast = "&c{0} &eput &c{1} &ein troll hell for &c{2}&e.";
 
 		data.setTrollHell(true);
 
 		if (type == TrollType.MUTE) {
-			// send = "&eYou have troll muted &c{0} &efor &c{1}&e.";
 			profiler = "&b{0} was troll muted by {1} for {2}.";
 			broadcast = "&c{0} &etroll muted &c{1} &efor &c{2}&e.";
 			data.setTrollMuted(true);
 		} else if (type == TrollType.BAN) {
-			// send = "&eYou have troll banned &c{0} &efor &c{1}&e.";
 			profiler = "&b{0} was troll banned by {1} for {2}.";
 			broadcast = "&c{0} &etroll banned &c{1} &efor &c{2}&e.";
 			data.setTrollBanned(true);
 		}
 
 		if (troll.isOnline()) {
-			forceIntoPublicChat(troll.getPlayer());
+			forceIntoPublicChat(data, troll.getPlayer());
 
 			// Hide players
 			for (Player online : Util.getOnlinePlayers()) {
@@ -77,9 +73,6 @@ public class TrollHandler implements Listener {
 			}
 		}
 
-		// send = FormatUtil.format(send, troll.getName(), reason);
-		// sender.sendMessage(send);
-
 		profiler = FormatUtil.format(profiler, troll.getName(), sender.getName(), reason);
 		data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(), profiler));
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
@@ -93,9 +86,7 @@ public class TrollHandler implements Listener {
 		data.setLastTrollReason(reason);
 	}
 
-	public final void freeFromHell(CommandSender sender, OfflinePlayer troll, TrollType type) {
-		PlayerData data = plugin.getPlayerDataCache().getData(troll);
-		// String send = "&eYou have freed &c{0} &efrom troll hell.";
+	public final void freeFromHell(CommandSender sender, PlayerData data, OfflinePlayer troll, TrollType type) {
 		String profiler = "&b{0} was freed from troll hell by {1}.";
 		String broadcast = "&c{0} &efreed &c{1} &efrom troll hell.";
 
@@ -103,11 +94,9 @@ public class TrollHandler implements Listener {
 		data.setTrollMuted(false);
 
 		if (type == TrollType.BAN) {
-			// send = "&eYou have troll unbanned &c{0}&e.";
 			profiler = "&b{0} was troll unbanned by {1}.";
 			broadcast = "&c{0} &etroll unbanned &c{1}&e.";
 		} else if (type == TrollType.MUTE) {
-			// send = "&eYou have troll unmuted &c{0}&e.";
 			profiler = "&b{0} was troll unmuted by {1}.";
 			broadcast = "&c{0} &etroll unmuted &c{1}&e.";
 		} else if (type == TrollType.HELL) {
@@ -124,9 +113,6 @@ public class TrollHandler implements Listener {
 			}
 		}
 
-		// send = FormatUtil.format(send, troll.getName());
-		// sender.sendMessage(send);
-
 		profiler = FormatUtil.format(profiler, troll.getName(), sender.getName());
 		data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(), profiler));
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
@@ -135,8 +121,7 @@ public class TrollHandler implements Listener {
 		plugin.getServer().broadcast(broadcast, plugin.getPermissionHandler().getPermissionString(Permission.TROLL_SPY));
 	}
 
-	public final void forceIntoPublicChat(Player troll) {
-		PlayerData data = plugin.getPlayerDataCache().getData(troll);
+	public final void forceIntoPublicChat(PlayerData data, Player troll) {
 		if (data.isTrollHell()) {
 			try {
 				PluginManager pm = plugin.getServer().getPluginManager();
@@ -149,12 +134,11 @@ public class TrollHandler implements Listener {
 					}
 				}
 			} catch (Throwable ex) {
-				// Probably a different version of Factions
 			}
 		}
 	}
 
-	// ---- Event Listeners ---- //
+	// ---- Event Listeners
 
 	private final void registerEvents() {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -211,7 +195,7 @@ public class TrollHandler implements Listener {
 				}
 			}
 
-			forceIntoPublicChat(troll);
+			forceIntoPublicChat(trollData, troll);
 			event.setJoinMessage(null);
 		} else {
 			for (Player online : Util.getOnlinePlayers()) {

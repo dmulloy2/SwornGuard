@@ -41,7 +41,7 @@ public class CmdTrollBan extends SwornGuardCommand {
 			return;
 
 		if (data.isTrollBanned()) {
-			plugin.getTrollHandler().freeFromHell(sender, target, TrollType.BAN);
+			plugin.getTrollHandler().freeFromHell(sender, data, target, TrollType.BAN);
 			return;
 		}
 
@@ -55,7 +55,7 @@ public class CmdTrollBan extends SwornGuardCommand {
 			return;
 		}
 
-		String reason = FormatUtil.join(" ", Arrays.copyOfRange(args, 1, args.length));
-		plugin.getTrollHandler().putInHell(sender, target, TrollType.BAN, reason);
+		String reason = FormatUtil.join(Arrays.copyOfRange(args, 1, args.length));
+		plugin.getTrollHandler().putInHell(sender, data, target, TrollType.BAN, reason);
 	}
 }

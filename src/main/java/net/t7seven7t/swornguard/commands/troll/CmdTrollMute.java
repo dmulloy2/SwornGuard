@@ -41,7 +41,7 @@ public class CmdTrollMute extends SwornGuardCommand {
 			return;
 
 		if (data.isTrollMuted()) {
-			plugin.getTrollHandler().freeFromHell(sender, target, TrollType.MUTE);
+			plugin.getTrollHandler().freeFromHell(sender, data, target, TrollType.MUTE);
 			return;
 		}
 
@@ -55,7 +55,7 @@ public class CmdTrollMute extends SwornGuardCommand {
 			return;
 		}
 
-		String reason = FormatUtil.join(" ", Arrays.copyOfRange(args, 1, args.length));
-		plugin.getTrollHandler().putInHell(sender, target, TrollType.MUTE, reason);
+		String reason = FormatUtil.join(Arrays.copyOfRange(args, 1, args.length));
+		plugin.getTrollHandler().putInHell(sender, data, target, TrollType.MUTE, reason);
 	}
 }
