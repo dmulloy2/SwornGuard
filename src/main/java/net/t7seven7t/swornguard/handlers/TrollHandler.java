@@ -58,17 +58,18 @@ public class TrollHandler implements Listener {
 		}
 
 		if (troll.isOnline()) {
-			forceIntoPublicChat(data, troll.getPlayer());
+			Player player = troll.getPlayer();
+			forceIntoPublicChat(data, player);
 
 			// Hide players
 			for (Player online : Util.getOnlinePlayers()) {
 				PlayerData data1 = plugin.getPlayerDataCache().getData(online);
 				if (data1.isTrollHell()) {
 					if (data.isTrollMuted() || data.isTrollBanned()) {
-						troll.getPlayer().hidePlayer(online);
+						player.hidePlayer(online);
 					}
 				} else {
-					troll.getPlayer().hidePlayer(online);
+					player.hidePlayer(online);
 				}
 			}
 		}
@@ -104,10 +105,11 @@ public class TrollHandler implements Listener {
 
 			// Show players
 			if (troll.isOnline()) {
+				Player player = troll.getPlayer();
 				for (Player online : Util.getOnlinePlayers()) {
 					PlayerData data1 = plugin.getPlayerDataCache().getData(online);
 					if (! data1.isVanished()) {
-						troll.getPlayer().showPlayer(online);
+						player.showPlayer(online);
 					}
 				}
 			}
@@ -151,21 +153,21 @@ public class TrollHandler implements Listener {
 		if (data.isTrollHell()) {
 			event.getRecipients().clear();
 			if (data.isTrollMuted() || data.isTrollBanned()) {
-				event.getRecipients().add(event.getPlayer());
+				event.getRecipients().add(player);
 				return;
 			}
 
-			String admMsg = FormatUtil.format(plugin.getMessage("troll_format"), event.getPlayer().getName(), event.getMessage());
+			String admMsg = FormatUtil.format(plugin.getMessage("troll_format"), player.getName(), event.getMessage());
 			String node = plugin.getPermissionHandler().getPermissionString(Permission.TROLL_SPY);
 
-			for (Player p : Util.getOnlinePlayers()) {
-				PlayerData data1 = plugin.getPlayerDataCache().getData(p);
+			for (Player online : Util.getOnlinePlayers()) {
+				PlayerData data1 = plugin.getPlayerDataCache().getData(online);
 				if (data1.isTrollHell()) {
-					event.getRecipients().add(p);
+					event.getRecipients().add(online);
 				}
 
-				if (p.hasPermission(node)) {
-					p.sendMessage(admMsg);
+				if (online.hasPermission(node)) {
+					online.sendMessage(admMsg);
 				}
 			}
 		}
@@ -209,16 +211,16 @@ public class TrollHandler implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerQuit(PlayerQuitEvent event) {
-		Player troll = event.getPlayer();
-		PlayerData trollData = plugin.getPlayerDataCache().getData(troll);
-		if (! trollData.isTrollHell()) {
+		Player player = event.getPlayer();
+		PlayerData data = plugin.getPlayerDataCache().getData(player);
+		if (! data.isTrollHell()) {
 			return;
 		}
 
 		for (Player online : Util.getOnlinePlayers()) {
-			PlayerData data = plugin.getPlayerDataCache().getData(online);
-			if (data.isTrollHell()) {
-				if (! trollData.isTrollMuted() && ! trollData.isTrollBanned()) {
+			PlayerData data1 = plugin.getPlayerDataCache().getData(online);
+			if (data1.isTrollHell()) {
+				if (! data1.isTrollMuted() && ! data1.isTrollBanned()) {
 					online.sendMessage(event.getQuitMessage());
 				}
 			}
@@ -233,12 +235,10 @@ public class TrollHandler implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerKick(PlayerKickEvent event) {
-		Player troll = event.getPlayer();
-		PlayerData trollData = plugin.getPlayerDataCache().getData(troll);
-		if (! trollData.isTrollHell()) {
-			return;
+		Player player = event.getPlayer();
+		PlayerData data = plugin.getPlayerDataCache().getData(player);
+		if (data.isTrollHell()) {
+			event.setLeaveMessage(null);
 		}
-
-		event.setLeaveMessage(null);
 	}
 }
