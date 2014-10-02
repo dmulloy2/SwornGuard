@@ -39,12 +39,12 @@ public class FactionsListener implements Listener, Reloadable {
 			return;
 		}
 
-		String name = fplayer.getName();
-		if (name == null || name.isEmpty()) {
+		String uniqueId = fplayer.getUniqueId();
+		if (uniqueId == null || uniqueId.isEmpty()) {
 			return;
 		}
 
-		OfflinePlayer player = Util.matchOfflinePlayer(name);
+		OfflinePlayer player = Util.matchOfflinePlayer(uniqueId);
 		if (player == null) {
 			return;
 		}
@@ -76,12 +76,12 @@ public class FactionsListener implements Listener, Reloadable {
 			return;
 		}
 
-		String name = fplayer.getName();
-		if (name == null || name.isEmpty()) {
+		String uniqueId = fplayer.getUniqueId();
+		if (uniqueId == null || uniqueId.isEmpty()) {
 			return;
 		}
 
-		OfflinePlayer player = Util.matchOfflinePlayer(name);
+		OfflinePlayer player = Util.matchOfflinePlayer(uniqueId);
 		if (player == null) {
 			return;
 		}
