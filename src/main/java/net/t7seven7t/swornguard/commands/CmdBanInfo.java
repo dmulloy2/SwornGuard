@@ -8,7 +8,6 @@ import java.util.List;
 
 import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.TimeUtil;
-import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.Permission;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -35,29 +34,29 @@ public class CmdBanInfo extends SwornGuardCommand {
 		OfflinePlayer target = getTarget(0);
 		if (target == null)
 			return;
-		
+
 		PlayerData data = getPlayerData(target);
 
 		List<String> lines = new ArrayList<String>();
-		
+
 		StringBuilder line = new StringBuilder();
 		line.append(FormatUtil.format(plugin.getMessage("baninfo_header"), target.getName(),
-				(Util.isBanned(target.getName())) ? plugin.getMessage("baninfo_banned") : plugin.getMessage("baninfo_notbanned")));
+				(target.isBanned()) ? plugin.getMessage("baninfo_banned") : plugin.getMessage("baninfo_notbanned")));
 		lines.add(line.toString());
-		
+
 		if (data.getBans() != 0) {
 			line = new StringBuilder();
-			line.append(FormatUtil.format(plugin.getMessage("baninfo_last_ban"), 
-						data.getLastBanner(), 
-						TimeUtil.getSimpleDate(data.getLastBan()), 
+			line.append(FormatUtil.format(plugin.getMessage("baninfo_last_ban"),
+						data.getLastBanner(),
+						TimeUtil.getSimpleDate(data.getLastBan()),
 						TimeUtil.formatTimeDifference(data.getLastBan(), System.currentTimeMillis())));
 			lines.add(line.toString());
-			
+
 			line = new StringBuilder();
 			line.append(FormatUtil.format(plugin.getMessage("baninfo_ban_reason"), data.getLastBanReason()));
 			lines.add(line.toString());
 		}
-		
+
 		if (data.getLastUnban() != 0) {
 			line = new StringBuilder();
 			line.append(FormatUtil.format(plugin.getMessage("baninfo_last_unban"),
@@ -65,12 +64,12 @@ public class CmdBanInfo extends SwornGuardCommand {
 						TimeUtil.getSimpleDate(data.getLastUnban()),
 						TimeUtil.formatTimeDifference(data.getLastUnban(), System.currentTimeMillis())));
 			lines.add(line.toString());
-			
+
 			line = new StringBuilder();
 			line.append(FormatUtil.format(plugin.getMessage("baninfo_unban_reason"), data.getLastUnbanReason()));
 			lines.add(line.toString());
 		}
-		
+
 		for (String string : lines)
 			sendMessage(string);
 	}
