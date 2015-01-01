@@ -15,11 +15,12 @@ import net.dmulloy2.types.IPermission;
 @AllArgsConstructor
 public enum Permission implements IPermission {
 	ALLOW_BLOCKED_COMMANDS("allow.blockedcommands"),
-	ALLOW_USE_COMMANDS_JAILED("allow.usecommandsjailed"),
-	ALLOW_USE_COMMANDS_HELL("allow.usecommandshell"),
 	ALLOW_FLY("canfly"),
-	ALLOW_SPAM("allow.spam"),
 	ALLOW_JAIL_BUILD("allow.jailbuild"),
+	ALLOW_SPAM("allow.spam"),
+	ALLOW_USE_COMMANDS_HELL("allow.usecommandshell"),
+	ALLOW_USE_COMMANDS_JAILED("allow.usecommandsjailed"),
+	CMD_ALT("cmd.alt"),
 	CMD_AUTO_PATROL("cmd.autopatrol"),
 	CMD_BAN("cmd.ban"),
 	CMD_BAN_INFO("cmd.baninfo"),
@@ -41,24 +42,22 @@ public enum Permission implements IPermission {
 	CMD_PATROL("cmd.patrol"),
 	CMD_RATIO("cmd.ratio"),
 	CMD_RELOAD("cmd.reload"),
-	CMD_SHOW("cmd.show"),
 	CMD_SERVER_INFO("cmd.serverinfo"),
-	CMD_UNJAIL("cmd.unjail"),
-	CMD_UNBAN("cmd.unban"),
-	CMD_VANISH("cmd.vanish"),
-	CMD_VANISH_LIST("cmd.vanishlist"),
-	SHOW_CHEAT_REPORTS("showcheatreports"),
-	VANISH_SPY("vanishspy"),
-	FIREWORK("firework"),
-	CREEPFUN("creepfun"),
-
-	// Troll Hell
+	CMD_SHOW("cmd.show"),
+	CMD_TROLL_BAN("troll.ban"),
 	CMD_TROLL_HELL("troll.hell"),
 	CMD_TROLL_MUTE("troll.mute"),
-	CMD_TROLL_BAN("troll.ban"),
+	CMD_UNBAN("cmd.unban"),
+	CMD_UNJAIL("cmd.unjail"),
+	CMD_VANISH("cmd.vanish"),
+	CMD_VANISH_LIST("cmd.vanishlist"),
+	CREEPFUN("creepfun"),
+	FIREWORK("firework"),
+	SHOW_CHEAT_REPORTS("showcheatreports"),
+	TROLL_CHECK("troll.status"),
 	TROLL_EXEMPT("troll.exempt"),
 	TROLL_SPY("troll.spy"),
-	TROLL_CHECK("troll.status")
+	VANISH_SPY("vanishspy")
 	;
 
 	private final String node;

@@ -96,6 +96,9 @@ commands:
         description: Displays kills leaderboard
         usage: /<command>
         aliases: [leaderboard]
+    alt:
+        description: Checks for alternate accounts
+        usage: /<command>
 permissions:
     swornguard.admin:
         description: Gives access to all SwornGuard features.
@@ -106,6 +109,7 @@ permissions:
             swornguard.allow.jailbuild: true
             swornguard.allow.blockedcommands: true
             swornguard.allow.usecommandsjailed: true
+            swornguard.cmd.alt: true
             swornguard.cmd.legit: true
             swornguard.cmd.ip: true
             swornguard.cmd.reload: true
@@ -172,6 +176,8 @@ permissions:
     swornguard.allow.blockedcommands:
         default: false
     swornguard.allow.usecommandsjailed:
+        default: false
+    swornguard.cmd.alt:
         default: false
     swornguard.cmd.legit:
         default: false

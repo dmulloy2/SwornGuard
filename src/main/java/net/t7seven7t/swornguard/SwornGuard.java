@@ -30,6 +30,7 @@ import net.dmulloy2.handlers.LogHandler;
 import net.dmulloy2.handlers.PermissionHandler;
 import net.dmulloy2.handlers.ResourceHandler;
 import net.dmulloy2.types.Reloadable;
+import net.t7seven7t.swornguard.commands.CmdAlt;
 import net.t7seven7t.swornguard.commands.CmdBanInfo;
 import net.t7seven7t.swornguard.commands.CmdFHistory;
 import net.t7seven7t.swornguard.commands.CmdIP;
@@ -204,6 +205,7 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 		commandHandler.registerPrefixedCommand(new CmdSInfo(this));
 		commandHandler.registerPrefixedCommand(new CmdVersion(this));
 
+		commandHandler.registerCommand(new CmdAlt(this));
 		commandHandler.registerCommand(new CmdAutoPatrol(this));
 		commandHandler.registerCommand(new CmdCheatTeleport(this));
 		commandHandler.registerCommand(new CmdPatrol(this));
