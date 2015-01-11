@@ -65,7 +65,8 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 				data = loadData(key);
 				if (data == null) {
 					// Corrupt data :(
-					file.delete();
+					if (! file.renameTo(new File(folder, file.getName() + "_bad")))
+						file.delete();
 					return null;
 				}
 
@@ -134,26 +135,29 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 			PlayerData data = FileSerialization.load(file, PlayerData.class);
 			if (Versioning.getVersion() != Version.MC_16) {
 				data.setUniqueId(key);
-				data.getLastKnownBy();
 			}
 
 			return data;
 		} catch (Throwable ex) {
-			plugin.getLogHandler().log(Level.WARNING, "Failed to load player data for {0}!", key);
+			plugin.getLogHandler().log(Level.WARNING, Util.getUsefulStack(ex, "loading data for {0}", key));
 			return null;
 		}
 	}
 
 	public final void save() {
 		long start = System.currentTimeMillis();
-		plugin.getLogHandler().log("Saving {0} to disk...", folderName);
+		plugin.getLogHandler().log("Saving players to disk...");
 
 		for (Entry<String, PlayerData> entry : getAllLoadedPlayerData().entrySet()) {
-			File file = new File(folder, getFileName(entry.getKey()));
-			FileSerialization.save(entry.getValue(), file);
+			try {
+				File file = new File(folder, getFileName(entry.getKey()));
+				FileSerialization.save(entry.getValue(), file);
+			} catch (Throwable ex) {
+				plugin.getLogHandler().log(Level.WARNING, Util.getUsefulStack(ex, "saving data for {0}", entry.getKey()));
+			}
 		}
 
-		plugin.getLogHandler().log("Players saved! [{0} ms]", System.currentTimeMillis() - start);
+		plugin.getLogHandler().log("Players saved. Took {0} ms.", System.currentTimeMillis() - start);
 	}
 
 	// Legacy
@@ -193,19 +197,17 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		Map<String, PlayerData> data = new HashMap<String, PlayerData>();
 		data.putAll(cache);
 
-		File[] files = folder.listFiles(new FileFilter() {
-
-			@Override
-			public boolean accept(File file) {
-				return file.getName().contains(extension);
-			}
-
-		});
+		File[] files = folder.listFiles();
+		if (files == null || files.length == 0) {
+			return Collections.unmodifiableMap(data);
+		}
 
 		for (File file : files) {
-			String fileName = IOUtil.trimFileExtension(file, extension);
-			if (! isFileLoaded(fileName))
-				data.put(fileName, loadData(fileName));
+			if (file.getName().contains(extension)) {
+				String fileName = IOUtil.trimFileExtension(file, extension);
+				if (! isFileLoaded(fileName))
+					data.put(fileName, loadData(fileName));
+			}
 		}
 
 		return Collections.unmodifiableMap(data);
@@ -275,7 +277,7 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 						File newFile = new File(folder, getFileName(uniqueId));
 						FileSerialization.save(dat, newFile);
 					} catch (Throwable ex) {
-						plugin.getLogHandler().log(Level.WARNING, "Failed to convert " + entry.getKey());
+						plugin.getLogHandler().log(Level.WARNING, Util.getUsefulStack(ex, "converting {0}", entry.getKey()));
 					}
 				}
 			}
@@ -301,11 +303,15 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 		});
 
 		for (File file : files) {
-			PlayerData loaded = FileSerialization.load(file, PlayerData.class);
-			if (loaded != null) {
-				String fileName = IOUtil.trimFileExtension(file, extension);
-				loaded.setLastKnownBy(fileName);
-				data.put(fileName, loaded);
+			try {
+				PlayerData loaded = FileSerialization.load(file, PlayerData.class);
+				if (loaded != null) {
+					String fileName = IOUtil.trimFileExtension(file, extension);
+					loaded.setLastKnownBy(fileName);
+					data.put(fileName, loaded);
+				}
+			} catch (Throwable ex) {
+				plugin.getLogHandler().log(Level.WARNING, Util.getUsefulStack(ex, "loading data {0}", file));
 			}
 		}
 

@@ -9,6 +9,7 @@ import java.util.logging.Level;
 import net.dmulloy2.io.FileSerialization;
 import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.TimeUtil;
+import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.events.JailEvent;
 import net.t7seven7t.swornguard.events.UnjailEvent;
@@ -40,7 +41,8 @@ public class JailHandler {
 				if (data != null)
 					return data;
 			} catch (Throwable ex) {
-				plugin.getLogHandler().log(Level.WARNING, "Failed to load jail data, creating new save.");
+				plugin.getLogHandler().log(Level.WARNING, Util.getUsefulStack(ex, "loading jail"));
+				plugin.getLogHandler().log(Level.INFO, "Creating a new jail save.");
 			}
 		}
 
@@ -48,7 +50,11 @@ public class JailHandler {
 	}
 
 	public void saveJail() {
-		FileSerialization.save(jail, new File(plugin.getDataFolder(), "jail.yml"));
+		try {
+			FileSerialization.save(jail, new File(plugin.getDataFolder(), "jail.yml"));
+		} catch (Throwable ex) {
+			plugin.getLogHandler().log(Level.WARNING, Util.getUsefulStack(ex, "saving jail"));
+		}
 	}
 
 	public void unjail(final OfflinePlayer offlinePlayer, String unjailer) {
