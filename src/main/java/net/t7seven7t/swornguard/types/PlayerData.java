@@ -110,6 +110,7 @@ public class PlayerData implements ConfigurationSerializable {
 	private String lastFaction;
 
 	// UUID Stuff
+	private List<String> history;
 	private String lastKnownBy;
 	private String uniqueId;
 

@@ -87,12 +87,50 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 	public final PlayerData getData(Player player) {
 		PlayerData data = getData(getKey(player));
 
-		// Online players always have data
-		if (data == null)
+		// Online players should always have data
+		if (data == null) {
 			data = newData(player);
+		}
 
-		// Update last known by and UUID
-		data.setLastKnownBy(player.getName());
+		// Try to fetch history from Essentials
+		List<String> history = data.getHistory();
+		if (history == null && plugin.isEssentialsEnabled()) {
+			history = plugin.getEssentialsHandler().getHistory(player.getUniqueId());
+		}
+
+		// Account for name changes
+		String lastKnownBy = data.getLastKnownBy();
+		if (lastKnownBy != null) {
+			if (! lastKnownBy.equals(player.getName())) {
+				if (history == null) {
+					history = new ArrayList<String>();
+				}
+
+				// Ensure we have the right casing
+				if (lastKnownBy.equalsIgnoreCase(player.getName())) {
+					plugin.getLogHandler().log("Corrected casing for {0}''s name.", player.getName());
+
+					history.remove(lastKnownBy);
+					data.setLastKnownBy(lastKnownBy = player.getName());
+					history.add(lastKnownBy);
+				} else {
+					// Name change!
+					plugin.getLogHandler().log("{0} changed their name to {1}.", lastKnownBy, player.getName());
+
+					data.setLastKnownBy(lastKnownBy = player.getName());
+					history.add(lastKnownBy);
+				}
+			}
+		} else {
+			data.setLastKnownBy(lastKnownBy = player.getName());
+		}
+
+		if (history == null) {
+			history = new ArrayList<String>();
+			history.add(player.getName());
+		}
+
+		data.setHistory(history);
 		data.setUniqueId(player.getUniqueId().toString());
 
 		// Return

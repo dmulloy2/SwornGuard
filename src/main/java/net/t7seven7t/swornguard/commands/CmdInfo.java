@@ -6,6 +6,7 @@ package net.t7seven7t.swornguard.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.dmulloy2.types.StringJoiner;
 import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
@@ -40,12 +41,12 @@ public class CmdInfo extends SwornGuardCommand {
 
 		List<String> lines = new ArrayList<String>();
 		StringBuilder line = new StringBuilder();
-		line.append(FormatUtil.format(plugin.getMessage("info_header"), 
-					target.getName(), 
+		line.append(FormatUtil.format(plugin.getMessage("info_header"),
+					target.getName(),
 					target.isOnline()
-					? plugin.getMessage("info_online_now") 
-							: FormatUtil.format(plugin.getMessage("info_last_seen"), 
-												TimeUtil.formatTimeDifference(	data.getLastOnline(), 
+					? plugin.getMessage("info_online_now")
+							: FormatUtil.format(plugin.getMessage("info_last_seen"),
+												TimeUtil.formatTimeDifference(	data.getLastOnline(),
 																				System.currentTimeMillis()))));
 			
 		String ip = target.isOnline() ? target.getPlayer().getAddress().getAddress().getHostAddress() :
@@ -54,60 +55,84 @@ public class CmdInfo extends SwornGuardCommand {
 			line.append(" from " + ip);
 
 		lines.add(line.toString());
-		
+
+		// Attempt to get the player's previous names
+		// We'll try to grab them from Essentials if we don't have a record
+		List<String> history = data.getHistory();
+		if (history == null || history.isEmpty()) {
+			if (plugin.isEssentialsEnabled()) {
+				history = plugin.getEssentialsHandler().getHistory(target.getUniqueId());
+			} else {
+				history = new ArrayList<String>();
+				history.add(player.getName());
+			}
+
+			data.setHistory(history);
+		}
+
+		history = new ArrayList<String>(data.getHistory());
+		history.remove(player.getName());
+
+		if (! history.isEmpty()) {
+			line = new StringBuilder();
+			line.append("  " + FormatUtil.format("&ePreviously known as: {0}",
+						new StringJoiner("&e, &a").appendAll(history).toString()));
+			lines.add(line.toString());
+		}
+
 		line = new StringBuilder();
-		line.append("  " + FormatUtil.format(plugin.getMessage("info_logins"), 
-					data.getLogins(), 
+		line.append("  " + FormatUtil.format(plugin.getMessage("info_logins"),
+					data.getLogins(),
 					TimeUtil.getSimpleDate(target.getFirstPlayed())));
 		lines.add(line.toString());
 		
 		line = new StringBuilder();
-		line.append("  " + FormatUtil.format(plugin.getMessage("info_blocks"), 
-					data.getBlocksBuilt(), 
-					data.getBlocksDeleted(), 
+		line.append("  " + FormatUtil.format(plugin.getMessage("info_blocks"),
+					data.getBlocksBuilt(),
+					data.getBlocksDeleted(),
 					data.getMessages()));
 		lines.add(line.toString());
 		
 		line = new StringBuilder();
-		line.append("  " + FormatUtil.format(plugin.getMessage("info_kills"), 
-					data.getPlayerKills(), 
-					data.getMonsterKills(), 
+		line.append("  " + FormatUtil.format(plugin.getMessage("info_kills"),
+					data.getPlayerKills(),
+					data.getMonsterKills(),
 					data.getAnimalKills(),
 					data.getDeaths()));
 		lines.add(line.toString());
 		
-		if (	plugin.getServer().getPluginManager().isPluginEnabled("Factions") || 
+		if (	plugin.getServer().getPluginManager().isPluginEnabled("Factions") ||
 				plugin.getServer().getPluginManager().isPluginEnabled("SwornNations")) {
 			line = new StringBuilder();
-			line.append("  " + FormatUtil.format(plugin.getMessage("info_factions"), 
+			line.append("  " + FormatUtil.format(plugin.getMessage("info_factions"),
 						data.getFactions()));
 			if (data.getLastFaction() != "")
-				line.append(FormatUtil.format(plugin.getMessage("info_last_faction"), 
+				line.append(FormatUtil.format(plugin.getMessage("info_last_faction"),
 							data.getLastFaction()));
 			lines.add(line.toString());
 		}
 		
 		if (data.getPlayersKicked() != 0 || data.getPlayersBanned() != 0) {
 			line = new StringBuilder();
-			line.append("  " + FormatUtil.format(plugin.getMessage("info_kickban"), 
-						data.getPlayersKicked(), 
+			line.append("  " + FormatUtil.format(plugin.getMessage("info_kickban"),
+						data.getPlayersKicked(),
 						data.getPlayersBanned()));
 			lines.add(line.toString());
 		}
 		
 		if (data.getReportsRespondedTo() != 0 || data.getPatrols() != 0) {
 			line = new StringBuilder();
-			line.append("  " + FormatUtil.format(plugin.getMessage("info_cheatrespond"), 
-						data.getReportsRespondedTo(), 
+			line.append("  " + FormatUtil.format(plugin.getMessage("info_cheatrespond"),
+						data.getReportsRespondedTo(),
 						data.getPatrols()));
 			lines.add(line.toString());
 		}
 		
 		if (data.getKicks() != 0) {
 			line = new StringBuilder();
-			line.append("  " + FormatUtil.format(plugin.getMessage("info_kicks"), 
-						data.getKicks(), 
-						TimeUtil.formatTimeDifference(data.getLastKick(), System.currentTimeMillis()), 
+			line.append("  " + FormatUtil.format(plugin.getMessage("info_kicks"),
+						data.getKicks(),
+						TimeUtil.formatTimeDifference(data.getLastKick(), System.currentTimeMillis()),
 						data.getLastKicker()));
 			lines.add(line.toString());
 			
@@ -118,9 +143,9 @@ public class CmdInfo extends SwornGuardCommand {
 		
 		if (data.getBans() != 0) {
 			line = new StringBuilder();
-			line.append("  " + FormatUtil.format(plugin.getMessage("info_bans"), 
-						data.getBans(), 
-						TimeUtil.formatTimeDifference(data.getLastBan(), System.currentTimeMillis()), 
+			line.append("  " + FormatUtil.format(plugin.getMessage("info_bans"),
+						data.getBans(),
+						TimeUtil.formatTimeDifference(data.getLastBan(), System.currentTimeMillis()),
 						data.getLastBanner()));
 			lines.add(line.toString());
 			
@@ -134,7 +159,7 @@ public class CmdInfo extends SwornGuardCommand {
 		
 		if (data.getJails() != 0) {
 			line = new StringBuilder();
-			line.append("  " + FormatUtil.format(plugin.getMessage("info_jails"), 
+			line.append("  " + FormatUtil.format(plugin.getMessage("info_jails"),
 						data.getJails(),
 						TimeUtil.formatTimeDifference(data.getLastJail(), System.currentTimeMillis()),
 						data.getLastJailer()));

@@ -73,6 +73,7 @@ import net.t7seven7t.swornguard.handlers.JailHandler;
 import net.t7seven7t.swornguard.handlers.LogFilterHandler;
 import net.t7seven7t.swornguard.handlers.PatrolHandler;
 import net.t7seven7t.swornguard.handlers.TrollHandler;
+import net.t7seven7t.swornguard.integration.EssentialsHandler;
 import net.t7seven7t.swornguard.io.PlayerDataCache;
 import net.t7seven7t.swornguard.io.PlayerDataServiceProvider;
 import net.t7seven7t.swornguard.listeners.BlockListener;
@@ -111,6 +112,8 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 	private @Getter FactionBetrayalDetector factionBetrayalDetector;
 	private @Getter FlyDetector flyDetector;
 	private @Getter XrayDetector xrayDetector;
+
+	private @Getter EssentialsHandler essentialsHandler;
 
 	private List<Listener> listeners;
 
@@ -172,10 +175,7 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 		registerListener(new PlayerListener(this));
 		registerListener(new ServerListener(this));
 
-		PluginManager pm = getServer().getPluginManager();
-		if (pm.getPlugin("Factions") != null || pm.getPlugin("SwornNations") != null) {
-			registerListener(new FactionsListener(this));
-		}
+		setupIntegration();
 
 		if (getConfig().getBoolean("autosave.enabled", true)) {
 			int interval = 20 * 60 * getConfig().getInt("autosave.interval", 15);
@@ -227,7 +227,7 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 		commandHandler.registerCommand(new CmdTrollMute(this));
 		commandHandler.registerCommand(new CmdTrollCheck(this));
 
-		logHandler.log("{0} has been enabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
+		logHandler.log("{0} has been enabled. Took {1} ms.", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
 	@Override
@@ -240,13 +240,32 @@ public class SwornGuard extends SwornPlugin implements Reloadable {
 		getServer().getScheduler().cancelTasks(this);
 		getServer().getServicesManager().unregisterAll(this);
 
-		logHandler.log("{0} has been disabled ({1}ms)", getDescription().getFullName(), System.currentTimeMillis() - start);
+		logHandler.log("{0} has been disabled. Took {1} ms.", getDescription().getFullName(), System.currentTimeMillis() - start);
 	}
 
 	public void registerListener(Listener listener) {
 		listeners.add(listener);
 
 		getServer().getPluginManager().registerEvents(listener, this);
+	}
+
+	// ---- Integration
+
+	private void setupIntegration() {
+		// Factions listener
+		PluginManager pm = getServer().getPluginManager();
+		if (pm.isPluginEnabled("SwornNations") || pm.isPluginEnabled("Factions")) {
+			registerListener(new FactionsListener(this));
+		}
+
+		try {
+			// Essentials integration
+			essentialsHandler = new EssentialsHandler(this);
+		} catch (Throwable ex) { }
+	}
+
+	public boolean isEssentialsEnabled() {
+		return essentialsHandler != null && essentialsHandler.isEnabled();
 	}
 
 	@Override
