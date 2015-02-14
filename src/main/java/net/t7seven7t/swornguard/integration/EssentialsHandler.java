@@ -18,7 +18,7 @@ import com.earth2me.essentials.Essentials;
 public class EssentialsHandler extends DependencyProvider<Essentials> {
 
 	public EssentialsHandler(SwornGuard handler) {
-		super(handler, "SwornGuard");
+		super(handler, "Essentials");
 	}
 
 	public List<String> getHistory(UUID uniqueId) {
