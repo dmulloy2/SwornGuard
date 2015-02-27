@@ -100,7 +100,7 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 
 		// Account for name changes
 		String lastKnownBy = data.getLastKnownBy();
-		if (lastKnownBy != null) {
+		if (lastKnownBy != null && ! lastKnownBy.isEmpty()) {
 			if (! lastKnownBy.equals(player.getName())) {
 				if (history == null) {
 					history = new ArrayList<String>();

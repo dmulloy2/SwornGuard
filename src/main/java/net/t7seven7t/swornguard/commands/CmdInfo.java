@@ -8,6 +8,7 @@ import java.util.List;
 
 import net.dmulloy2.types.StringJoiner;
 import net.dmulloy2.util.FormatUtil;
+import net.dmulloy2.util.ListUtil;
 import net.dmulloy2.util.TimeUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.Permission;
@@ -64,18 +65,18 @@ public class CmdInfo extends SwornGuardCommand {
 				history = plugin.getEssentialsHandler().getHistory(target.getUniqueId());
 			} else {
 				history = new ArrayList<String>();
-				history.add(player.getName());
+				history.add(target.getName());
 			}
 
 			data.setHistory(history);
 		}
 
 		history = new ArrayList<String>(data.getHistory());
-		history.remove(player.getName());
+		ListUtil.removeIgnoreCase(history, target.getName());
 
 		if (! history.isEmpty()) {
 			line = new StringBuilder();
-			line.append("  " + FormatUtil.format("&ePreviously known as: {0}",
+			line.append("  " + FormatUtil.format("&ePreviously known as: &a{0}",
 						new StringJoiner("&e, &a").appendAll(history).toString()));
 			lines.add(line.toString());
 		}
