@@ -35,10 +35,15 @@ public class CmdInfo extends SwornGuardCommand {
 	@Override
 	public void perform() {
 		OfflinePlayer target = getTarget(0, hasPermission(sender, Permission.CMD_INFO_OTHERS));
-		if (target == null)
+		if (target == null) {
 			return;
+		}
 
 		PlayerData data = getPlayerData(target);
+		if (data == null) {
+			err("&c{0} &4has no data!", target.getName());
+			return;
+		}
 
 		List<String> lines = new ArrayList<String>();
 		StringBuilder line = new StringBuilder();
@@ -63,7 +68,10 @@ public class CmdInfo extends SwornGuardCommand {
 		if (history == null || history.isEmpty()) {
 			if (plugin.isEssentialsEnabled()) {
 				history = plugin.getEssentialsHandler().getHistory(target.getUniqueId());
-			} else {
+			}
+
+			// This also covers any failures with Essentials
+			if (history == null || history.isEmpty()) {
 				history = new ArrayList<String>();
 				history.add(target.getName());
 			}

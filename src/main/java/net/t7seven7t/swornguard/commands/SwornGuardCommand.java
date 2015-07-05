@@ -18,11 +18,11 @@ public abstract class SwornGuardCommand extends Command {
 		this.plugin = plugin;
 	}
 
-	protected OfflinePlayer getTarget(int argIndex) {
+	protected final OfflinePlayer getTarget(int argIndex) {
 		return getTarget(argIndex, true);
 	}
 
-	protected OfflinePlayer getTarget(int argIndex, boolean others) {
+	protected final OfflinePlayer getTarget(int argIndex, boolean others) {
 		OfflinePlayer target = null;
 
 		if (! isPlayer()) {
@@ -37,30 +37,26 @@ public abstract class SwornGuardCommand extends Command {
 			}
 		}
 
-		if (target == null) {
+		if (target == null)
 			err(plugin.getMessage("error_player_not_found"));
-			return null;
-		}
-
 		return target;
 	}
 
-	protected OfflinePlayer getTarget(String identifier, boolean msg) {
+	protected final OfflinePlayer getTarget(String identifier, boolean msg) {
 		OfflinePlayer target = Util.matchOfflinePlayer(identifier);
 		if (target == null && msg)
 			err(plugin.getMessage("error_player_not_found"), identifier);
 		return target;
 	}
 
-	protected PlayerData getPlayerData(OfflinePlayer target) {
+	protected final PlayerData getPlayerData(OfflinePlayer target) {
 		return plugin.getPlayerDataCache().getData(target);
 	}
 
-	protected PlayerData getPlayerData(OfflinePlayer target, boolean create) {
+	protected final PlayerData getPlayerData(OfflinePlayer target, boolean create) {
 		PlayerData data = getPlayerData(target);
 		if (data == null && create)
 			data = plugin.getPlayerDataCache().newData(target);
 		return data;
 	}
-
 }
