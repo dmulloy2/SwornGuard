@@ -5,11 +5,13 @@ package net.t7seven7t.swornguard.handlers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Filter;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import lombok.AllArgsConstructor;
 import net.dmulloy2.types.Reloadable;
 import net.dmulloy2.util.FormatUtil;
 import net.dmulloy2.util.Util;
@@ -30,7 +32,7 @@ import org.bukkit.entity.Player;
 /**
  * @author dmulloy2
  */
-public class LogFilterHandler implements java.util.logging.Filter, org.apache.logging.log4j.core.Filter, Reloadable {
+public class LogFilterHandler implements Filter, org.apache.logging.log4j.core.Filter, Reloadable {
 	private final SwornGuard plugin;
 	private final Preconditions preconditions;
 	private boolean speedDetectorEnabled;
@@ -57,13 +59,13 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 				if (speedDetectorEnabled) {
 					if (! plugin.getPermissionHandler().hasPermission(player, Permission.ALLOW_FLY)) {
 						if (! player.getAllowFlight() && ! player.isInsideVehicle()) {
-							if (! preconditions.isPlayerFallingIntoVoid(player) && ! preconditions.isPlayerInsideCar(player) 
+							if (! preconditions.isPlayerFallingIntoVoid(player) && ! preconditions.isPlayerInsideCar(player)
 									&& ! preconditions.isNewPlayerJoin(player) && ! preconditions.hasRecentlyTeleported(player)) {
 								PlayerData data = plugin.getPlayerDataCache().getData(player);
 								data.setConsecutivePings(data.getConsecutivePings() + 1);
 								if (data.getConsecutivePings() >= 2) {
 									// Announce the cheat
-									CheatEvent event = new CheatEvent(player, CheatType.SPEED, 
+									CheatEvent event = new CheatEvent(player, CheatType.SPEED,
 											FormatUtil.format(plugin.getMessage("cheat_message"), player.getName(), "moving too quickly!"));
 									plugin.getCheatHandler().announceCheat(event);
 									
@@ -92,9 +94,30 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 	}
 
 	private final void applyFilters() {
-    	plugin.getServer().getLogger().setFilter(this);
-    	java.util.logging.Logger.getLogger("Minecraft").setFilter(this);
-    	((org.apache.logging.log4j.core.Logger) LogManager.getRootLogger()).addFilter(this);
+		java.util.logging.Logger logger = plugin.getServer().getLogger();
+		Filter current = logger.getFilter();
+		if (current == null || current instanceof LogFilterHandler) {
+			logger.setFilter(this);
+		} else {
+			logger.setFilter(new FilterDelegate(current, this));
+		}
+
+    	((Logger) LogManager.getRootLogger()).addFilter(this);
+	}
+
+	@AllArgsConstructor
+	private class FilterDelegate implements Filter {
+		private final Filter original;
+		private final Filter ours;
+
+		@Override
+		public boolean isLoggable(LogRecord record) {
+			if (! original.isLoggable(record)) {
+				return false;
+			}
+
+			return ours.isLoggable(record);
+		}
 	}
 
 	@Override
@@ -107,12 +130,14 @@ public class LogFilterHandler implements java.util.logging.Filter, org.apache.lo
 				try {
 					logFilters.add(Pattern.compile(string));
 				} catch (PatternSyntaxException ex) {
-					plugin.getLogHandler().log(java.util.logging.Level.WARNING, "Supplied regex filter {0} is invalid! Ignoring!", string);
+					plugin.getLogHandler().log(Level.WARNING, "Supplied regex filter \"{0}\" is invalid!", string);
 				}
 			}
 		}
 
-		this.applyFilters();
+		if (speedDetectorEnabled && ! logFilters.isEmpty()) {
+			this.applyFilters();
+		}
 	}
 
 	// Default Filter Method
