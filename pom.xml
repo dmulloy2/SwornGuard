@@ -20,6 +20,10 @@
       <id>essentials-repo</id>
       <url>http://repo.ess3.net/content/repositories/public/</url>
     </repository>
+    <repository>
+      <id>vault-repo</id>
+      <url>http://nexus.theyeticave.net/content/repositories/pub_releases/</url>
+    </repository>
   </repositories>
 
   <profiles>
@@ -108,7 +112,6 @@
       </resource>
     </resources>
   </build>
-
 
   <dependencies>
     <dependency>
