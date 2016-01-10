@@ -93,7 +93,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 /**
  * @author t7seven7t
  */
-public class SwornGuard extends SwornPlugin implements Reloadable {
+public class SwornGuard extends SwornPlugin {
 	private @Getter ResourceHandler resourceHandler;
 	private @Getter PlayerDataCache playerDataCache;
 	private @Getter Preconditions preconditions;
