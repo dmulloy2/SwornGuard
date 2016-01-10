@@ -78,8 +78,11 @@ public class TrollHandler implements Listener {
 		data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(), profiler));
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
 
-		broadcast = FormatUtil.format(broadcast, sender.getName(), troll.getName(), reason);
-		plugin.getServer().broadcast(broadcast, plugin.getPermissionHandler().getPermissionString(Permission.TROLL_SPY));
+		for (Player player : Util.getOnlinePlayers()) {
+			if (plugin.getPermissionHandler().hasPermission(player, Permission.TROLL_SPY)) {
+				player.sendMessage(FormatUtil.format(broadcast, player.equals(sender) ? "You" : sender.getName(), troll.getName(), reason));
+			}
+		}
 
 		data.setTrollHells(data.getTrollHells() + 1);
 		data.setLastTroller(sender.getName());
@@ -119,8 +122,11 @@ public class TrollHandler implements Listener {
 		data.getProfilerList().add(FormatUtil.format(plugin.getMessage("profiler_event"), TimeUtil.getLongDateCurr(), profiler));
 		plugin.getLogHandler().log(ChatColor.stripColor(profiler));
 
-		broadcast = FormatUtil.format(broadcast, sender.getName(), troll.getName());
-		plugin.getServer().broadcast(broadcast, plugin.getPermissionHandler().getPermissionString(Permission.TROLL_SPY));
+		for (Player player : Util.getOnlinePlayers()) {
+			if (plugin.getPermissionHandler().hasPermission(player, Permission.TROLL_SPY)) {
+				player.sendMessage(FormatUtil.format(broadcast, player.equals(sender) ? "You" : sender.getName(), troll.getName()));
+			}
+		}
 	}
 
 	public final void forceIntoPublicChat(PlayerData data, Player troll) {
