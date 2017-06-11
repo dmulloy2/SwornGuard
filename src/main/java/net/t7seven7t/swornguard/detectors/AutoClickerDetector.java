@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.dmulloy2.util.CompatUtil;
 import net.dmulloy2.util.MaterialUtil;
 import net.t7seven7t.swornguard.SwornGuard;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * @author t7seven7t
@@ -37,18 +39,16 @@ public class AutoClickerDetector {
 
 	public boolean isClickingTooFast(final Player player) {
 		final long now = System.currentTimeMillis();
-		
-		if (player.getItemInHand() == null 
-				|| !autoclickerAllowedWeapons.contains(player.getItemInHand().getType())) {
-			if (recentClicks.containsKey(player.getName()) 
-					&& (now - recentClicks.get(player.getName()) < autoclickerTimeBetweenAttacks)) {
+
+		ItemStack inHand = CompatUtil.getItemInMainHand(player);
+		if (inHand == null || !autoclickerAllowedWeapons.contains(inHand.getType())) {
+			if (recentClicks.containsKey(player.getName()) && (now - recentClicks.get(player.getName()) < autoclickerTimeBetweenAttacks)) {
 				return true;
 			}
 		}
-		
+
 		recentClicks.remove(player.getName());
 		recentClicks.put(player.getName(), Long.valueOf(now));
-		
 		return false;
 	}
 }

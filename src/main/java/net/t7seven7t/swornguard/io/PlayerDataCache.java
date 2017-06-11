@@ -19,8 +19,6 @@ import java.util.logging.Level;
 import net.dmulloy2.io.FileSerialization;
 import net.dmulloy2.io.IOUtil;
 import net.dmulloy2.io.UUIDFetcher;
-import net.dmulloy2.types.Versioning;
-import net.dmulloy2.types.Versioning.Version;
 import net.dmulloy2.util.Util;
 import net.t7seven7t.swornguard.SwornGuard;
 import net.t7seven7t.swornguard.types.PlayerData;
@@ -171,10 +169,7 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 
 		try {
 			PlayerData data = FileSerialization.load(file, PlayerData.class);
-			if (Versioning.getVersion() != Version.MC_16) {
-				data.setUniqueId(key);
-			}
-
+			data.setUniqueId(key);
 			return data;
 		} catch (Throwable ex) {
 			plugin.getLogHandler().log(Level.WARNING, Util.getUsefulStack(ex, "loading data for {0}", key));
@@ -256,10 +251,6 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 	private final void convertToUUID() {
 		File updated = new File(folder, ".updated");
 		if (updated.exists()) {
-			return;
-		}
-
-		if (Versioning.getVersion() == Version.MC_16) {
 			return;
 		}
 
@@ -359,10 +350,6 @@ public class PlayerDataCache implements PlayerDataServiceProvider {
 	// ---- Util
 
 	private final String getKey(OfflinePlayer player) {
-		if (Versioning.getVersion() == Version.MC_16) {
-			return player.getName();
-		}
-
 		return player.getUniqueId().toString();
 	}
 

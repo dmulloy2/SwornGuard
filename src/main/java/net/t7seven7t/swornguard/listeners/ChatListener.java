@@ -244,9 +244,9 @@ public class ChatListener implements Listener, Reloadable {
 							for (int j = 0; j < 4; j++) {
 								Creeper creeper = spawnLocation.getWorld().spawn(spawnLocation, Creeper.class);
 								if (j == 0)
-									bat.setPassenger(creeper);
+									bat.addPassenger(creeper);
 								else
-									prevCreeper.setPassenger(creeper);
+									prevCreeper.addPassenger(creeper);
 								creeper.setPowered(true);
 								prevCreeper = creeper;
 								entityIds.add(creeper.getUniqueId());

@@ -26,13 +26,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.Logger;
+import org.apache.logging.log4j.core.filter.AbstractFilter;
 import org.apache.logging.log4j.message.Message;
 import org.bukkit.entity.Player;
 
 /**
  * @author dmulloy2
  */
-public class LogFilterHandler implements Filter, org.apache.logging.log4j.core.Filter, Reloadable {
+public class LogFilterHandler extends AbstractFilter implements Filter, Reloadable {
 	private final SwornGuard plugin;
 	private final Preconditions preconditions;
 	private boolean speedDetectorEnabled;
@@ -168,15 +169,4 @@ public class LogFilterHandler implements Filter, org.apache.logging.log4j.core.F
 	public Result filter(Logger logger, org.apache.logging.log4j.Level level, Marker marker, Message message, Throwable ex) {
 		return filter(message.getFormattedMessage()) ? Result.ACCEPT : Result.DENY;
 	}
-
-	@Override
-	public Result getOnMatch() {
-		return Result.NEUTRAL;
-	}
-
-	@Override
-	public Result getOnMismatch() {
-		return Result.NEUTRAL;
-	}
-	
 }
