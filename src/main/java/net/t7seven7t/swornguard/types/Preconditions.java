@@ -49,7 +49,7 @@ public class Preconditions {
 					
 					Material type = loc.getBlock().getType();
 					
-					return type != Material.POWERED_RAIL && type != Material.RAILS
+					return type != Material.POWERED_RAIL && type != Material.RAIL
 							&& type != Material.DETECTOR_RAIL && type != Material.ACTIVATOR_RAIL;
 				}
 			}
